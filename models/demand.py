@@ -1,15 +1,17 @@
 from extensions import db
 
-class MaterialsPerProduct(db.Model):
+class Demand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    time_slot = db.Column(db.String(10), db.ForeignKey('time.id'), nullable=False)
+    order_count = db.Column(db.Integer)
+    amount = db.Column(db.Integer)
     
     def serialize(self):
         return {
             'id': self.id,
-            'material_id': self.material_id,
             'product_id': self.product_id,
+            'time_slot': self.time_slot,
+            'order_count': self.order_count,
             'amount': self.amount
         }

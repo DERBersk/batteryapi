@@ -1,19 +1,21 @@
 from extensions import db
 
-class MaterialsPerSupplier(db.Model):
+class Price(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=False)
-    min_amount = db.Column(db.Integer)
-    delivery_time = db.Column(db.Time)
-    availability = db.Column(db.Float)
+    cost = db.Column(db.Float)
+    unit = db.Column(db.String(50))
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
     
     def serialize(self):
         return {
             'id': self.id,
             'material_id': self.material_id,
             'supplier_id': self.supplier_id,
-            'min_amount': self.min_amount,
-            'delivery_time': self.delivery_time,
-            'availability': self.availability,
+            'cost': self.cost,
+            'unit': self.unit,
+            'start_date': self.start_date,
+            'end_date': self.end_date
         }
