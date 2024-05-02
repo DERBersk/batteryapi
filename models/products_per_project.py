@@ -4,7 +4,12 @@ class ProductsPerProject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
-    start = db.Column(db.Date, nullable=False)
-    end = db.Column(db.Date, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    strategy = db.Column(db.String(100))
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'project_id':self.project_id,
+            'amount':self.amount
+        }

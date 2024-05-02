@@ -1,17 +1,15 @@
 from extensions import db
 
-class Project(db.Model):
+class Time(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    partner = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(150), nullable = False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
-    production_schedule = db.Column(db.String(10))
     
     def serialize(self):
         return {
             'id': self.id,
-            'partner': self.partner,
+            'name': self.name,
             'start_date': self.start_date,
-            'end_date': self.end_date,
-            'production_schedule': self.production_schedule
+            'end_date': self.end_date
         }
