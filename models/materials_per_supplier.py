@@ -5,7 +5,8 @@ class MaterialsPerSupplier(db.Model):
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=False)
     min_amount = db.Column(db.Integer)
-    delivery_time = db.Column(db.Time)
+    max_amount = db.Column(db.Integer)
+    lead_time = db.Column(db.Time)
     availability = db.Column(db.Float)
     
     def serialize(self):
@@ -14,6 +15,7 @@ class MaterialsPerSupplier(db.Model):
             'material_id': self.material_id,
             'supplier_id': self.supplier_id,
             'min_amount': self.min_amount,
-            'delivery_time': self.delivery_time,
+            'max_amount': self.max_amount,
+            'lead_time': self.lead_time,
             'availability': self.availability,
         }
