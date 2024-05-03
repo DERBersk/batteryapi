@@ -33,7 +33,11 @@ def get_supplier(supplier_id):
                     'name': material.name,
                     'safety_stock': material.safety_stock,
                     'lot_size': material.lot_size,
-                    'stock_level': material.stock_level
+                    'stock_level': material.stock_level,
+                    'min_amount': material.min_amount,
+                    'max_amount': material.max_amount,
+                    'lead_time': material.lead_time,
+                    'availability': material.availability
                 }
             )
         supplier_data = {
