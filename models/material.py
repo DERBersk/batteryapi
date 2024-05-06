@@ -6,7 +6,7 @@ class Material(db.Model):
     safety_stock = db.Column(db.Integer)
     lot_size = db.Column(db.Integer)
     stock_level = db.Column(db.Float)
-    
+        
     def serialize(self):
         return {
             'id': self.id,

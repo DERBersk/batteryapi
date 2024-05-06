@@ -6,6 +6,7 @@ class Project(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     production_schedule = db.Column(db.String(10))
+    machine_labor_availability = db.Column(db.Float)
     
     def serialize(self):
         return {
@@ -13,5 +14,6 @@ class Project(db.Model):
             'partner': self.partner,
             'start_date': self.start_date,
             'end_date': self.end_date,
-            'production_schedule': self.production_schedule
+            'production_schedule': self.production_schedule,
+            'machine_labor_availability': self.machine_labor_availability
         }

@@ -105,9 +105,9 @@ def populate_materials_per_supplier(num_entries=20):
         supplier_id = random.choice(supplier_ids)
         min_amount = random.randint(1, 100)
         # Generate a random delivery time between 1 hour and 24 hours
-        delivery_time = time(hour=random.randint(0, 23))
+        lead_time = time(hour=random.randint(0, 23))
         availability = random.uniform(0, 1)
-        entry = MaterialsPerSupplier(material_id=material_id, supplier_id=supplier_id, min_amount=min_amount, delivery_time=delivery_time, availability=availability)
+        entry = MaterialsPerSupplier(material_id=material_id, supplier_id=supplier_id, min_amount=min_amount, lead_time=lead_time, availability=availability)
         db.session.add(entry)
     db.session.commit()
 
