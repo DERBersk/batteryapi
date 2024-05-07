@@ -22,7 +22,8 @@ def populate_suppliers(num_suppliers=5):
         risk_index = random.uniform(0, 10)
         sustainability_index = random.uniform(0, 10)
         quality = random.uniform(0, 10)
-        supplier = Supplier(name=name, lat=lat, long=long, risk_index=risk_index, sustainability_index=sustainability_index, quality=quality)
+        reliability = random.uniform(0,1)
+        supplier = Supplier(name=name, lat=lat, long=long, risk_index=risk_index, sustainability_index=sustainability_index, quality=quality, reliability=reliability)
         db.session.add(supplier)
     db.session.commit()
         
@@ -40,8 +41,9 @@ def populate_materials(num_materials=5):
 def populate_products(num_products=5):
     fake = Faker()
     for _ in range(num_products):
-        name = fake.word()
-        product = Product(name=name)
+        description = fake.word()
+        specification = fake.word()
+        product = Product(description=description,specification=specification)
         db.session.add(product)
     db.session.commit()
     
@@ -52,7 +54,8 @@ def populate_projects(num_projects=5):
         start_date = datetime.now() + timedelta(days=random.randint(1, 30))
         end_date = start_date + timedelta(days=random.randint(1, 365))
         production_schedule = random.choice(['static'])
-        project = Project(partner=partner, start_date=start_date, end_date=end_date, production_schedule=production_schedule)
+        machine_labor_availability = random.uniform(0,1)
+        project = Project(partner=partner, start_date=start_date, end_date=end_date, production_schedule=production_schedule,machine_labor_availability=machine_labor_availability)
         db.session.add(project)
     db.session.commit()
         
@@ -107,14 +110,15 @@ def populate_materials_per_supplier(num_entries=20):
         # Generate a random delivery time between 1 hour and 24 hours
         lead_time = time(hour=random.randint(0, 23))
         availability = random.uniform(0, 1)
-        entry = MaterialsPerSupplier(material_id=material_id, supplier_id=supplier_id, min_amount=min_amount, lead_time=lead_time, availability=availability)
+        volume_commitment = random.uniform(0,20)*100
+        entry = MaterialsPerSupplier(material_id=material_id, supplier_id=supplier_id, min_amount=min_amount, lead_time=lead_time, availability=availability, volume_commitment=volume_commitment)
         db.session.add(entry)
     db.session.commit()
 
 def populate_materials_per_product(num_entries=20):
     material_ids = [1, 2, 3, 4, 5]  # Sample material IDs
     product_ids = [1, 2, 3, 4, 5]  # Sample product IDs
-
+    fake = Faker()
     for _ in range(num_entries):
         material_id = random.choice(material_ids)
         product_id = random.choice(product_ids)
