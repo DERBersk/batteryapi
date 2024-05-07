@@ -1,4 +1,5 @@
-Flask==2.2.2
+Flask
 flask_sqlalchemy
 datetime
 faker
+Werkzeug==2.2.2
