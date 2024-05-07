@@ -20,9 +20,10 @@ def create_app():
     
     return app
 
-if __name__ == '__main__':
-    app = create_app()
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, host='0.0.0.0')
+app = create_app()
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+# app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(debug=True)
