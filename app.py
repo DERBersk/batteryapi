@@ -2,7 +2,7 @@ from flask import Flask
 from extensions import db
 
 def create_app():
-    app = Flask(__name__.split(".")[0])
+    app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
     # Import routes
     from routes.supplier_routes import suppliers_bp
@@ -24,4 +24,6 @@ app = create_app()
 db.init_app(app)
 with app.app_context():
     db.create_all()
-app.run(debug=True, host='0.0.0.0')
+# app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(debug=True)
