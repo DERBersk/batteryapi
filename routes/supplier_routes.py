@@ -71,6 +71,7 @@ def get_supplier(supplier_id):
 ###################################################
 # Post a single or multiple suppliers
 ###################################################
+@supplier_bp.route('', methods=['POST'])
 def create_or_update_suppliers():
     from app import db
     data = request.json
