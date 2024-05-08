@@ -3,6 +3,9 @@ import functions.create_test_data as cd
 
 test_data_bp = Blueprint('createdata', __name__, url_prefix='/api/createdata')
 
+###################################################
+# Create Test data initially
+###################################################
 @test_data_bp.route('/', methods=['GET'])
 def createData():
     cd.populate_suppliers()
