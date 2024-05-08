@@ -1,6 +1,9 @@
 from flask import Flask
 from extensions import db
 
+#TODO: Historical Demand Routes
+#TODO: Analytics Routes - First Mock then create
+
 def create_app():
     app = Flask(__name__.split(".")[0])
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
