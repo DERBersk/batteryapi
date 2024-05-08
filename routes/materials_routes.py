@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.materials_per_product import MaterialsPerProduct
+from models.price import Price
 
 material_bp = Blueprint('material', __name__, url_prefix='/api/materials')
 
@@ -22,7 +23,7 @@ def get_material(material_id):
     if material:
         return jsonify(material.serialize())
     else:
-        return jsonify({'message': f'Product with id {material_id} not found'}), 404
+        return jsonify({'message': f'Material with id {material_id} not found'}), 404
 
 ###################################################
 # Post a single or multiple materials
@@ -60,9 +61,11 @@ def delete_material(material_id):
     material = Material.query.get(material_id)
     if material:
         # Delete from the database
-        MaterialsPerProduct.query.filter_by(material_id=material_id).delete()
+        MaterialsPerProduct.query.filter_by(MaterialsPerProduct.material_id==material_id).delete()
         
-        MaterialsPerSupplier.query.filter_by(material_id=material_id).delete()
+        MaterialsPerSupplier.query.filter_by(MaterialsPerSupplier.material_id==material_id).delete()
+        
+        Price.query.filter_by(Price.material_id == material_id).delete()
         
         db.session.delete(material)
         db.session.commit()

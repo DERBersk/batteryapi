@@ -53,26 +53,63 @@ def get_product(product_id):
 ###################################################
 # Post a single or multiple products
 ###################################################
-def create_products():
+@product_bp.route('/', methods=['POST'])
+def create_or_update_products():
     from app import db
-    data = request.get_json()
+    data = request.json
 
     if not isinstance(data, list):
-        return jsonify({'error': 'JSON payload must be a list of products'}), 400
+        return jsonify({'message': 'Invalid data format. Expected a list of products.'}), 400
 
-    new_products = []
     for product_data in data:
-        new_product = Product(
-            description=product_data.get('description'),
-            specification=product_data.get('specification')
-        )
-        new_products.append(new_product)
-        db.session.add(new_product)
+        # Extract product data
+        product_data = {
+            'description': product_data.get('description'),
+            'specification': product_data.get('specification')
+        }
+
+        # Create or update product
+        if 'id' in product_data:
+            product = Product.query.get(product_data['id'])
+            if not product:
+                return jsonify({'message': f'Product with id {product_data["id"]} not found'}), 404
+            for key, value in product_data.items():
+                setattr(product, key, value)
+        else:
+            product = Product(**product_data)
+
+        db.session.add(product)
+
+        # Extract materials data
+        materials_data = product_data.get('materials', [])
+        MaterialsPerProduct.query.filter(MaterialsPerProduct.product_id == product.id).delete()
+        for material_data in materials_data:
+            material_id = material_data.get('id')
+            if material_id:
+                material = Material.query.get(material_id)
+                if not material:
+                    return jsonify({'message': f'Material with id {material_id} not found'}), 404
+            else:
+                material = Material()
+
+            material.name = material_data.get('name')
+            material.safety_stock = material_data.get('safety_stock')
+            material.lot_size = material_data.get('lot_size')
+            material.stock_level = material_data.get('stock_level')
+
+            # Add or update MaterialsPerProduct
+            amount = material_data.get('amount')
+
+            materials_per_product = MaterialsPerProduct(
+                product_id=product.id,
+                material_id=material.id,
+                amount=amount
+            )
+            db.session.add(materials_per_product)
 
     db.session.commit()
 
-    serialized_products = [product.serialize() for product in new_products]
-    return jsonify(serialized_products), 201
+    return jsonify({'message': 'Products created/updated successfully'}), 200
 
 ###################################################
 # Delete a single product
@@ -83,9 +120,9 @@ def delete_product(product_id):
     product = Product.query.get(product_id)
     if product:
         # Delete from the database
-        MaterialsPerProduct.query.filter_by(product_id=product_id).delete()
+        MaterialsPerProduct.query.filter_by(MaterialsPerProduct.product_id==product_id).delete()
         
-        ProductsPerProject.query.filter_by(product_id=product_id).delete()
+        ProductsPerProject.query.filter_by(ProductsPerProject.product_id==product_id).delete()
         
         db.session.delete(product)
         db.session.commit()

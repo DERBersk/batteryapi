@@ -1,9 +1,7 @@
 from flask import Flask
 from extensions import db
 
-#TODO: Concept for creation and deletion of Inbetween Tables
-#TODO: Post for changes also! If changed, then only modify
-#TODO: Historical Demand & Price Routes
+#TODO: Historical Demand Routes
 #TODO: Analytics Routes - First Mock then create
 
 def create_app():

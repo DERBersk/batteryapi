@@ -55,29 +55,68 @@ def get_project(project_id):
 ###################################################
 # Post a single or multiple project
 ###################################################
-def create_projects():
+@project_bp.route('/', methods=['POST'])
+def create_or_update_project():
     from app import db
-    data = request.get_json()
+    data = request.json
 
     if not isinstance(data, list):
-        return jsonify({'error': 'JSON payload must be a list of projects'}), 400
+        return jsonify({'message': 'Invalid data format. Expected a list of projects.'}), 400
 
-    new_projects = []
     for project_data in data:
-        new_project = Project(
-            partner=project_data.get('partner'),
-            start_date=project_data.get('start_date'),
-            end_date=project_data.get('end_date'),
-            production_schedule=project_data.get('production_schedule'),
-            machine_labor_availability=project_data.get('machine_labor_availability')
-        )
-        new_projects.append(new_project)
-        db.session.add(new_project)
+        # Extract project data
+        project_data = {
+            'partner': project_data.get('partner'),
+            'start_date': project_data.get('start_date'),
+            'end_date': project_data.get('end_date'),
+            'production_schedule': project_data.get('production_schedule'),
+            'machine_labor_availability': project_data.get('machine_labor_availability')
+        }
+
+        # Create or update project
+        if 'id' in project_data:
+            project = Project.query.get(project_data['id'])
+            if not project:
+                return jsonify({'message': f'Project with id {project_data["id"]} not found'}), 404
+            for key, value in project_data.items():
+                setattr(project, key, value)
+        else:
+            project = Project(**project_data)
+
+        db.session.add(project)
+
+        # Extract products data
+        products_data = project_data.get('products', [])
+        ProductsPerProject.query.filter(ProductsPerProject.project_id == project.id).delete()
+        for product_data in products_data:
+            product_id = product_data.get('id')
+            if product_id:
+                product = Product.query.get(product_id)
+                if not product:
+                    return jsonify({'message': f'Product with id {product_id} not found'}), 404
+            else:
+                product = Product()
+            
+            product.description = product_data.get('description')
+            product.specification = product_data.get('specification')
+
+            # Add or update ProductsPerProject
+            amount = product_data.get('amount')
+            raw_material_type = product_data.get('raw_material_type')
+            component_parts_type = product_data.get('component_parts_type')
+
+            products_per_project = ProductsPerProject(
+                project_id=project.id,
+                product_id=product.id,
+                amount=amount,
+                raw_material_type=raw_material_type,
+                component_parts_type=component_parts_type
+            )
+            db.session.add(products_per_project)
 
     db.session.commit()
 
-    serialized_projects = [project.serialize() for project in new_projects]
-    return jsonify(serialized_projects), 201
+    return jsonify({'message': 'Projects created/updated successfully'}), 200
 
 ###################################################
 # Delete a single project
@@ -88,7 +127,7 @@ def delete_project(project_id):
     project = Project.query.get(project_id)
     if project:
         # Delete from the database
-        ProductsPerProject.query.filter_by(project_id=project_id).delete()
+        ProductsPerProject.query.filter_by(ProductsPerProject.project_id==project_id).delete()
         
         db.session.delete(project)
         db.session.commit()
