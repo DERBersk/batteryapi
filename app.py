@@ -6,7 +6,7 @@ from extensions import db
 
 def create_app():
     app = Flask(__name__.split(".")[0])
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.xheevcowfsiqoblrojtv:TGEBzsP7RGjpVM5E@aws-0-eu-west-2.pooler.supabase.com:5432/postgres'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
     # Import routes
     from routes.supplier_routes import supplier_bp
     from routes.product_routes import product_bp
