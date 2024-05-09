@@ -15,7 +15,7 @@ The Battery API offers a range of endpoints to facilitate interactions with user
 The User endpoint provides functionality for managing user data within the Battery API. Users can be retrieved, created, and deleted using respective HTTP methods.
 
 * [Show User](documentation/user/get.md) : `GET /api/user/`
-* [Create User](documentation/user/post.md) : `PUT /api/user/`
+* [Create User](documentation/user/post.md) : `POST /api/user/`
 * [Delete User](documentation/user/delete.md) : `DELETE /api/user/`
 
 ### Supplier related
@@ -23,7 +23,7 @@ The User endpoint provides functionality for managing user data within the Batte
 The Supplier endpoint enables the management of supplier information within the Battery API. Suppliers can be retrieved, created, and deleted using respective HTTP methods.
 
 * [Show Supplier](documentation/user/get.md) : `GET /api/supplier/`
-* [Create Supplier](documentation/user/post.md) : `PUT /api/supplier/`
+* [Create Supplier](documentation/user/post.md) : `POST /api/supplier/`
 * [Delete Supplier](documentation/user/delete.md) : `DELETE /api/supplier/`
 
 ### Price related
@@ -31,7 +31,7 @@ The Supplier endpoint enables the management of supplier information within the 
 The Price endpoint offers functionality for managing pricing details within the Battery API. Prices can be retrieved, created, and deleted using respective HTTP methods.
 
 * [Show Price](documentation/price/get.md) : `GET /api/price/`
-* [Create Price](documentation/price/post.md) : `PUT /api/price/`
+* [Create Price](documentation/price/post.md) : `POST /api/price/`
 * [Delete Price](documentation/price/delete.md) : `DELETE /api/price/`
 
 ### Product related
@@ -39,7 +39,7 @@ The Price endpoint offers functionality for managing pricing details within the 
 The Product endpoint provides capabilities for managing product data within the Battery API. Products can be retrieved, created, and deleted using respective HTTP methods.
 
 * [Show Product](documentation/product/get.md) : `GET /api/product/`
-* [Create Product](documentation/product/post.md) : `PUT /api/product/`
+* [Create Product](documentation/product/post.md) : `POST /api/product/`
 * [Delete Product](documentation/product/delete.md) : `DELETE /api/product/`
 
 ### Project related
@@ -47,7 +47,7 @@ The Product endpoint provides capabilities for managing product data within the 
 The Project endpoint facilitates the management of project information within the Battery API. Projects can be retrieved, created, and deleted using respective HTTP methods.
 
 * [Show Project](documentation/project/get.md) : `GET /api/project/`
-* [Create Project](documentation/project/post.md) : `PUT /api/project/`
+* [Create Project](documentation/project/post.md) : `POST /api/project/`
 * [Delete Project](documentation/project/delete.md) : `DELETE /api/project/`
 
 ### Test Data related
