@@ -28,29 +28,39 @@ def get_material(material_id):
 ###################################################
 # Post a single or multiple materials
 ###################################################
-@material_bp.route('/', methods=['POST'])
-def create_materials():
+def create_or_update_materials():
     from app import db
-    data = request.get_json()
+    data = request.json
 
     if not isinstance(data, list):
-        return jsonify({'error': 'JSON payload must be a list of materials'}), 400
+        return jsonify({'message': 'Invalid data format. Expected a list of materials.'}), 400
 
-    new_materials = []
     for material_data in data:
-        new_material = Material(
-            name=material_data.get('name'),
-            safety_stock=material_data.get('safety_stock'),
-            lot_size=material_data.get('lot_size'),
-            stock_level=material_data.get('stock_level')
-        )
-        new_materials.append(new_material)
-        db.session.add(new_material)
+        # Prepare material data
+        material_data = {
+            "id": material_data.get('id'),
+            "name": material_data.get('name'),
+            "safety_stock": material_data.get('safety_stock'),
+            "lot_size": material_data.get('lot_size'),
+            "stock_level": material_data.get('stock_level')
+        }
+        
+        # Check if ID is provided
+        if 'id' in material_data:
+            material = Material.query.get(material_data['id'])
+            if not material:
+                return jsonify({'error': f'Material with id {material_data["id"]} not found'}), 404
+            # Update existing material
+            for key, value in material_data.items():
+                setattr(material, key, value)
+        else:
+            # Create new material
+            material = Material(**material_data)
+            db.session.add(material)
 
     db.session.commit()
 
-    serialized_materials = [material.serialize() for material in new_materials]
-    return jsonify(serialized_materials), 201
+    return jsonify({'message': 'Materials created/updated successfully'}), 200
 
 ###################################################
 # Delete a single Material

@@ -23,28 +23,40 @@ def get_material(material_id):
     if price:
         return jsonify(price.serialize())
     else:
-        return jsonify({'message': f'Price with id {material_id} not found'}), 404
+        return jsonify({'message': f'Price with material_id {material_id} and empty end_date not found'}), 404
 
 ###################################################
 # Post a single or multiple prices
 ###################################################
 @price_bp.route('/', methods=['POST'])
-def create_prices():
+def create_or_update_prices():
     data = request.json
     from app import db
     if not isinstance(data, list):
         return jsonify({'message': 'Invalid data format. Expected a list of prices.'}), 400
 
     for price_data in data:
-        price = Price(
-            material_id=price_data.get('material_id'),
-            supplier_id=price_data.get('supplier_id'),
-            cost=price_data.get('cost'),
-            unit=price_data.get('unit'),
-            start_date=datetime.strptime(price_data.get('start_date'), "%Y-%m-%d"),
-            end_date=datetime.strptime(price_data.get('end_date'), "%Y-%m-%d")
-        )
+        
+        price_data={
+            "material_id":price_data.get('material_id'),
+            "supplier_id":price_data.get('supplier_id'),
+            "cost":price_data.get('cost'),
+            "unit":price_data.get('unit'),
+            "start_date":datetime.strptime(price_data.get('start_date'), "%Y-%m-%d"),
+            "end_date":datetime.strptime(price_data.get('end_date'), "%Y-%m-%d")
+        }
+        
+        if 'id' in price_data:
+            product = Price.query.get(price_data['id'])
+            if not product:
+                return jsonify({'message': f'Price with id {price_data["id"]} not found'}), 404
+            for key, value in price_data.items():
+                setattr(product, key, value)
+        else:
+            price = Price(**price_data)
+
         db.session.add(price)
+        
 
     db.session.commit()
 
@@ -60,6 +72,6 @@ def delete_price(price_id):
     if price:
         db.session.delete(price)
         db.session.commit()
-        return jsonify({'message': 'Material and associated records deleted successfully'}), 200
+        return jsonify({'message': 'Price deleted successfully'}), 200
     else:
-        return jsonify({'error': 'Material not found'}), 404
+        return jsonify({'error': 'Price not found'}), 404
