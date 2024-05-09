@@ -22,9 +22,9 @@ The User endpoint provides functionality for managing user data within the Batte
 
 The Supplier endpoint enables the management of supplier information within the Battery API. Suppliers can be retrieved, created, and deleted using respective HTTP methods.
 
-* [Show Supplier](documentation/user/get.md) : `GET /api/supplier/`
-* [Create Supplier](documentation/user/post.md) : `POST /api/supplier/`
-* [Delete Supplier](documentation/user/delete.md) : `DELETE /api/supplier/`
+* [Show Supplier](documentation/supplier/get.md) : `GET /api/supplier/`
+* [Create Supplier](documentation/supplier/post.md) : `POST /api/supplier/`
+* [Delete Supplier](documentation/supplier/delete.md) : `DELETE /api/supplier/`
 
 ### Price related
 
