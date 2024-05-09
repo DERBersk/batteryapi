@@ -62,6 +62,7 @@ def get_supplier(supplier_id):
                 'sustainability_index':supplier.sustainability_index,
                 'quality':supplier.quality,
                 'reliability':supplier.reliability,
+                'availability':supplier.availability,
                 'materials': materials_list
         }
         return jsonify(supplier_data), 200
@@ -87,7 +88,8 @@ def create_or_update_suppliers():
             'risk_index': supplier_data.get('risk_index'),
             'sustainability_index': supplier_data.get('sustainability_index'),
             'quality': supplier_data.get('quality'),
-            'reliability': supplier_data.get('reliability')
+            'reliability': supplier_data.get('reliability'),
+            'availability': supplier_data.get('availability')
         }
 
         # Create or update supplier
