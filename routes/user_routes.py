@@ -31,17 +31,26 @@ def create_user():
     from app import db
     data = request.get_json()
 
-    new_user = User(
-        email=data.get('email'),
-        first_name=data.get('first_name'),
-        last_name=data.get('last_name'),
-        created_date= datetime.strptime(data.get('created_date'),'%m-%d-%y').date()
-    )
-    db.session.add(new_user)
+    if 'id' in data:
+        user = User.query.get(data['id'])
+        if not user:
+            return jsonify({'error': f'User with id {data["id"]} not found'}), 404
+        # Update existing user
+        for key, value in data.items():
+            setattr(user, key, value)
+    else:
+        # Create new user
+        new_user = User(
+            email=data.get('email'),
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            created_date= datetime.strptime(data.get('created_date'),'%m-%d-%y').date()
+        )
+        db.session.add(new_user)
 
     db.session.commit()
     
-    return jsonify(new_user.id), 201
+    return jsonify({'message': 'User created/updated successfully'}), 201
 
 ###################################################
 # Delete a single user
