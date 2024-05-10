@@ -26,7 +26,7 @@ def populate_suppliers(num_suppliers=5):
         availability = random.uniform(0,1)
         supplier = Supplier(name=name, lat=lat, long=long, risk_index=risk_index, sustainability_index=sustainability_index, quality=quality, reliability=reliability,availability=availability)
         db.session.add(supplier)
-    db.session.commit()
+        db.session.commit()
         
 def populate_materials(num_materials=5):
     fake = Faker()
@@ -37,7 +37,7 @@ def populate_materials(num_materials=5):
         stock_level = random.uniform(0, lot_size*10)
         material = Material(name=name, safety_stock=safety_stock, lot_size=lot_size, stock_level=stock_level)
         db.session.add(material)
-    db.session.commit()
+        db.session.commit()
         
 def populate_products(num_products=5):
     fake = Faker()
@@ -46,7 +46,7 @@ def populate_products(num_products=5):
         specification = fake.word()
         product = Product(description=description,specification=specification)
         db.session.add(product)
-    db.session.commit()
+        db.session.commit()
     
 def populate_projects(num_projects=5):
     fake = Faker()
@@ -58,7 +58,7 @@ def populate_projects(num_projects=5):
         machine_labor_availability = random.uniform(0,1)
         project = Project(partner=partner, start_date=start_date, end_date=end_date, production_schedule=production_schedule,machine_labor_availability=machine_labor_availability)
         db.session.add(project)
-    db.session.commit()
+        db.session.commit()
         
 def populate_demands(num_demands=20):
     # Assuming you have a Product and Time model defined
@@ -73,7 +73,7 @@ def populate_demands(num_demands=20):
         amount = random.randint(100, 1000)
         demand = Demand(product_id=product_id, time_slot=time_slot, order_count=order_count, amount=amount)
         db.session.add(demand)
-    db.session.commit()
+        db.session.commit()
     
 def populate_times(num_times=4):
     for _ in range(num_times):
@@ -82,7 +82,7 @@ def populate_times(num_times=4):
         end_date = start_date + timedelta(days=random.randint(1, 30))
         time = Time(name=name, start_date=start_date, end_date=end_date)
         db.session.add(time)
-    db.session.commit()
+        db.session.commit()
 
 def populate_prices(num_prices=20):
     material_ids = [1, 2, 3, 4, 5]  # Sample material IDs
@@ -98,7 +98,7 @@ def populate_prices(num_prices=20):
         end_date = start_date + timedelta(days=random.randint(1, 365))
         price = Price(material_id=material_id, supplier_id=supplier_id, cost=cost, unit=unit, start_date=start_date, end_date=end_date)
         db.session.add(price)
-    db.session.commit()
+        db.session.commit()
     
 def populate_materials_per_supplier(num_entries=20):
     material_ids = [1, 2, 3, 4, 5]  # Sample material IDs
@@ -114,7 +114,7 @@ def populate_materials_per_supplier(num_entries=20):
         volume_commitment = random.uniform(0,20)*100
         entry = MaterialsPerSupplier(material_id=material_id, supplier_id=supplier_id, min_amount=min_amount, lead_time=lead_time, availability=availability, volume_commitment=volume_commitment)
         db.session.add(entry)
-    db.session.commit()
+        db.session.commit()
 
 def populate_materials_per_product(num_entries=20):
     material_ids = [1, 2, 3, 4, 5]  # Sample material IDs
@@ -126,7 +126,7 @@ def populate_materials_per_product(num_entries=20):
         amount = random.randint(1, 100)
         entry = MaterialsPerProduct(material_id=material_id, product_id=product_id, amount=amount)
         db.session.add(entry)
-    db.session.commit()
+        db.session.commit()
 
 def populate_products_per_project(num_entries=20):
     product_ids = [1, 2, 3, 4, 5]  # Sample product IDs
@@ -138,4 +138,4 @@ def populate_products_per_project(num_entries=20):
         amount = random.randint(1, 100)
         entry = ProductsPerProject(product_id=product_id, project_id=project_id, amount=amount)
         db.session.add(entry)
-    db.session.commit()
+        db.session.commit()
