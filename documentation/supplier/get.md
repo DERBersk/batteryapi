@@ -31,7 +31,8 @@ Show data of a All Suppliers.
         "quality": 5.924827825576889,
         "reliability": 0.3174353388376102,
         "risk_index": 0.8108719323659386,
-        "sustainability_index": 8.28791629020131
+        "sustainability_index": 8.28791629020131,
+        "availability": "True"
     },
     {
         "availability": 0.9874379222633706,
@@ -42,7 +43,8 @@ Show data of a All Suppliers.
         "quality": 4.117976905451678,
         "reliability": 0.3862772420817989,
         "risk_index": 2.6539343594064366,
-        "sustainability_index": 6.025667519196149
+        "sustainability_index": 6.025667519196149,
+        "availability": "False"
     },
     ...
 ]

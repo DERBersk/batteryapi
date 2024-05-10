@@ -9,7 +9,7 @@ class Supplier(db.Model):
     sustainability_index = db.Column(db.Float, nullable=True)
     quality = db.Column(db.Float, nullable=True)
     reliability = db.Column(db.Float, nullable=True)
-    availability = db.Column(db.Float, nullable=True)
+    availability = db.Column(db.Boolean, nullable=True)
     
     def serialize(self):
         return {
