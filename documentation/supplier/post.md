@@ -20,7 +20,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "sustainability_index": 7,
         "quality": 8,
         "reliability": 9,
-        "availability": 10,
+        "availability": "True",
         "materials": [
         {
             "id": 2,
@@ -56,7 +56,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "sustainability_index": 6,
         "quality": 7,
         "reliability": 8,
-        "availability": 9,
+        "availability": "False",
         "materials": [
         {
             "id": 1,

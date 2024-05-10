@@ -1,0 +1,8 @@
+Steps
+
+1: Model File (Model itself & serialize)
+2: Route File for direct and indirect calls (Materials, MaterialsPerSupplier Call in Supplier), post and get
+3: Documentation Files
+4: Push and Pull Request
+5: Delete File in supabase
+6: Call a valid api call
