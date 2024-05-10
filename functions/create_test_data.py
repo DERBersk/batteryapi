@@ -23,7 +23,7 @@ def populate_suppliers(num_suppliers=5):
         sustainability_index = random.uniform(0, 10)
         quality = random.uniform(0, 10)
         reliability = random.uniform(0,1)
-        availability = random.uniform(0,1)
+        availability = random.uniform(0,1)>0.5
         supplier = Supplier(name=name, lat=lat, long=long, risk_index=risk_index, sustainability_index=sustainability_index, quality=quality, reliability=reliability,availability=availability)
         db.session.add(supplier)
         db.session.commit()
