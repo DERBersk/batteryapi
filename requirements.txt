@@ -5,3 +5,4 @@ datetime
 faker
 Werkzeug==2.2.2
 psycopg2-binary
+apscheduler
