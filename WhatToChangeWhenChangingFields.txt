@@ -4,6 +4,7 @@ Steps
 2: Route File for direct and indirect calls (Materials, MaterialsPerSupplier Call in Supplier), post and get
 3: Create Data function
 4: Documentation Files
-5: Push and Pull Request
-6: Delete File in supabase
-7: Call a valid api call
+5: UML Model
+6: Push and Pull Request
+7: Fit in supabase
+8: Call a valid api call

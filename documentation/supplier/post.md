@@ -21,6 +21,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "quality": 8,
         "reliability": 9,
         "availability": "True",
+        "country": "Germany",
         "materials": [
         {
             "id": 2,
@@ -57,6 +58,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "quality": 7,
         "reliability": 8,
         "availability": "False",
+        "country": "USA",
         "materials": [
         {
             "id": 1,

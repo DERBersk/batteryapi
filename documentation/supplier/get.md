@@ -32,7 +32,8 @@ Show data of a All Suppliers.
         "reliability": 0.3174353388376102,
         "risk_index": 0.8108719323659386,
         "sustainability_index": 8.28791629020131,
-        "availability": "True"
+        "availability": "True",
+        "country": "France"
     },
     {
         "availability": 0.9874379222633706,
@@ -44,7 +45,8 @@ Show data of a All Suppliers.
         "reliability": 0.3862772420817989,
         "risk_index": 2.6539343594064366,
         "sustainability_index": 6.025667519196149,
-        "availability": "False"
+        "availability": "False",
+        "country": "China"
     },
     ...
 ]
@@ -82,6 +84,7 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
     "availability": 0.45,
     "lat": -68.37832013303877,
     "long": -72.47398735322135,
+    "country": "Chile",
     "materials": [
         {
             "availability": 0.07,
