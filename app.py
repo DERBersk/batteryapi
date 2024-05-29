@@ -1,5 +1,6 @@
 from flask import Flask
-from extensions import db
+from extensions import db, scheduler
+from functions.schedule_tasks import Run
 
 #TODO: Historical Demand Routes
 #TODO: Analytics Routes - First Mock then create
@@ -29,6 +30,7 @@ def create_app():
 
 app = create_app()
 db.init_app(app)
+scheduler.add_job(func=Run, trigger='cron', hour=23, minute=0)
 with app.app_context():
     db.create_all()
 # app.run(debug=True, host='0.0.0.0')
