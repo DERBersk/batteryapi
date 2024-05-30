@@ -18,6 +18,7 @@ def create_app():
     from routes.create_test_data_routes import test_data_bp
     from routes.price_routes import price_bp
     from routes.user_routes import user_bp
+    from routes.kpi_routes import kpi_bp
 
     # Register blueprints
     app.register_blueprint(supplier_bp)
@@ -27,6 +28,7 @@ def create_app():
     app.register_blueprint(test_data_bp)
     app.register_blueprint(price_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(kpi_bp)
     
     return app
 
