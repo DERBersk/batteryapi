@@ -1,12 +1,14 @@
 from flask import Flask
 from extensions import db, scheduler
 from functions.schedule_tasks import Run
+from flask_cors import CORS
 
 #TODO: Historical Demand Routes
 #TODO: Analytics Routes - First Mock then create
 
 def create_app():
     app = Flask(__name__.split(".")[0])
+    CORS(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.xheevcowfsiqoblrojtv:TGEBzsP7RGjpVM5E@aws-0-eu-west-2.pooler.supabase.com:5432/postgres'
     # Import routes
     from routes.supplier_routes import supplier_bp
