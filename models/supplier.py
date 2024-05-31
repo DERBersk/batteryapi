@@ -21,7 +21,7 @@ class Supplier(db.Model):
             'risk_index': self.risk_index,
             'sustainability_index':self.sustainability_index,
             'quality':self.quality,
-            'reliability':self.reliability,
+            'reliability':self.reliability, # Reliability = Compliance
             'availability':self.availability,
             'country':self.country
         }
