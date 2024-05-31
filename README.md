@@ -4,11 +4,26 @@ Currently launched on the vercel environment under the following link: https://b
 
 ## Data Structure
 
-![Data Structure Image](documentation/UML.drawio.png)
+![Data Structure Image](lib/png/UML.drawio.png)
 
 ## Endpoints
 
 The Battery API offers a range of endpoints to facilitate interactions with user data, supplier information, pricing details, product management, project tracking, and test data generation. Each endpoint serves a specific purpose within the system, allowing integration and manipulation of data to meet diverse requirements. Below is a comprehensive list of endpoints categorized based on their respective functionalities. 
+
+### KPI related
+
+Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are Country-Risk, ... 
+
+* [Show Country-Risk](documentation/kpi/countryrisk.md) `GET /api/kpi/countryrisk`
+
+### Material related
+
+The Material endpoint provides functionality for managing material data within the Battery API. Materials can be retrieved, created, and deleted using respective HTTP methods.
+
+* [Show Material](documentation/material/get.md) : `GET /api/materials/`
+* [Create Material](documentation/material/post.md) : `POST /api/materials/`
+* [Delete Material](documentation/material/delete.md) : `DELETE /api/materials/`
+
 
 ### User related
 
