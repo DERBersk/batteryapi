@@ -4,7 +4,6 @@ from functions.schedule_tasks import Run
 from flask_cors import CORS
 
 #TODO: Historical Demand Routes
-#TODO: Analytics Routes - First Mock then create
 
 def create_app():
     app = Flask(__name__.split(".")[0])
@@ -19,6 +18,7 @@ def create_app():
     from routes.price_routes import price_bp
     from routes.user_routes import user_bp
     from routes.kpi_routes import kpi_bp
+    from routes.base_production_routes import base_productionbp
 
     # Register blueprints
     app.register_blueprint(supplier_bp)
@@ -29,6 +29,7 @@ def create_app():
     app.register_blueprint(price_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(kpi_bp)
+    app.register_blueprint(base_productionbp)
     
     return app
 

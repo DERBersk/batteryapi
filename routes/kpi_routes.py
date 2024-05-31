@@ -4,8 +4,6 @@ from functions.risk_calculation import load_country_data,transform_country_data
 
 kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 
-### TODO: Documentation
-
 ###################################################
 # Get for Sustainability Index
 ###################################################
