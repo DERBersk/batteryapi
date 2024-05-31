@@ -2,7 +2,7 @@ import random
 import json
 
 # Function to generate a random number between 0 and 1
-def calculate_risk_index():
+def calculate_country_risk_index():
     return round(random.uniform(0, 1), 3)
 
 # Function to transform the JSON data
@@ -12,7 +12,7 @@ def transform_country_data(country_data):
         transformed_entry = {
             "countrycode": country_code,
             "description": description,
-            "no.": calculate_risk_index()
+            "no.": calculate_country_risk_index()
         }
         transformed_data.append(transformed_entry)
     return transformed_data
