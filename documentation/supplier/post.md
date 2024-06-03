@@ -23,29 +23,21 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "availability": "True",
         "country": "Germany",
         "materials": [
-        {
-            "id": 2,
-            "name": "Changed Copper",
-            "safety_stock": 100,
-            "lot_size": 50,
-            "stock_level": 200,
-            "min_amount": 20,
-            "max_amount": 100,
-            "lead_time": "05:00:00",
-            "availability": 95,
-            "volume_commitment": 200
-        },
-        {
-            "name": "New Zinc",
-            "safety_stock": 150,
-            "lot_size": 75,
-            "stock_level": 300,
-            "min_amount": 30,
-            "max_amount": 150,
-            "lead_time": "07:00:00",
-            "availability": 90,
-            "volume_commitment": 300
-        }
+            {
+                "id": 2,
+                "name": "Changed Copper",
+                "safety_stock": 100,
+                "lot_size": 50,
+                "stock_level": 200,
+                "lead_time": 3
+            },
+            {
+                "name": "New Zinc",
+                "safety_stock": 150,
+                "lot_size": 75,
+                "stock_level": 300,
+                "lead_time": 7
+            }
         ]
     },
     {
@@ -60,18 +52,14 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "availability": "False",
         "country": "USA",
         "materials": [
-        {
-            "id": 1,
-            "name": "Changed Lithium-Ion",
-            "safety_stock": 120,
-            "lot_size": 60,
-            "stock_level": 250,
-            "min_amount": 25,
-            "max_amount": 120,
-            "lead_time": "06:00:00",
-            "availability": 85,
-            "volume_commitment": 250
-        }
+            {
+                "id": 1,
+                "name": "Changed Lithium-Ion",
+                "safety_stock": 120,
+                "lot_size": 60,
+                "stock_level": 250,
+                "lead_time": 4
+            }
         ]
     }
 ]

@@ -22,7 +22,7 @@ Create or modify one or many Products and each respective fitted table (Material
             "safety_stock": 100,
             "lot_size": 50,
             "stock_level": 200,
-            "amount": 50
+            "amount": 50.0
         },
         {
             "id": 1,
@@ -30,7 +30,7 @@ Create or modify one or many Products and each respective fitted table (Material
             "safety_stock": 150,
             "lot_size": 75,
             "stock_level": 300,
-            "amount": 100
+            "amount": 100.13
         }
         ]
     },
@@ -43,7 +43,7 @@ Create or modify one or many Products and each respective fitted table (Material
             "safety_stock": 120,
             "lot_size": 60,
             "stock_level": 250,
-            "amount": 75
+            "amount": 75.345
         }
         ]
     }

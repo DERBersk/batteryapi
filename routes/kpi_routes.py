@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime
 from functions.risk_calculation import load_country_data,transform_country_data
+from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation
 
 kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 
@@ -17,3 +18,8 @@ def get_transformed_countries():
     country_data = load_country_data()
     transformed_data = transform_country_data(country_data)
     return jsonify(transformed_data)
+
+@kpi_bp.route('/calculateWeeklyDemand', methods=['GET'])
+def calculateWeeklyDemand():
+    MaterialDemandCalculation()
+    return jsonify('Calculation finished!')

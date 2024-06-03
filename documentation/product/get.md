@@ -68,7 +68,7 @@ Show data of a single Product and its associated Product
     "description": "Lithium-Ion Battery Pouch v3",
     "materials": [
         {
-            "amount": 28,
+            "amount": 28.0,
             "id": 4,
             "lot_size": 8,
             "name": "Lithium-Ion",
@@ -76,7 +76,7 @@ Show data of a single Product and its associated Product
             "stock_level": 59.8
         },
         {
-            "amount": 24,
+            "amount": 24.24,
             "id": 2,
             "lot_size": 5,
             "name": "Copper",

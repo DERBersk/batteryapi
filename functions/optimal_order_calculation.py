@@ -11,16 +11,20 @@ from models.weekly_material_demand import WeeklyMaterialDemand
 # File for Order Calculation Function
 def MaterialDemandCalculation():
     # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
-    base_volume_weekly = BaseProductionVolume.query.filter(is_later_or_equal((BaseProductionVolume.week,BaseProductionVolume.year))).all()
+    base_volume_weekly_all = BaseProductionVolume.query.all()
+    
+    filtered_base_volume = [record for record in base_volume_weekly_all if record.is_later_or_equal]
     
     # Fetch the Project Data, weekly basis (next month)
-    product_per_projects = Project.query.filter(check_project_date(Project.start_date,Project.end_date)).join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_date,Project.end_date,ProductsPerProject.amount, ProductsPerProject.product_id).all()
+    product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_date,Project.end_date,ProductsPerProject.amount, ProductsPerProject.product_id).all()
+    
+    filtered_product_per_projects = [project for project in product_per_projects_all if project.check_project_date()]
     
     # Fetch Data for Product composition
     materials_per_products = MaterialsPerProduct.query.all()
     
     # Calculate weekly total Product demand (Sum of Demands)
-    weekly_total = get_weekly_totals(base_volume_weekly, product_per_projects)
+    weekly_total = get_weekly_totals(filtered_base_volume, filtered_product_per_projects)
     
     # Calculate weekly total Material demand (Demand and Composition fit)
     material_demand_dict = calculate_material_demand(weekly_total,materials_per_products)
@@ -56,63 +60,25 @@ def OptimalOrderCalculation():
     # Return List of recommended orders
     
     return ""
-
-def is_later_or_equal(week_year_tuple):
-    """
-    Compares a tuple (week, year) to the current week and year.
-    
-    Parameters:
-    week_year_tuple (tuple): The tuple (week, year) to compare.
-    
-    Returns:
-    bool: True if the input tuple is later than or equal to the current week and year, False otherwise.
-    """
-    current_year, current_week = datetime.now().isocalendar()[:2]
-    
-    input_week, input_year = week_year_tuple
-    
-    if input_year > current_year:
-        return True
-    elif input_year == current_year:
-        return input_week >= current_week
-    else:
-        return False
-    
-def check_project_date(start_date, end_date, check_date=None):
-    """
-    Checks if a given date is within the start and end date range or if the project is incoming.
-    
-    Parameters:
-    start_date (datetime): The start date of the project.
-    end_date (datetime): The end date of the project.
-    check_date (datetime, optional): The date to check. Defaults to the current date.
-    
-    Returns:
-    Boolean: True if the project is incoming or current, false if it is past
-    """
-    if check_date is None:
-        check_date = datetime.now()
-    
-    if check_date < start_date:
-        return True
-    elif start_date <= check_date <= end_date:
-        return True
-    else:
-        return False
     
 def get_weekly_totals(base_volume_weekly, product_per_projects):
     # Step 1: Aggregate base volumes by (product_id, year, week)
     base_volume_dict = defaultdict(float)
     for entry in base_volume_weekly:
-        _, product_id, year, week, amount = entry
+        product_id = entry.product_id
+        year = entry.year
+        week = entry.week
+        amount = entry.amount
         base_volume_dict[(product_id, year, week)] += amount
     
     # Step 2: Distribute project amounts across weeks
     project_volume_dict = defaultdict(float)
     for entry in product_per_projects:
-        _, product_id, start_date_str, end_date_str, amount = entry
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-        end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+        project = entry.Project
+        product_id = entry.product_id
+        start_date = project.start_date
+        end_date = project.end_date
+        amount = entry.amount
         
         days_in_project = (end_date - start_date).days + 1
         daily_amount = amount / days_in_project
@@ -135,6 +101,7 @@ def get_weekly_totals(base_volume_weekly, product_per_projects):
     total_volume_dict = dict(total_volume_dict)
     
     return total_volume_dict
+
 
 def calculate_material_demand(weekly_product_totals, materials_per_product):
     material_demand_dict = defaultdict(float)

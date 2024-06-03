@@ -1,4 +1,6 @@
 from extensions import db
+import datetime
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class BaseProductionVolume(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,3 +17,11 @@ class BaseProductionVolume(db.Model):
             'week': self.week,
             'amount': self.amount
         }
+        
+    def is_later_or_equal(self):
+        current_year, current_week = datetime.datetime.now().isocalendar()[:2]
+        if self.year > current_year:
+            return True
+        elif self.year == current_year:
+            return self.week >= current_week
+        return False

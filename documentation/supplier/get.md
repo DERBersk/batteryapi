@@ -87,17 +87,13 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
     "country": "Chile",
     "materials": [
         {
-            "availability": 0.07,
             "id": 1,
             "lead_time": "14:00:00",
             "lot_size": 9,
-            "max_amount": null,
-            "min_amount": 98,
             "name": "Cobalt",
             "price": 10.95,
             "safety_stock": 7,
             "stock_level": 86,
-            "volume_commitment": 1400
         }
     ],
     "name": "Fisher-Diaz",
