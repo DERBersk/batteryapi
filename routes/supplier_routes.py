@@ -26,12 +26,12 @@ def get_supplier(supplier_id):
                                   .join(Supplier)\
                                   .filter(MaterialsPerSupplier.supplier_id==supplier_id)\
                                   .filter(Material.id==MaterialsPerSupplier.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.min_amount,MaterialsPerSupplier.max_amount,MaterialsPerSupplier.lead_time,MaterialsPerSupplier.availability,MaterialsPerSupplier.volume_commitment)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time)\
                                   .all()
         materials_list = []
         for material in materials:
             price = Price.query.filter(Price.supplier_id == supplier_id)\
-                           .filter(Price.end_date == "")\
+                           .filter(Price.end_date == datetime.strptime("01.01.1975","%d.%m.%Y"))\
                            .filter(Price.material_id == material.id)\
                            .order_by(Price.cost).first()
             price_val = 0
@@ -45,11 +45,7 @@ def get_supplier(supplier_id):
                     'safety_stock': material.safety_stock,
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
-                    'min_amount': material.min_amount,
-                    'max_amount': material.max_amount,
-                    'lead_time': material.lead_time.strftime("%H:%M:%S"),
-                    'availability': material.availability,
-                    'volume_commitment': material.volume_commitment,
+                    'lead_time': material.lead_time,
                     'price': price_val
                 }
             )
@@ -125,20 +121,12 @@ def create_or_update_suppliers():
             material.stock_level = material_data.get('stock_level')
 
             # Add or update MaterialsPerSupplier
-            min_amount = material_data.get('min_amount')
-            max_amount = material_data.get('max_amount')
-            lead_time = datetime.strptime(material_data.get('lead_time'), "%H:%M:%S").time()
-            availability = material_data.get('availability')
-            volume_commitment = material_data.get('volume_commitment')
+            lead_time = material_data.get('lead_time')
 
             materials_per_supplier = MaterialsPerSupplier(
                 supplier_id=supplier.id,
                 material_id=material.id,
-                min_amount=min_amount,
-                max_amount=max_amount,
-                lead_time=lead_time,
-                availability=availability,
-                volume_commitment=volume_commitment
+                lead_time=lead_time
             )
             db.session.add(material)
             db.session.add(materials_per_supplier)
