@@ -87,3 +87,13 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
 
 `{'message': 'Supplier with id {supplier_id} not found'}`
 
+### 400 Bad Request
+
+**Condition** : If the format is not given as a List
+
+**Code** : `400 Bad request`
+
+**Content** : 
+
+`{'message': 'Invalid data format. Expected a list of Suppliers.'}`
+

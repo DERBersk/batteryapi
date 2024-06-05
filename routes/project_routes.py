@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from models.project import Project
 from models.product import Product
+from models.week import Week
 from models.products_per_project import ProductsPerProject
 
 project_bp = Blueprint('project', __name__, url_prefix='/api/projects')
@@ -39,11 +40,15 @@ def get_project(project_id):
                     'component_parts_type': product.component_parts_type
                 }
             )
+        st_wk = Week.query.filter(Week.id == project.start_week).first()
+        en_wk = Week.query.filter(Week.id == project.end_week).first()
         project_data = {
                 'id': project.id,
                 'partner': project.partner,
-                'start_date': project.start_date,
-                'end_date': project.end_date,
+                'start_week': st_wk.week,
+                'start_year': st_wk.year,
+                'end_week': en_wk.week,
+                'end_year': en_wk.year,
                 'production_schedule': project.production_schedule,
                 'machine_labor_availability': project.machine_labor_availability,
                 'materials': products_list
@@ -65,10 +70,12 @@ def create_or_update_project():
 
     for project_data in data:
         # Extract project data
+        start_week = Week.query.filter(Week.year == project_data.get['start_year']).filter(Week.week == project_data.get['start_week'])
+        end_week = Week.query.filter(Week.year == project_data.get['end_year']).filter(Week.week == project_data.get['end_week'])
         project_data = {
             'partner': project_data.get('partner'),
-            'start_date': project_data.get('start_date'),
-            'end_date': project_data.get('end_date'),
+            'start_week': start_week.id,
+            'end_week': end_week.id,
             'production_schedule': project_data.get('production_schedule'),
             'machine_labor_availability': project_data.get('machine_labor_availability')
         }

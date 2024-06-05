@@ -4,8 +4,6 @@ from models.base_production_volume import BaseProductionVolume
 
 base_productionbp = Blueprint('baseproduction', __name__, url_prefix='/api/baseproduction')
 
-# TODO: Documentation
-
 ###################################################
 # Get for multiple base production volumes
 ###################################################
@@ -20,28 +18,29 @@ def get_base_production_volumes():
 @base_productionbp.route('/', methods=['POST'])
 def post_base_production_volume():
     data = request.get_json()
-    
-    # Check if we have an id in the data to edit an existing record
-    if 'id' in data:
-        base_production_volume = BaseProductionVolume.query.get(data['id'])
-        if not base_production_volume:
-            return jsonify({'message': 'BaseProductionVolume not found'}), 404
 
-        base_production_volume.product_id = data.get('product_id', base_production_volume.product_id)
-        base_production_volume.year = data.get('year', base_production_volume.year)
-        base_production_volume.week = data.get('week', base_production_volume.week)
-        base_production_volume.amount = data.get('amount', base_production_volume.amount)
-    else:
-        base_production_volume = BaseProductionVolume(
-            product_id=data['product_id'],
-            year=data['year'],
-            week=data['week'],
-            amount=data['amount']
-        )
-        db.session.add(base_production_volume)
+    if not isinstance(data, list):
+        return jsonify({'message': 'Data should be a list of base production volumes'}), 400
+
+    for entry in data:
+        if 'id' in entry:
+            base_production_volume = BaseProductionVolume.query.get(entry['id'])
+            if not base_production_volume:
+                return jsonify({'message': f'BaseProductionVolume with id {entry["id"]} not found'}), 404
+
+            base_production_volume.product_id = entry.get('product_id', base_production_volume.product_id)
+            base_production_volume.week_id = entry.get('week_id', base_production_volume.week_id)
+            base_production_volume.amount = entry.get('amount', base_production_volume.amount)
+        else:
+            base_production_volume = BaseProductionVolume(
+                product_id=entry['product_id'],
+                week_id=entry['week_id'],
+                amount=entry['amount']
+            )
+            db.session.add(base_production_volume)
     
     db.session.commit()
-    return jsonify(base_production_volume.serialize()), 201
+    return jsonify({'message': 'Base production volumes added/updated successfully'}), 201
 
 ###################################################
 # Delete for single base production volume

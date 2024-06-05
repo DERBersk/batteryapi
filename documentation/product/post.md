@@ -80,4 +80,4 @@ Create or modify one or many Products and each respective fitted table (Material
 
 **Content** : 
 
-`{'message': 'Invalid data format. Expected a list of prices.'}`
+`{'message': 'Invalid data format. Expected a list of Products.'}`

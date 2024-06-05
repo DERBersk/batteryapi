@@ -23,20 +23,24 @@ Show data of a All Projects.
 ```json
 [
     {
-        "end_date": "Mon, 13 Jan 2025 00:00:00 GMT",
+        "end_week": 5,
+        "end_year": 2025,
         "id": 1,
         "machine_labor_availability": 0.38051291175043056,
         "partner": "Greene PLC",
         "production_schedule": "static",
-        "start_date": "Mon, 27 May 2024 00:00:00 GMT"
+        "start_week": 1,
+        "start_year": 2025 
     },
     {
-        "end_date": "Wed, 27 Nov 2024 00:00:00 GMT",
+        "end_week": 50,
+        "end_year": 2024,
         "id": 2,
         "machine_labor_availability": 0.9875034373413405,
         "partner": "Allen-Gonzales",
         "production_schedule": "static",
-        "start_date": "Mon, 13 May 2024 00:00:00 GMT"
+        "start_week": 48,
+        "start_year": 2024 
     },
     ...
 ]
@@ -71,7 +75,8 @@ Show data of a single Project and its associated tables: Products and ProductsPe
 ```json
 {
     "id": 1,
-    "end_date": "Mon, 13 Jan 2025 00:00:00 GMT",
+    "end_week": 20,
+    "end_year": 2024,
     "machine_labor_availability": 0.38,
     "materials": [
         {
@@ -93,7 +98,8 @@ Show data of a single Project and its associated tables: Products and ProductsPe
     ],
     "partner": "Greene PLC",
     "production_schedule": "static",
-    "start_date": "Mon, 27 May 2024 00:00:00 GMT"
+    "start_week": 14,
+    "start_year": 2024 
 }
 ```
 

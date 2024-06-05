@@ -14,8 +14,10 @@ Create or modify one or many Projects and each respective fitted table (Products
 [
     {
         "partner": "New Projectpartner",
-        "start_date": "2024-05-10",
-        "end_date": "2024-06-10",
+        "start_week": 10,
+        "start_year": 2025,
+        "end_week": 14,
+        "end_year": 2025,
         "production_schedule": "Two shifts per day",
         "machine_labor_availability": "High",
         "products": [
@@ -70,5 +72,5 @@ Create or modify one or many Projects and each respective fitted table (Products
 
 **Content** : 
 
-`{'message': 'Invalid data format. Expected a list of prices.'}`
+`{'message': 'Invalid data format. Expected a list of Projects.'}`
 

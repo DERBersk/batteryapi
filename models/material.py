@@ -3,8 +3,8 @@ from extensions import db
 class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    safety_stock = db.Column(db.Integer)
-    lot_size = db.Column(db.Integer)
+    safety_stock = db.Column(db.Float)
+    lot_size = db.Column(db.Float)
     stock_level = db.Column(db.Float)
         
     def serialize(self):

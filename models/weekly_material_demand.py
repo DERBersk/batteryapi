@@ -1,17 +1,19 @@
 from extensions import db
+from models.week import Week
 
 class WeeklyMaterialDemand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
-    year = db.Column(db.Integer, nullable=False)
-    week = db.Column(db.Integer, nullable=False)
+    week_id = db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     
     def serialize(self):
+        week = Week.query.filter(Week.id == self.week_id).first()
+        
         return {
             'id': self.id,
             'material_id': self.material_id,
-            'year': self.year,
-            'week': self.week,
+            'week': week.week,
+            'year': week.year,
             'amount': self.amount
         }

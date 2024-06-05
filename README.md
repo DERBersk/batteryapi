@@ -65,12 +65,10 @@ The Project endpoint facilitates the management of project information within th
 * [Create Project](documentation/project/post.md) : `POST /api/project/`
 * [Delete Project](documentation/project/delete.md) : `DELETE /api/project/`
 
-### Test Data related
+### Base Production related
 
-The Create Test Data endpoint generates random entries for test data within the Battery API. This endpoint aids in populating the system with simulated data, allowing for testing and development processes.
+The Base Production endpoint allows for management of additional production plans to the projects. Base Production Data can be retrieved, created and deleted using respective HTTP methods.
 
-* [Create Test Data](documentation/createdata/get.md) : `GET /api/createdata/`
-
-
-
-
+* [Show Base Production](documentation/base_production/get.md) : `GET /api/baseproduction/`
+* [Create Base Production](documentation/base_production/post.md) : `POST /api/baseproduction/`
+* [Delete Base Production](documentation/base_production/delete.md) : `DELETE /api/baseproduction/`
