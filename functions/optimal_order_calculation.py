@@ -1,8 +1,8 @@
-import datetime
 from collections import defaultdict
 from models.base_production_volume import BaseProductionVolume
 from models.project import Project
 from models.material import Material
+from models.week import Week
 from models.products_per_project import ProductsPerProject
 from models.materials_per_product import MaterialsPerProduct
 from models.materials_per_supplier import MaterialsPerSupplier
@@ -16,7 +16,7 @@ def MaterialDemandCalculation():
     filtered_base_volume = [record for record in base_volume_weekly_all if record.is_later_or_equal]
     
     # Fetch the Project Data, weekly basis (next month)
-    product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_date,Project.end_date,ProductsPerProject.amount, ProductsPerProject.product_id).all()
+    product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
     
     filtered_product_per_projects = [project for project in product_per_projects_all if project.check_project_date()]
     
@@ -35,6 +35,7 @@ def MaterialDemandCalculation():
     return ""
 
 def OptimalOrderCalculation():
+    # TODO: Calculation
     # Fetch weekly Material Demand Data
     weekly_material_demand = WeeklyMaterialDemand.query.all()
     
@@ -42,8 +43,10 @@ def OptimalOrderCalculation():
     # TODO: Strategy involvement
     lead_times = MaterialsPerSupplier.query.filter(MaterialsPerSupplier.availability == True).add_columns(MaterialsPerSupplier.material_id,MaterialsPerSupplier.supplier_id,MaterialsPerSupplier.lead_time)
     
-    # Fetch Safety Stock
+    # Fetch Safety Stock and current Inventory
     safety_stock = Material.query.add_columns(Material.id, Material.safety_stock).all()
+    stock_level =  Material.query.add_columns(Material.id, Material.stock_level).all()
+    
     
     # If Inventory smaller than Safety Stock: Order needed anyway
     
@@ -62,32 +65,45 @@ def OptimalOrderCalculation():
     return ""
     
 def get_weekly_totals(base_volume_weekly, product_per_projects):
+    weeks = Week.query.all()
+    week_mapping = {week.id: (int(week.year), int(week.week)) for week in weeks}
     # Step 1: Aggregate base volumes by (product_id, year, week)
     base_volume_dict = defaultdict(float)
     for entry in base_volume_weekly:
         product_id = entry.product_id
-        year = entry.year
-        week = entry.week
+        year, week = week_mapping[entry.week_id]
         amount = entry.amount
         base_volume_dict[(product_id, year, week)] += amount
     
+
     # Step 2: Distribute project amounts across weeks
     project_volume_dict = defaultdict(float)
-    for entry in product_per_projects:
-        project = entry.Project
-        product_id = entry.product_id
-        start_date = project.start_date
-        end_date = project.end_date
-        amount = entry.amount
-        
-        days_in_project = (end_date - start_date).days + 1
-        daily_amount = amount / days_in_project
-        
-        current_date = start_date
-        while current_date <= end_date:
-            year, week, _ = current_date.isocalendar()
-            project_volume_dict[(product_id, year, week)] += daily_amount
-            current_date += datetime.timedelta(days=1)
+    # Iteriere durch alle Projekte
+    for project in product_per_projects:
+        start_week_id = project.start_week
+        end_week_id = project.end_week
+        product_id = project.product_id
+        total_amount = project.amount
+
+        # Hole die (year, week) Werte für Start- und Endwochen
+        start_year, start_week = week_mapping[start_week_id]
+        end_year, end_week = week_mapping[end_week_id]
+
+        # Berechne die Anzahl der Wochen im Bereich von start_week bis end_week
+        num_weeks = weeks_between(start_year, start_week, end_year, end_week)
+        weekly_amount = total_amount / num_weeks
+
+        # Iteriere durch alle Wochen im Bereich von start_week bis end_week und teile den Betrag auf
+        current_year, current_week = start_year, start_week
+        while (current_year < end_year) or (current_year == end_year and current_week <= end_week):
+            project_volume_dict[(product_id, current_year, current_week)] = weekly_amount
+
+            # Nächste Woche
+            current_week += 1
+            if current_week > 52:  # Annahme: 52 Wochen pro Jahr
+                current_week = 1
+                current_year += 1
+
     
     # Step 3: Combine base volumes and project volumes
     total_volume_dict = defaultdict(float)
@@ -123,12 +139,24 @@ def save_weekly_material_demand(material_demand_dict):
 
     # Add new data
     for (material_id, year, week), amount in material_demand_dict.items():
+        wk = Week.query.filter(Week.year == year).filter(Week.week == week).first()
         weekly_demand = WeeklyMaterialDemand(
             material_id=material_id,
-            year=year,
-            week=week,
+            week_id=wk.id,
             amount=amount
         )
         db.session.add(weekly_demand)
     
     db.session.commit()
+    
+# Hilfsfunktion zur Berechnung der Anzahl der Wochen zwischen zwei Wochen
+def weeks_between(start_year, start_week, end_year, end_week):
+    total_weeks = 0
+    current_year, current_week = start_year, start_week
+    while (current_year < end_year) or (current_year == end_year and current_week <= end_week):
+        total_weeks += 1
+        current_week += 1
+        if current_week > 52:  # Annahme: 52 Wochen pro Jahr
+            current_week = 1
+            current_year += 1
+    return total_weeks

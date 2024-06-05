@@ -54,5 +54,5 @@ Create or modify one or many Materials.
 
 **Content** : 
 
-`{'message': 'Invalid data format. Expected a list of prices.'}`
+`{'message': 'Invalid data format. Expected a list of Materials.'}`
 

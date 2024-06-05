@@ -1,31 +1,36 @@
 from extensions import db
 import datetime 
+from models.week import Week
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     partner = db.Column(db.String(100), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    start_week = db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
+    end_week =  db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     production_schedule = db.Column(db.String(10))
     machine_labor_availability = db.Column(db.Float)
     
     def serialize(self):
+        startweek = Week.query.filter(Week.id == self.start_week).first()
+        endweek = Week.query.filter(Week.id == self.end_week).first()
         return {
             'id': self.id,
             'partner': self.partner,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
+            'start_week': startweek.week,
+            'start_year': startweek.year,
+            'end_week': endweek.week,
+            'end_year': endweek.year,
             'production_schedule': self.production_schedule,
             'machine_labor_availability': self.machine_labor_availability
         }
         
-    def check_project_date(self, check_date=None):
-        if check_date is None:
-            check_date = datetime.datetime.now()
-        
-        if check_date < self.start_date:
+    def check_project_week(self):
+        start_week = Week.query.filter(Week.id == self.start_week).first()
+        end_week = Week.query.filter(Week.id == self.end_week).first()
+        check_year, check_week = datetime.datetime.now().isocalendar()[:2]
+        if check_year < start_week.year or (check_year == start_week.year and check_week < start_week.week):
             return True
-        elif self.start_date <= check_date <= self.end_date:
-            return True
-        else:
+        elif check_year > end_week.year or (check_year == end_week.year and check_week > end_week.week):
             return False
+        else:
+            return True

@@ -3,8 +3,6 @@ from extensions import db, scheduler
 from functions.schedule_tasks import Run
 from flask_cors import CORS
 
-#TODO: Historical Demand Routes
-
 def create_app():
     app = Flask(__name__.split(".")[0])
     CORS(app)
@@ -14,7 +12,6 @@ def create_app():
     from routes.product_routes import product_bp
     from routes.project_routes import project_bp
     from routes.materials_routes import material_bp
-    from routes.create_test_data_routes import test_data_bp
     from routes.price_routes import price_bp
     from routes.user_routes import user_bp
     from routes.kpi_routes import kpi_bp
@@ -25,7 +22,6 @@ def create_app():
     app.register_blueprint(product_bp)
     app.register_blueprint(project_bp)
     app.register_blueprint(material_bp)
-    app.register_blueprint(test_data_bp)
     app.register_blueprint(price_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(kpi_bp)

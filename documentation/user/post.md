@@ -49,4 +49,4 @@ Create or modify one or many Users.
 
 **Content** : 
 
-`{'message': 'Invalid data format. Expected a list of prices.'}`
+`{'message': 'Invalid data format. Expected a list of Users.'}`
