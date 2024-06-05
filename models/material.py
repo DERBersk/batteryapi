@@ -1,4 +1,5 @@
 from extensions import db
+from models.options import StrategyEnum
 
 class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,6 +7,7 @@ class Material(db.Model):
     safety_stock = db.Column(db.Float)
     lot_size = db.Column(db.Float)
     stock_level = db.Column(db.Float)
+    strategy = db.Column(db.Enum(StrategyEnum), nullable=False, default=StrategyEnum.NONE)
         
     def serialize(self):
         return {
@@ -13,5 +15,6 @@ class Material(db.Model):
             'name': self.name,
             'safety_stock': self.safety_stock,
             'lot_size': self.lot_size,
-            'stock_level': self.stock_level
+            'stock_level': self.stock_level,
+            'strategy': self.strategy
         }

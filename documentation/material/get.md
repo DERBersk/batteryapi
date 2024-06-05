@@ -27,14 +27,16 @@ Show data of a All Materials.
         "lot_size": 9,
         "name": "Lithium-Ion",
         "safety_stock": 7,
-        "stock_level": 86
+        "stock_level": 86,
+        "strategy": "Sustainability"
     },
     {
         "id": 2,
         "lot_size": 5,
         "name": "Copper",
         "safety_stock": 8,
-        "stock_level": 32.7
+        "stock_level": 32.7,
+        "strategy": "Price"
     },
     ...
 ]
@@ -72,7 +74,8 @@ Show data of a single Material.
     "lot_size": 9,
     "name": "Copper",
     "safety_stock": 7,
-    "stock_level": 86.95
+    "stock_level": 86.95,
+    "strategy": " "
 }
 ```
 

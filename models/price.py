@@ -6,8 +6,8 @@ class Price(db.Model):
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=False)
     cost = db.Column(db.Float)
     unit = db.Column(db.String(50))
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     
     def serialize(self):
         return {

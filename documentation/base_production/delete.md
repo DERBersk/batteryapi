@@ -1,10 +1,10 @@
-# Delete Projects
+# Delete Base Production Volume
 
-Delete one Project via id and associated ProductsPerProjects.
+Delete one Base Production Volume via id.
 
-**URL** : `/api/project/<project_id>`
+**URL** : `/api/baseproduction/<baseproduction_id>`
 
-**URL Parameters** : `project_id=[integer]` where `project_id` is the ID of the Project.
+**URL Parameters** : `baseproduction_id=[integer]` where `baseproduction_id` is the ID of the Base Production Volume.
 
 **Method** : `DELETE`
 
@@ -20,24 +20,24 @@ Delete one Project via id and associated ProductsPerProjects.
 
 #### Success Response
 
-**Condition** : If the Project exists.
+**Condition** : If the Base Production Volume exists.
 
 **Code** : `200 OK`
 
-**Content** : `{'message':'Project and associated records deleted successfully'}`
+**Content** : `{'message':'Base Production Volume and associated records deleted successfully'}`
 
 #### Error Responses
 
-**Condition** : If there was no Project available to delete.
+**Condition** : If there was no Base Production Volume available to delete.
 
 **Code** : `404 NOT FOUND`
 
-**Content** : `{'error': 'Project not found'}`
+**Content** : `{'error': 'Base Production Volume not found'}`
 
 
 ## Example 
 
-**Call**: `DELETE /api/project/1`
+**Call**: `DELETE /api/baseproduction/1`
 
 **Data**:
 

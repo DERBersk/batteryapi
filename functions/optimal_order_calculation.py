@@ -2,11 +2,18 @@ from collections import defaultdict
 from models.base_production_volume import BaseProductionVolume
 from models.project import Project
 from models.material import Material
+from models.supplier import Supplier
+from models.options import StrategyEnum, Options
 from models.week import Week
+from models.price import Price
 from models.products_per_project import ProductsPerProject
 from models.materials_per_product import MaterialsPerProduct
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.weekly_material_demand import WeeklyMaterialDemand
+
+###############################################################################################
+# Main Functions
+###############################################################################################
 
 # File for Order Calculation Function
 def MaterialDemandCalculation():
@@ -34,35 +41,118 @@ def MaterialDemandCalculation():
 
     return ""
 
-def OptimalOrderCalculation():
-    # TODO: Calculation
-    # Fetch weekly Material Demand Data
-    weekly_material_demand = WeeklyMaterialDemand.query.all()
+def OptimalOrderCalculation():    
+    # Fetch Materials
+    materials = Material.query.all()    
     
-    # Fetch Lead times
-    # TODO: Strategy involvement
-    lead_times = MaterialsPerSupplier.query.filter(MaterialsPerSupplier.availability == True).add_columns(MaterialsPerSupplier.material_id,MaterialsPerSupplier.supplier_id,MaterialsPerSupplier.lead_time)
-    
-    # Fetch Safety Stock and current Inventory
-    safety_stock = Material.query.add_columns(Material.id, Material.safety_stock).all()
-    stock_level =  Material.query.add_columns(Material.id, Material.stock_level).all()
-    
-    
-    # If Inventory smaller than Safety Stock: Order needed anyway
-    
-    # Fetch Supplier for Material each after employed strategy
-    
+    rec_order_list = []
     # For each of the Materials
+    for material in materials:
+        material_id = material.id
+        order_needed = False
+        strategy = StrategyEnum.NONE.value
+        min_order = 0
+        supplier_id = 0
+        lead_time = 0
+        sustainability_index = 0
+        risk_index = 0
+        price = 0
+        strategy = None
+        
+        # Fetch Supplier for Material each after employed strategy
+        if material.strategy == None:
+            options = Options.query.first()
+            strategy = options.strategy.value
+        else:
+            strategy = material.strategy.value
+                
+        if strategy == "Sustainability":
+            supplier = Supplier.query.join(MaterialsPerSupplier)\
+                                        .filter(Supplier.id == MaterialsPerSupplier.supplier_id)\
+                                        .filter(MaterialsPerSupplier.material_id == material_id)\
+                                        .order_by(Supplier.sustainability_index.desc())\
+                                        .first()
+        elif strategy == "Risk":
+            supplier = Supplier.query.join(MaterialsPerSupplier)\
+                                        .filter(Supplier.id == MaterialsPerSupplier.supplier_id)\
+                                        .filter(MaterialsPerSupplier.material_id == material_id)\
+                                        .order_by(Supplier.risk_index.desc())\
+                                        .first()
+        elif strategy == "Price":
+            supplier = Price.query.join(Supplier)\
+                                        .filter(Price.supplier_id == Supplier.id)\
+                                        .filter(Price.material_id == material_id)\
+                                        .filter(Price.end_date.is_(None))\
+                                        .add_columns(Supplier.id)\
+                                        .order_by(Price.cost.asc()).first()
+        elif strategy == "LeadTime":  
+            supplier = MaterialsPerSupplier.query.join(Supplier)\
+                                        .filter(MaterialsPerSupplier.supplier_id == Supplier.id)\
+                                        .filter(MaterialsPerSupplier.material_id == material_id)\
+                                        .add_columns(Supplier.id)\
+                                        .order_by(MaterialsPerSupplier.lead_time.desc()).first()
+        if supplier is None:
+            continue
+        supplier_id = supplier.id
     
-        # Aggregate Demanded Material in lead time (of Supplier) area (5 days lead time = Material Demand next 2 weeks (weeks rounded up +1))
+        # Get the Price and the lead_time of the Supplier
+        price = Price.query.filter(Price.supplier_id == supplier.id)\
+                                        .filter(Price.material_id == material_id)\
+                                        .filter(Price.end_date.is_(None))\
+                                        .add_columns(Price.cost)\
+                                        .order_by(Price.cost.asc()).first()
+                
+        if price is not None:
+            price = price.cost
+        else:
+            print(supplier_id)
+            print(price)
+            continue
+        
+        lead_time =  MaterialsPerSupplier.query.filter(MaterialsPerSupplier.supplier_id == supplier.id)\
+                                        .filter(MaterialsPerSupplier.material_id == material_id)\
+                                        .first()
+        
+        lead_time = lead_time.lead_time
+        
+        supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
+        
+        sustainability_index = supplier.sustainability_index
+        risk_index = supplier.risk_index
+        
+        weekly_material_demand = WeeklyMaterialDemand.query.filter(WeeklyMaterialDemand.material_id == material_id).all()
+        filtered_weekly_material_demand = [record for record in weekly_material_demand if record.is_later_or_equal]
+        
+        lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time)
     
         # If Demanded Material + Safety Stock is smaller than the inventory: Recommend no order
-        
-        # If Demanded Material + Safety Stock is bigger than the inventory: Recommend order
-        
-    # Return List of recommended orders
+        total_demand = lead_time_demand + material.safety_stock
+        if total_demand <= material.stock_level:
+            order_needed = False
+            min_order = 0
+        else:
+            # If Demanded Material + Safety Stock is bigger than the inventory: Recommend order
+            order_needed = True
+            min_order = total_demand - material.stock_level
     
-    return ""
+        material_recommendation = {
+            "material_id": material_id,
+            "order_needed": order_needed,
+            "strategy": strategy,
+            "min_order": min_order,
+            "supplier_id": supplier_id,
+            "lead_time": lead_time,
+            "sustainability_index": sustainability_index,
+            "risk_index": risk_index,
+            "price": price
+        }
+        rec_order_list.append(material_recommendation)
+    # Return List of recommended orders
+    return rec_order_list
+    
+###############################################################################################
+# Support Functions
+###############################################################################################
     
 def get_weekly_totals(base_volume_weekly, product_per_projects):
     weeks = Week.query.all()
@@ -104,7 +194,6 @@ def get_weekly_totals(base_volume_weekly, product_per_projects):
                 current_week = 1
                 current_year += 1
 
-    
     # Step 3: Combine base volumes and project volumes
     total_volume_dict = defaultdict(float)
     for (product_id, year, week), amount in base_volume_dict.items():
@@ -160,3 +249,11 @@ def weeks_between(start_year, start_week, end_year, end_week):
             current_week = 1
             current_year += 1
     return total_weeks
+
+def get_lead_time_demand(weekly_material_demand, lead_time):
+    total_demand = 0
+    for demand in weekly_material_demand:
+        if demand.is_in_lead_time(lead_time):
+            total_demand += demand.amount
+    return total_demand-1
+        
