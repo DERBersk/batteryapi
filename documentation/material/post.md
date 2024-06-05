@@ -15,13 +15,15 @@ Create or modify one or many Materials.
     "name": "Changed Material X",
     "safety_stock": 100,
     "lot_size": 50,
-    "stock_level": 200
+    "stock_level": 200,
+    "strategy": "risk"
   },
   {
     "name": "New Material Y",
     "safety_stock": 150,
     "lot_size": 75,
-    "stock_level": 300
+    "stock_level": 300,
+    "strategy": " "
   }
 ]
 ```

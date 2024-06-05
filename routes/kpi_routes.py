@@ -23,3 +23,7 @@ def get_transformed_countries():
 def calculateWeeklyDemand():
     MaterialDemandCalculation()
     return jsonify('Calculation finished!')
+
+@kpi_bp.route('/optimalOrders', methods=['GET'])
+def OptimalOrders():
+    return jsonify(OptimalOrderCalculation())
