@@ -41,100 +41,90 @@ def MaterialDemandCalculation():
 
     return ""
 
-def OptimalOrderCalculation():    
-    # Fetch Materials
-    materials = Material.query.all()    
+def OptimalOrderCalculation():
+    # Fetch all necessary data before the loop
+    materials = Material.query.all()
+    options = Options.query.first()
+    suppliers = Supplier.query.all()
+    prices = Price.query.filter(Price.end_date.is_(None)).all()
+    materials_per_supplier = MaterialsPerSupplier.query.all()
+    weekly_material_demands = WeeklyMaterialDemand.query.all()
+    
+    # Preprocess data for quick lookup
+    supplier_dict = {supplier.id: supplier for supplier in suppliers}
+    price_dict = {(price.supplier_id, price.material_id): price for price in prices}
+    materials_per_supplier_dict = {(mps.supplier_id, mps.material_id): mps for mps in materials_per_supplier}
+    weekly_material_demands_dict = {}
+    for demand in weekly_material_demands:
+        if demand.material_id not in weekly_material_demands_dict:
+            weekly_material_demands_dict[demand.material_id] = []
+        weekly_material_demands_dict[demand.material_id].append(demand)
     
     rec_order_list = []
-    # For each of the Materials
+    
     for material in materials:
         material_id = material.id
         order_needed = False
-        strategy = StrategyEnum.NONE.value
-        min_order = 0
-        supplier_id = 0
-        lead_time = 0
-        sustainability_index = 0
-        risk_index = 0
-        price = 0
-        strategy = None
+        strategy = material.strategy.value if material.strategy else options.strategy.value
+        supplier = None
         
-        # Fetch Supplier for Material each after employed strategy
-        if material.strategy == None:
-            options = Options.query.first()
-            strategy = options.strategy.value
-        else:
-            strategy = material.strategy.value
-                
         if strategy == "Sustainability":
-            supplier = Supplier.query.join(MaterialsPerSupplier)\
-                                        .filter(Supplier.id == MaterialsPerSupplier.supplier_id)\
-                                        .filter(MaterialsPerSupplier.material_id == material_id)\
-                                        .order_by(Supplier.sustainability_index.desc())\
-                                        .first()
+            supplier = max(
+                [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict],
+                key=lambda s: s.sustainability_index,
+                default=None
+            )
         elif strategy == "Risk":
-            supplier = Supplier.query.join(MaterialsPerSupplier)\
-                                        .filter(Supplier.id == MaterialsPerSupplier.supplier_id)\
-                                        .filter(MaterialsPerSupplier.material_id == material_id)\
-                                        .order_by(Supplier.risk_index.desc())\
-                                        .first()
+            supplier = max(
+                [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict],
+                key=lambda s: s.risk_index,
+                default=None
+            )
         elif strategy == "Price":
-            supplier = Price.query.join(Supplier)\
-                                        .filter(Price.supplier_id == Supplier.id)\
-                                        .filter(Price.material_id == material_id)\
-                                        .filter(Price.end_date.is_(None))\
-                                        .add_columns(Supplier.id)\
-                                        .order_by(Price.cost.asc()).first()
-        elif strategy == "LeadTime":  
-            supplier = MaterialsPerSupplier.query.join(Supplier)\
-                                        .filter(MaterialsPerSupplier.supplier_id == Supplier.id)\
-                                        .filter(MaterialsPerSupplier.material_id == material_id)\
-                                        .add_columns(Supplier.id)\
-                                        .order_by(MaterialsPerSupplier.lead_time.desc()).first()
-        if supplier is None:
+            supplier = min(
+                [p for p in prices if p.material_id == material_id],
+                key=lambda p: p.cost,
+                default=None
+            )
+            if supplier:
+                supplier = supplier_dict[supplier.supplier_id]
+        elif strategy == "LeadTime":
+            supplier = min(
+                [mps for mps in materials_per_supplier if mps.material_id == material_id],
+                key=lambda mps: mps.lead_time,
+                default=None
+            )
+            if supplier:
+                supplier = supplier_dict[supplier.supplier_id]
+        
+        if not supplier:
             continue
+        
         supplier_id = supplier.id
-    
-        # Get the Price and the lead_time of the Supplier
-        price = Price.query.filter(Price.supplier_id == supplier.id)\
-                                        .filter(Price.material_id == material_id)\
-                                        .filter(Price.end_date.is_(None))\
-                                        .add_columns(Price.cost)\
-                                        .order_by(Price.cost.asc()).first()
-                
-        if price is not None:
-            price = price.cost
-        else:
-            print(supplier_id)
-            print(price)
+        price = price_dict.get((supplier_id, material_id))
+        price = price.cost if price else None
+        
+        if not price:
             continue
         
-        lead_time =  MaterialsPerSupplier.query.filter(MaterialsPerSupplier.supplier_id == supplier.id)\
-                                        .filter(MaterialsPerSupplier.material_id == material_id)\
-                                        .first()
-        
-        lead_time = lead_time.lead_time
-        
-        supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
+        lead_time = materials_per_supplier_dict.get((supplier_id, material_id)).lead_time
         
         sustainability_index = supplier.sustainability_index
         risk_index = supplier.risk_index
         
-        weekly_material_demand = WeeklyMaterialDemand.query.filter(WeeklyMaterialDemand.material_id == material_id).all()
+        weekly_material_demand = weekly_material_demands_dict.get(material_id, [])
         filtered_weekly_material_demand = [record for record in weekly_material_demand if record.is_later_or_equal]
         
         lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time)
-    
-        # If Demanded Material + Safety Stock is smaller than the inventory: Recommend no order
+        
         total_demand = lead_time_demand + material.safety_stock
         if total_demand <= material.stock_level:
             order_needed = False
             min_order = 0
         else:
-            # If Demanded Material + Safety Stock is bigger than the inventory: Recommend order
             order_needed = True
             min_order = total_demand - material.stock_level
-    
+        
         material_recommendation = {
             "material_id": material_id,
             "order_needed": order_needed,
@@ -147,7 +137,7 @@ def OptimalOrderCalculation():
             "price": price
         }
         rec_order_list.append(material_recommendation)
-    # Return List of recommended orders
+    
     return rec_order_list
     
 ###############################################################################################
