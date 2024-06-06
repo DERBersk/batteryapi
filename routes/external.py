@@ -3,7 +3,6 @@ from flask import Blueprint, request,render_template,current_app
 from link_generate_concept.email import send_email
 from link_generate_concept.token_manager import generate_token,tokens
 from models.supplier import Supplier
-from extensions import db
 
 external_bp = Blueprint('external', __name__, url_prefix='/api/external')
 
