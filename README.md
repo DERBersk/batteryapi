@@ -15,6 +15,8 @@ The Battery API offers a range of endpoints to facilitate interactions with user
 Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are Country-Risk, ... 
 
 * [Show Country-Risk](documentation/kpi/countryrisk.md) `GET /api/kpi/countryrisk`
+* [Show and Calculate Weekly Material Demand](documentation/kpi/weeklyDemand.md) `GET /api/kpi/weeklyDemand`
+* [Show and Calculate Optimal Orders](documentation/kpi/optimalOrders.md) `GET /api/kpi/optimalOrders`
 
 ### Material related
 
