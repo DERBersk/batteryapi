@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USERNAME = 'ffb.procure@gmail.com'
-EMAIL_PASSWORD = 'ffbprosem@20224'
+EMAIL_PASSWORD = 'lgew wfui hwzk exgk'
 
 def send_email(email, subject, html_content):
     msg = MIMEMultipart()
