@@ -1,0 +1,10 @@
+Steps
+
+1: Model File (Model itself & serialize)
+2: Route File for direct and indirect calls (Materials, MaterialsPerSupplier Call in Supplier), post and get
+3: Create Data function
+4: Documentation Files
+5: UML Model
+6: Push and Pull Request
+7: Fit in supabase
+8: Call a valid api call
