@@ -25,17 +25,17 @@ Show data of a calculated Country-Risk Index
     {
         "countrycode":"AF",
         "description":"Afghanistan",
-        "no.":0.915
+        "index":0.915
     },
     {
         "countrycode":"AX",
         "description":"Aland Islands",
-        "no.":0.26
+        "index":0.26
     },
     {
         "countrycode":"AL",
         "description":"Albania",
-        "no.":0.293
+        "index":0.293
     },
     ...
 ]
