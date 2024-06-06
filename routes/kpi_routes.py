@@ -19,10 +19,10 @@ def get_transformed_countries():
     transformed_data = transform_country_data(country_data)
     return jsonify(transformed_data)
 
-@kpi_bp.route('/calculateWeeklyDemand', methods=['GET'])
+@kpi_bp.route('/materialDemand', methods=['GET'])
 def calculateWeeklyDemand():
-    MaterialDemandCalculation()
-    return jsonify('Calculation finished!')
+    res = MaterialDemandCalculation()
+    return jsonify([mdc.serialize() for mdc in res])
 
 @kpi_bp.route('/optimalOrders', methods=['GET'])
 def OptimalOrders():
