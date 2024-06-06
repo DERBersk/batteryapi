@@ -12,7 +12,7 @@ def transform_country_data(country_data):
         transformed_entry = {
             "countrycode": country_code,
             "description": description,
-            "no.": calculate_country_risk_index()
+            "index": calculate_country_risk_index()
         }
         transformed_data.append(transformed_entry)
     return transformed_data
