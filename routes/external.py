@@ -11,7 +11,7 @@ def generate_link(supplier_id):
     print("HERE")
     supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
     if supplier:
-        email = 'nourashraf225@gmail.com' #This email should be the email of the supplier
+        email = 'dominikeitner@gmail.com' #This email should be the email of the supplier
         expiration_time = datetime.now() + timedelta(days=1)  # Change this to whatever expiration time you want
         token = generate_token(email, expiration_time)
         link = request.host_url + 'api/external/update_data/' + token
