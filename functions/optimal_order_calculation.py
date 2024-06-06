@@ -25,7 +25,7 @@ def MaterialDemandCalculation():
     # Fetch the Project Data, weekly basis (next month)
     product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
     
-    filtered_product_per_projects = [project for project in product_per_projects_all if project.check_project_date()]
+    filtered_product_per_projects = [project for project in product_per_projects_all if project.Project.check_project_week()]
     
     # Fetch Data for Product composition
     materials_per_products = MaterialsPerProduct.query.all()
@@ -39,13 +39,15 @@ def MaterialDemandCalculation():
     # Save Data in new Table Material Demand (if Data already exists, update data)
     save_weekly_material_demand(material_demand_dict)
 
-    return ""
+    res = WeeklyMaterialDemand.query.all()
+
+    return res
 
 def OptimalOrderCalculation():
     # Fetch all necessary data before the loop
     materials = Material.query.all()
     options = Options.query.first()
-    suppliers = Supplier.query.all()
+    suppliers = Supplier.query.filter(Supplier.availability == True).all()
     prices = Price.query.filter(Price.end_date.is_(None)).all()
     materials_per_supplier = MaterialsPerSupplier.query.all()
     weekly_material_demands = WeeklyMaterialDemand.query.all()
