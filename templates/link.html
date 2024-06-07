@@ -4,10 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Supplier Data Update Link</title>
+    <style>
+      .update-button {
+        background-color: #179C7D;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+      }
+    </style>
   </head>
   <body>
-    <h1>Supplier Data Update Link</h1>
-    <p>Click the link below to update your data:</p>
-    <p><a href="{{ link }}">{{ link }}</a></p>
+    <h1>Supplier Data Update for {{ company_name }}</h1>
+    <p>To ensure your information is up to date, please click the button below:</p>
+    <p><a href="{{ link }}" class="update-button">Update Your Data</a></p>
   </body>
 </html>

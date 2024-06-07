@@ -1,21 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Supplier Data</title>
-  </head>
-  <body>
-    <h1>Update Supplier Data</h1>
-    <form action="" method="post">
-      <!-- You can add input fields here for updating data -->
-      <label for="name">Name:</label><br />
-      <input type="text" id="name" name="name" /><br />
-      <label for="email">Email:</label><br />
-      <input type="email" id="email" name="email" /><br />
-      <label for="phone">Phone:</label><br />
-      <input type="text" id="phone" name="phone" /><br />
-      <input type="submit" value="Update" />
-    </form>
-  </body>
+    <style>
+        body {
+            background-color: #F1F4F8;
+            color: #606A85;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1, h2 {
+            color: #179C7D;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #179C7D;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #128a68;
+        }
+
+        .material-item {
+            margin-bottom: 20px;
+        }
+
+        .material-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .material-inputs {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .material-inputs input[type="number"] {
+            width: calc(50% - 10px);
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Update Supplier Data</h1>
+
+        <form action="" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ supplier.name }}" readonly required/>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ supplier.email }}" required/>
+            
+            <h2>Material Data:</h2>
+            
+            {% for material in materials %}
+            <div class="material-item">
+                <h3>{{ material.name }}</h3>
+                <div class="material-labels">
+                    <label for="co2_emissions_{{ material.id }}">CO2 Emissions (kg CO2/kg Material)</label>
+                    <label for="lead_time_{{ material.id }}">Lead Time (weeks)</label>
+                </div>
+                <div class="material-inputs">
+                    <input type="number" id="co2_emissions_{{ material.id }}" name="co2_emissions_{{ material.id }}" value="{{ material.co2_emissions }}" step="0.01" />
+                    <input type="number" id="lead_time_{{ material.id }}" name="lead_time_{{ material.id }}" value="{{ material.lead_time }}" />
+                </div>
+            </div>
+            {% endfor %}
+            
+            <input type="submit" value="Update" />
+        </form>
+    </div>
+</body>
 </html>
