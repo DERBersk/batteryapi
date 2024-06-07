@@ -8,10 +8,12 @@ external_bp = Blueprint('external', __name__, url_prefix='/api/external')
 
 @external_bp.route('/generate_link/<int:supplier_id>',methods=["POST"])
 def generate_link(supplier_id):
-    print("HERE")
+    user_email = request.json['email']
     supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
     if supplier:
         email = 'dominikeitner@gmail.com' #This email should be the email of the supplier
+        if user_email:
+            email = user_email
         expiration_time = datetime.now() + timedelta(days=1)  # Change this to whatever expiration time you want
         token = generate_token(email, expiration_time)
         link = request.host_url + 'api/external/update_data/' + token
