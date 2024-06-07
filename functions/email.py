@@ -1,12 +1,16 @@
 import smtplib
+import json
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+with open('config.json', 'r') as file:
+    config = json.load(file)
+
 # Add your email configuration here
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USERNAME = 'ffb.procure@gmail.com'
-EMAIL_PASSWORD = 'lgew wfui hwzk exgk'
+EMAIL_HOST = config['EMAIL_HOST']
+EMAIL_PORT = config['EMAIL_PORT']
+EMAIL_USERNAME = config['EMAIL_USERNAME']
+EMAIL_PASSWORD = config['EMAIL_PASSWORD']
 
 def send_email(email, subject, html_content):
     msg = MIMEMultipart()

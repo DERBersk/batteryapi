@@ -6,6 +6,7 @@ class MaterialsPerSupplier(db.Model):
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=False)
     lead_time = db.Column(db.Integer)
+    co2_emissions = db.Column(db.Float, nullable = True)
     
     def serialize(self):
         return {
