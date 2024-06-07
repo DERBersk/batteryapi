@@ -33,7 +33,8 @@ Show data of a All Suppliers.
         "risk_index": 0.8108719323659386,
         "sustainability_index": 8.28791629020131,
         "availability": "True",
-        "country": "France"
+        "country": "France",
+        "email": ""
     },
     {
         "availability": 0.9874379222633706,
@@ -46,7 +47,8 @@ Show data of a All Suppliers.
         "risk_index": 2.6539343594064366,
         "sustainability_index": 6.025667519196149,
         "availability": "False",
-        "country": "China"
+        "country": "China",
+        "email": "maxmustermann@gmail.com"
     },
     ...
 ]
@@ -100,7 +102,8 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
     "quality": 5.92,
     "reliability": 0.317,
     "risk_index": 0.81,
-    "sustainability_index": 8.28
+    "sustainability_index": 8.28,
+    "email": "monikamustermann@fisher.ch"
 }
 ```
 

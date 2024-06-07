@@ -22,6 +22,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "reliability": 9,
         "availability": "True",
         "country": "Germany",
+        "email": "",
         "materials": [
             {
                 "id": 2,
@@ -51,6 +52,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "reliability": 8,
         "availability": "False",
         "country": "USA",
+        "email": "maxmustermann@gmail.com",
         "materials": [
             {
                 "id": 1,

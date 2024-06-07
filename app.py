@@ -16,7 +16,7 @@ def create_app():
     from routes.user_routes import user_bp
     from routes.kpi_routes import kpi_bp
     from routes.base_production_routes import base_productionbp
-    from routes.external import external_bp
+    from routes.external_routes import external_bp
     # Register blueprints
     app.register_blueprint(supplier_bp)
     app.register_blueprint(product_bp)

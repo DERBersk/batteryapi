@@ -60,6 +60,7 @@ def get_supplier(supplier_id):
                 'reliability':supplier.reliability,
                 'availability':str(supplier.availability),
                 'country': supplier.country,
+                'email': supplier.email,
                 'materials': materials_list
         }
         return jsonify(supplier_data), 200
@@ -88,7 +89,8 @@ def create_or_update_suppliers():
             'quality': supplier_data.get('quality'),
             'reliability': supplier_data.get('reliability'),
             'availability': (supplier_data.get('availability')=="True")|(supplier_data.get('availability') == "true"),
-            'country': supplier_data.get('country')
+            'country': supplier_data.get('country'),
+            'email': supplier_data.get('email')
         }
 
         # Create or update supplier

@@ -11,6 +11,7 @@ class Supplier(db.Model):
     reliability = db.Column(db.Float, nullable=True)
     availability = db.Column(db.Boolean, nullable=True)
     country = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(250), nullable=True)
     
     def serialize(self):
         return {
@@ -23,5 +24,6 @@ class Supplier(db.Model):
             'quality':self.quality,
             'reliability':self.reliability, # Reliability = Compliance
             'availability':self.availability,
-            'country':self.country
+            'country':self.country,
+            'email': self.email
         }
