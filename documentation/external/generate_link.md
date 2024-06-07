@@ -34,7 +34,7 @@ Generate a unique link for suppliers to update their data.
 
 This endpoint generates a unique link for a specific supplier identified by their ID. The link is sent to the supplier's email address, given in the table `Supplier`, allowing them to update their data securely. Upon successful generation of the link, an email notification is sent to the supplier containing the link.
 
-![Email Example](lib/images/EmailNotification.jpeg)
+![Email Example](../../lib/images/EmailNotification.jpeg)
 
 The link remains valid for a predefined period (default 7 days) from the time of generation. After the expiration, the link becomes invalid, ensuring data security and preventing unauthorized access.
 

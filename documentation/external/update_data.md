@@ -40,7 +40,7 @@ The endpoint supports both `GET` and `POST` methods.
 - When accessed via `GET`, the endpoint renders an HTML form populated with the supplier's current data.
 - Upon form submission (`POST`), the endpoint updates the supplier's information in the database with the provided data.
 
-![Supplier Form](lib/images/SupplierForm.jpeg)
+![Supplier Form](../../lib/images/SupplierForm.jpeg)
 
 The token passed in the URL is validated against a pre-generated list of tokens to ensure the authenticity of the request. Additionally, the expiration time of the token is checked to prevent unauthorized access after the token's validity period.
 
