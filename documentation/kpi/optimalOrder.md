@@ -82,6 +82,8 @@ The `OptimalOrderCalculation` function determines the optimal order quantities f
 
 This process ensures efficient material ordering by considering various strategic factors, thereby minimizing costs, risks, or environmental impact while maintaining sufficient inventory levels.
 
+The combination of weekly material demand calculation and optimal order calculation is based on the Network Heuristic from [... et al. (20)](www.google.com)
+
 ### Necessary Data
 
 The following data is required for the `OptimalOrderCalculation` function to work effectively:
