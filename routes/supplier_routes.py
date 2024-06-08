@@ -33,7 +33,7 @@ def get_supplier(supplier_id):
         materials_list = []
         for material in materials:
             price = Price.query.filter(Price.supplier_id == supplier_id)\
-                           .filter(Price.end_date == datetime.strptime("01.01.1975","%d.%m.%Y"))\
+                           .filter(Price.end_date is not None)\
                            .filter(Price.material_id == material.id)\
                            .order_by(Price.cost).first()
             price_val = 0

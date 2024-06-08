@@ -1,4 +1,6 @@
+# import external packages
 from collections import defaultdict
+# import models
 from models.base_production_volume import BaseProductionVolume
 from models.project import Project
 from models.material import Material

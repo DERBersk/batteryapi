@@ -51,4 +51,4 @@ Delete one Base Production Volume via id.
 
 `200 OK`
 
-`{'message':'Project and associated records deleted successfully'}`
+`{'message':'Base Production Volume deleted successfully'}`

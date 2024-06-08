@@ -1,3 +1,4 @@
+# import external packages
 import smtplib
 import json
 from email.mime.multipart import MIMEMultipart

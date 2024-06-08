@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify
 # import functions and data
 from functions.risk_calculation import load_country_data,transform_country_data
 from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation
+from functions.reliability_calculation import ReliabilityCalculation
 
 kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 
@@ -38,3 +39,12 @@ def calculateWeeklyDemand():
 @kpi_bp.route('/optimalOrders', methods=['GET'])
 def OptimalOrders():
     return jsonify(OptimalOrderCalculation())
+
+###################################################
+# Route for the Return and Calculation
+# of reliability
+###################################################
+@kpi_bp.route('/reliability', methods=['GET'])
+def Reliability():
+    ReliabilityCalculation()
+    return jsonify('Computation Successful!')
