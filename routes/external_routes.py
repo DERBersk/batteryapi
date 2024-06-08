@@ -1,9 +1,12 @@
+# import external packages
+import json
 from datetime import datetime,timedelta
-from flask import Blueprint, request,render_template,current_app,flash
+from flask import Blueprint, request,render_template,current_app,jsonify
+# import functions and data
 from functions.email import send_email
 from functions.token_manager import generate_token,tokens
-import json
 from extensions import db
+# import models
 from models.supplier import Supplier
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.material import Material
@@ -13,12 +16,20 @@ external_bp = Blueprint('external', __name__, url_prefix='/api/external')
 # Load configuration from a JSON file
 with open('config.json', 'r') as file:
     config = json.load(file)
-
+    
+###################################################
+# Route for calculation of token and sending
+# an email with an "Update Data" Link to the 
+# supplier
+###################################################
 @external_bp.route('/generate_link/<int:supplier_id>',methods=["POST"])
 def generate_link(supplier_id):
     supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
     if supplier:
-        email = supplier.email #This email should be the email of the supplier
+        if supplier.email is not None:
+            email = supplier.email #This email should be the email of the supplier
+        else:
+            return jsonify("Email field is empty"),404
         expiration_time = datetime.now() + timedelta(days=7)  # Change this to whatever expiration time you want
         token = generate_token(email, expiration_time, supplier.id)
         link = request.host_url + 'api/external/update_data/' + token
@@ -31,9 +42,14 @@ def generate_link(supplier_id):
         subject = 'Update Your Supplier Data'
         send_email(email, subject, html_content)
 
-        return 'Link sent to {}'.format(email)
-    return "Failed"
+        return jsonify('Link sent to {}'.format(email)),200
+    return jsonify("Failed"),404
 
+###################################################
+# Route for depicting an update-data page to the 
+# supplier and the saving process of the given 
+# data
+###################################################
 @external_bp.route('/update_data/<token>', methods=["GET", "POST"])
 def update_data(token):
     if token in tokens:
@@ -41,7 +57,7 @@ def update_data(token):
         if datetime.now() < supplier_data['expiration_time']:
             supplier = Supplier.query.filter(Supplier.id == supplier_data['id']).first()
             if not supplier:
-                return 'Invalid supplier.'
+                return jsonify('Invalid supplier.'),404
 
             if request.method == 'POST':
                 # Retrieve form data
@@ -68,7 +84,7 @@ def update_data(token):
                     # Commit changes to the database
                     db.session.commit()
 
-                return 'Data updated successfully!'
+                return jsonify('Data updated successfully!'),200
 
             # Query materials associated with the supplier
             materials = db.session.query(Material, MaterialsPerSupplier).\
@@ -89,6 +105,6 @@ def update_data(token):
             # Render the form with existing supplier data and materials
             return render_template('update_form.html', supplier=supplier, materials=materials_data)
         else:
-            return 'Link has expired.'
+            return jsonify('Link has expired.'),403
     else:
-        return 'Invalid link.'
+        return jsonify('Invalid link.'),400

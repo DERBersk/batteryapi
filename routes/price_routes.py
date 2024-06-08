@@ -1,6 +1,8 @@
-from flask import Blueprint, jsonify, request
-from models.price import Price
+# import external packages
 from datetime import datetime
+from flask import Blueprint, jsonify, request
+# import models
+from models.price import Price
 
 price_bp = Blueprint('price', __name__, url_prefix='/api/price')
 

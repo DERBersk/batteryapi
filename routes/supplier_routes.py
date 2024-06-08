@@ -1,9 +1,11 @@
+# import external packages
+from datetime import datetime
 from flask import Blueprint, jsonify, request
+# import models
 from models.supplier import Supplier
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.price import Price
-from datetime import datetime
 
 supplier_bp = Blueprint('supplier', __name__, url_prefix='/api/supplier')
 

@@ -1,12 +1,19 @@
+# import external sources
 from flask import Flask
+import json
+from flask_cors import CORS
+# import functions and data
 from extensions import db, scheduler
 from functions.schedule_tasks import Run
-from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__.split(".")[0])
     CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.xheevcowfsiqoblrojtv:TGEBzsP7RGjpVM5E@aws-0-eu-west-2.pooler.supabase.com:5432/postgres'
+    
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = config["DATABASE"]
     # Import routes
     from routes.supplier_routes import supplier_bp
     from routes.product_routes import product_bp

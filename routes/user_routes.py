@@ -1,5 +1,7 @@
-from flask import Blueprint, jsonify, request
+# import external packages
 from datetime import datetime
+from flask import Blueprint, jsonify, request
+# import models
 from models.user import User
 
 user_bp = Blueprint('user', __name__, url_prefix='/api/user')

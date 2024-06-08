@@ -4,7 +4,13 @@ Currently launched on the vercel environment under the following link: https://b
 
 ## Data Structure
 
-![Data Structure Image](lib/png/UML.drawio.png)
+![Data Structure Image](lib/images/UML.drawio.png)
+
+* Suppliers provide various Materials. Each material has specific Prices that can vary over time and have different lead_times based on the supplier.
+* Materials are used in Products, and the amount of material required is recorded in the Material_per_Product relationship.
+* Projects involve the production of certain Products over specified time periods.
+* Weekly_Material_Demand and Base_Production_Volume manage the weekly demand and the user defined production volumes for each week, respectively.
+* Users and Options tables are used for managing user information and strategy options.
 
 ## Endpoints
 
@@ -74,3 +80,10 @@ The Base Production endpoint allows for management of additional production plan
 * [Show Base Production](documentation/base_production/get.md) : `GET /api/baseproduction/`
 * [Create Base Production](documentation/base_production/post.md) : `POST /api/baseproduction/`
 * [Delete Base Production](documentation/base_production/delete.md) : `DELETE /api/baseproduction/`
+
+### External Communication related
+
+The Communication endpoints allow for emails to be sent out to suppliers including a link to the `update-form.html`, which then allows the supplier to enter necessary data themselves.
+
+* [Send Email Link](documentation/external/generate_link.md) : `POST /api/external/generate_link/`
+* [Update Supplier Data Form](documentation/external/update_data.md) : `POST,GET /api/external/generate_link/`

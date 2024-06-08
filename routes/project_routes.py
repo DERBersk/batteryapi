@@ -1,4 +1,6 @@
+# import external packages
 from flask import Blueprint, jsonify, request
+# import models
 from models.project import Project
 from models.product import Product
 from models.week import Week
