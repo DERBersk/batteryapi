@@ -23,6 +23,7 @@ Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are C
 * [Show Country-Risk](documentation/kpi/countryrisk.md) `GET /api/kpi/countryrisk`
 * [Show and Calculate Weekly Material Demand](documentation/kpi/weeklyDemand.md) `GET /api/kpi/weeklyDemand`
 * [Show and Calculate Optimal Orders](documentation/kpi/optimalOrder.md) `GET /api/kpi/optimalOrders`
+* [Calculate Supplier Reliability](documentation/kpi/reliability.md) `GET /api/kpi/reliability`
 
 ### Material related
 
@@ -80,6 +81,14 @@ The Base Production endpoint allows for management of additional production plan
 * [Show Base Production](documentation/base_production/get.md) : `GET /api/baseproduction/`
 * [Create Base Production](documentation/base_production/post.md) : `POST /api/baseproduction/`
 * [Delete Base Production](documentation/base_production/delete.md) : `DELETE /api/baseproduction/`
+
+### Order related
+
+The Order endpoint allows for management of Historical and current. Order Data can be retrieved, created and deleted using respective HTTP methods.
+
+* [Show Orders](documentation/order/get.md) : `GET /api/order/`
+* [Create Orders](documentation/order/post.md) : `POST /api/order/`
+* [Delete Order](documentation/order/delete.md) : `DELETE /api/order/`
 
 ### External Communication related
 
