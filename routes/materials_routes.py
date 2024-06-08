@@ -1,4 +1,6 @@
+# import external packages
 from flask import Blueprint, jsonify, request
+# import models
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.materials_per_product import MaterialsPerProduct

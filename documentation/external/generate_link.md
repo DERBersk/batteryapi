@@ -28,7 +28,7 @@ Generate a unique link for suppliers to update their data.
 
 **Code** : `404 Not Found`
 
-**Content** : `Failed`
+**Content** : `Failed` or `Email field is empty`
 
 ## Description
 

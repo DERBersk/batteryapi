@@ -1,10 +1,17 @@
+# import external packages
 from flask import Blueprint,jsonify,request
+# import functions and data
+from extensions import db
+# import models
 from models.options import Options
 from models.options import StrategyEnum
-from extensions import db
 
 options_bp = Blueprint('options', __name__, url_prefix='/api/options')
 
+###################################################
+# One Route to get and post data to and from the 
+# overall Options table
+###################################################
 @options_bp.route('/', methods=['GET', 'POST'])
 def options():
     options = Options.query.first()
