@@ -68,6 +68,7 @@ def OptimalOrderCalculation():
     
     for material in materials:
         material_id = material.id
+        name = material.name
         order_needed = False
         strategy = material.strategy.value if material.strategy else options.strategy.value
         supplier = None
@@ -131,6 +132,7 @@ def OptimalOrderCalculation():
         
         material_recommendation = {
             "material_id": material_id,
+            "name": name,
             "order_needed": order_needed,
             "strategy": strategy,
             "min_order": min_order,
