@@ -35,13 +35,13 @@ The following data is required for the `ReliabilityCalculation` function to work
 
 ### Formula
 
-The reliability \( R \) is calculated using the following formula:
+The reliability $R$ is calculated using the following formula:
 
 $$
 R = \frac{P}{T} - T_h
 $$
 
 where:
-- \( P \) is the number of punctual deliveries,
-- \( T \) is the total number of deliveries,
-- \( T_h \) is the threshold.
+- $P$ is the number of punctual deliveries,
+- $T$ is the total number of deliveries,
+- $T_h$ is the threshold.
