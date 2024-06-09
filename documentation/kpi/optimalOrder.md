@@ -24,6 +24,7 @@ Calculate the optimal order quantities for materials based on various strategies
 [
     {
         "material_id": 1,
+        "name": "Graphit",
         "order_needed": true,
         "strategy": "Price",
         "min_order": 50,
@@ -35,6 +36,7 @@ Calculate the optimal order quantities for materials based on various strategies
     },
     {
         "material_id": 2,
+        "name": "Lithium",
         "order_needed": false,
         "strategy": "Sustainability",
         "min_order": 0,
