@@ -7,4 +7,5 @@ Werkzeug==2.2.2
 psycopg2-binary
 apscheduler
 pycountry
+pandas
 xlrd
