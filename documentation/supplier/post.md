@@ -30,14 +30,16 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "safety_stock": 100,
                 "lot_size": 50,
                 "stock_level": 200,
-                "lead_time": 3
+                "lead_time": 3,
+                "unit": "kg"
             },
             {
                 "name": "New Zinc",
                 "safety_stock": 150,
                 "lot_size": 75,
                 "stock_level": 300,
-                "lead_time": 7
+                "lead_time": 7,
+                "unit": "Stk"
             }
         ]
     },
@@ -60,7 +62,8 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "safety_stock": 120,
                 "lot_size": 60,
                 "stock_level": 250,
-                "lead_time": 4
+                "lead_time": 4,
+                "unit": "Stk"
             }
         ]
     }

@@ -16,83 +16,68 @@ Currently launched on the vercel environment under the following link: https://b
 
 The Battery API offers a range of endpoints to facilitate interactions with user data, supplier information, pricing details, product management, project tracking, and test data generation. Each endpoint serves a specific purpose within the system, allowing integration and manipulation of data to meet diverse requirements. Below is a comprehensive list of endpoints categorized based on their respective functionalities. 
 
-### KPI related
+[Endpoint Documentation](documentation/end_point_documentation.md) : List of all API Endpoints and their implemented methods
 
-Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are Country-Risk, ... 
+## Development Environment Setup
 
-* [Show Country-Risk](documentation/kpi/countryrisk.md) `GET /api/kpi/countryrisk`
-* [Show and Calculate Weekly Material Demand](documentation/kpi/weeklyDemand.md) `GET /api/kpi/weeklyDemand`
-* [Show and Calculate Optimal Orders](documentation/kpi/optimalOrder.md) `GET /api/kpi/optimalOrders`
-* [Calculate Supplier Reliability](documentation/kpi/reliability.md) `GET /api/kpi/reliability`
+### Regular setup
 
-### Material related
+1. Pull the Repository from GitHub ([Repository Link](https://github.com/DERBersk/batteryapi))
+2. Install python ([Python Installation](https://www.python.org/downloads/))
+3. Install all packages from the [requirements.txt](requirements.txt) file
+4. Configure the [config.json](config.json) document by entering:
+    * the Email information
+    * the Company Name
+    * the database (when developing, a path to a data.db file suffices)
+    * the reliability threshold for the calculation of the reliability index
+5. Run `python app.py` in the terminal (also possible in VSCode or other editors)
 
-The Material endpoint provides functionality for managing material data within the Battery API. Materials can be retrieved, created, and deleted using respective HTTP methods.
+When completing the steps, the BatteryAPI is running. An other way to launch the application is to use Docker, which is described in the following.
 
-* [Show Material](documentation/material/get.md) : `GET /api/materials/`
-* [Create Material](documentation/material/post.md) : `POST /api/materials/`
-* [Delete Material](documentation/material/delete.md) : `DELETE /api/materials/`
+### Installation with Docker
 
+1. Pull the Repository from GitHub ([Repository Link](https://github.com/DERBersk/batteryapi))
+2. Install docker ([Docker Installation](https://docs.docker.com/get-docker/))
+3. Configure the [config.json](config.json) document by entering:
+    * the Email information
+    * the Company Name
+    * the database (when developing, a path to a data.db file suffices)
+    * the reliability threshold for the calculation of the reliability index
+4. Run `docker build --tag batteryapi .` to build an image
+5. Run `docker run -d -p 5000:5000 batteryapi` to start the image
 
-### User related
+After these four steps, the Container is built and deployed.
 
-The User endpoint provides functionality for managing user data within the Battery API. Users can be retrieved, created, and deleted using respective HTTP methods.
+### Development Information
 
-* [Show User](documentation/user/get.md) : `GET /api/user/`
-* [Create User](documentation/user/post.md) : `POST /api/user/`
-* [Delete User](documentation/user/delete.md) : `DELETE /api/user/`
+Local development is the fastest way to implement new features and to test them. Generally it is advised to work with a regular setup, as with docker, after every change, the image has to be stopped, rebuild and started, while with the regular installation, the testing can start in a matter of seconds.
 
-### Supplier related
+## File Structure
 
-The Supplier endpoint enables the management of supplier information within the Battery API. Suppliers can be retrieved, created, and deleted using respective HTTP methods.
+The code is currently structured the following way:
 
-* [Show Supplier](documentation/supplier/get.md) : `GET /api/supplier/`
-* [Create Supplier](documentation/supplier/post.md) : `POST /api/supplier/`
-* [Delete Supplier](documentation/supplier/delete.md) : `DELETE /api/supplier/`
+```
+├── documentation
+│   ├── ...
+├── functions
+│   ├── ...
+├── lib
+│   ├── ...
+├── models
+│   ├── ...
+├── routes
+│   ├── ...
+├── templates
+│   ├── ...
+├── extensions.py
+└── app.py
+```
 
-### Price related
-
-The Price endpoint offers functionality for managing pricing details within the Battery API. Prices can be retrieved, created, and deleted using respective HTTP methods.
-
-* [Show Price](documentation/price/get.md) : `GET /api/price/`
-* [Create Price](documentation/price/post.md) : `POST /api/price/`
-* [Delete Price](documentation/price/delete.md) : `DELETE /api/price/`
-
-### Product related
-
-The Product endpoint provides capabilities for managing product data within the Battery API. Products can be retrieved, created, and deleted using respective HTTP methods.
-
-* [Show Product](documentation/product/get.md) : `GET /api/product/`
-* [Create Product](documentation/product/post.md) : `POST /api/product/`
-* [Delete Product](documentation/product/delete.md) : `DELETE /api/product/`
-
-### Project related
-
-The Project endpoint facilitates the management of project information within the Battery API. Projects can be retrieved, created, and deleted using respective HTTP methods.
-
-* [Show Project](documentation/project/get.md) : `GET /api/project/`
-* [Create Project](documentation/project/post.md) : `POST /api/project/`
-* [Delete Project](documentation/project/delete.md) : `DELETE /api/project/`
-
-### Base Production related
-
-The Base Production endpoint allows for management of additional production plans to the projects. Base Production Data can be retrieved, created and deleted using respective HTTP methods.
-
-* [Show Base Production](documentation/base_production/get.md) : `GET /api/baseproduction/`
-* [Create Base Production](documentation/base_production/post.md) : `POST /api/baseproduction/`
-* [Delete Base Production](documentation/base_production/delete.md) : `DELETE /api/baseproduction/`
-
-### Order related
-
-The Order endpoint allows for management of Historical and current. Order Data can be retrieved, created and deleted using respective HTTP methods.
-
-* [Show Orders](documentation/order/get.md) : `GET /api/order/`
-* [Create Orders](documentation/order/post.md) : `POST /api/order/`
-* [Delete Order](documentation/order/delete.md) : `DELETE /api/order/`
-
-### External Communication related
-
-The Communication endpoints allow for emails to be sent out to suppliers including a link to the `update-form.html`, which then allows the supplier to enter necessary data themselves.
-
-* [Send Email Link](documentation/external/generate_link.md) : `POST /api/external/generate_link/`
-* [Update Supplier Data Form](documentation/external/update_data.md) : `POST,GET /api/external/generate_link/`
+* `documentation` encompasses all Markdown files regarding routing and a guide on how to add new fields.
+* `functions` includes all python files regarding more complex functions to be separated from the route files.
+* `lib` holds all files that are in the category of either data or images.
+* `models` includes all database structures (tables and columns) and their respective functions to be used on one specific instance of the table.
+* `routes` regards all defined routes. These do not have to be, but currently are all registered in the app.py file.
+* `templates` includes all html files used for supplier access.
+* `extensions.py` defines all Singleton objects, such as the database and the scheduler
+* `app.py` is the core of the project and activates all routes and initiates the database. This file is called when starting the application.

@@ -15,7 +15,6 @@ Create or modify one or many Prices.
         "material_id": 123,
         "supplier_id": 456,
         "cost": 10.99,
-        "unit": "USD",
         "start_date": "2024-05-10",
         "end_date": "2024-06-10"
     },
@@ -23,7 +22,6 @@ Create or modify one or many Prices.
         "material_id": 456,
         "supplier_id": 789,
         "cost": 20.55,
-        "unit": "USD",
         "start_date": "2024-06-01",
         "end_date": "2024-07-01"
     }

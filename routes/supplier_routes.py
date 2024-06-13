@@ -28,7 +28,7 @@ def get_supplier(supplier_id):
                                   .join(Supplier)\
                                   .filter(MaterialsPerSupplier.supplier_id==supplier_id)\
                                   .filter(Material.id==MaterialsPerSupplier.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit)\
                                   .all()
         materials_list = []
         for material in materials:
@@ -48,6 +48,7 @@ def get_supplier(supplier_id):
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
                     'lead_time': material.lead_time,
+                    'unit': material.unit,
                     'price': price_val
                 }
             )
@@ -123,6 +124,7 @@ def create_or_update_suppliers():
             material.safety_stock = material_data.get('safety_stock')
             material.lot_size = material_data.get('lot_size')
             material.stock_level = material_data.get('stock_level')
+            material.unit = material_data.get('unit')
 
             # Add or update MaterialsPerSupplier
             lead_time = material_data.get('lead_time')

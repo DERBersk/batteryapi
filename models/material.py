@@ -8,6 +8,7 @@ class Material(db.Model):
     lot_size = db.Column(db.Float)
     stock_level = db.Column(db.Float)
     strategy = db.Column(db.Enum(StrategyEnum), nullable=False, default=StrategyEnum.NONE)
+    unit = db.Column(db.String(50))
         
     def serialize(self):
         return {
@@ -16,5 +17,6 @@ class Material(db.Model):
             'safety_stock': self.safety_stock,
             'lot_size': self.lot_size,
             'stock_level': self.stock_level,
-            'strategy': self.strategy
+            'strategy': self.strategy.name if self.strategy else None,
+            'unit': self.unit
         }
