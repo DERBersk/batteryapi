@@ -1,6 +1,7 @@
+import datetime
 from extensions import db
 from models.week import Week
-import datetime
+from models.material import Material
 
 class WeeklyMaterialDemand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,13 +11,15 @@ class WeeklyMaterialDemand(db.Model):
     
     def serialize(self):
         week = Week.query.filter(Week.id == self.week_id).first()
+        material = Material.query.filter(Material.id == self.material_id).first()
         
         return {
             'id': self.id,
             'material_id': self.material_id,
             'week': week.week,
             'year': week.year,
-            'amount': self.amount
+            'amount': self.amount,
+            'unit': material.unit
         }
     
     def is_later_or_equal(self):

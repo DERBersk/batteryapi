@@ -28,7 +28,8 @@ Show data of a All Materials.
         "name": "Lithium-Ion",
         "safety_stock": 7,
         "stock_level": 86,
-        "strategy": "Sustainability"
+        "strategy": "Sustainability",
+        "unit": "Stk"
     },
     {
         "id": 2,
@@ -36,7 +37,8 @@ Show data of a All Materials.
         "name": "Copper",
         "safety_stock": 8,
         "stock_level": 32.7,
-        "strategy": "Price"
+        "strategy": "Price",
+        "unit": "kg"
     },
     ...
 ]
@@ -75,7 +77,8 @@ Show data of a single Material.
     "name": "Copper",
     "safety_stock": 7,
     "stock_level": 86.95,
-    "strategy": " "
+    "strategy": " ",
+    "unit": "m^2"
 }
 ```
 

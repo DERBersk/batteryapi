@@ -28,7 +28,7 @@ def get_product(product_id):
                                   .join(Product)\
                                   .filter(MaterialsPerProduct.product_id==product_id)\
                                   .filter(Material.id==MaterialsPerProduct.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount,Material.unit)\
                                   .all()
         materials_list = []
         for material in materials:
@@ -39,7 +39,8 @@ def get_product(product_id):
                     'safety_stock': material.safety_stock,
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
-                    'amount': material.amount
+                    'amount': material.amount,
+                    'unit': material.unit
                 }
             )
         product_data = {
@@ -98,6 +99,7 @@ def create_or_update_products():
             material.safety_stock = material_data.get('safety_stock')
             material.lot_size = material_data.get('lot_size')
             material.stock_level = material_data.get('stock_level')
+            material.unit = material_data.get('unit')
 
             # Add or update MaterialsPerProduct
             amount = material_data.get('amount')

@@ -96,6 +96,7 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
             "price": 10.95,
             "safety_stock": 7,
             "stock_level": 86,
+            "unit": "kg"
         }
     ],
     "name": "Fisher-Diaz",

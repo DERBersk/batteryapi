@@ -43,7 +43,6 @@ def create_or_update_prices():
             "material_id":price_data.get('material_id'),
             "supplier_id":price_data.get('supplier_id'),
             "cost":price_data.get('cost'),
-            "unit":price_data.get('unit'),
             "start_date":datetime.strptime(price_data.get('start_date'), "%Y-%m-%d"),
             "end_date":datetime.strptime(price_data.get('end_date'), "%Y-%m-%d")
         }

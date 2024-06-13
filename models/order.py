@@ -1,4 +1,5 @@
 from extensions import db
+from models.material import Material
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,13 +10,16 @@ class Order(db.Model):
     delivery_date = db.Column(db.Date, nullable = True)
         
     def serialize(self):
+        material=Material.query.filter(Material.id == self.material_id).first()
+        
         return {
             'id': self.id,
             'material_id': self.material_id,
             'supplier_id': self.supplier_id,
             'amount': self.amount,
             'planned_delivery_date': self.planned_delivery_date,
-            'delivery_date': self.delivery_date
+            'delivery_date': self.delivery_date,
+            'unit': material.unit
         }
     
     def is_punctual(self):

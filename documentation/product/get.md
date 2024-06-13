@@ -73,7 +73,8 @@ Show data of a single Product and its associated Product
             "lot_size": 8,
             "name": "Lithium-Ion",
             "safety_stock": 7,
-            "stock_level": 59.8
+            "stock_level": 59.8,
+            "unit": "kg"
         },
         {
             "amount": 24.24,
@@ -81,7 +82,8 @@ Show data of a single Product and its associated Product
             "lot_size": 5,
             "name": "Copper",
             "safety_stock": 8,
-            "stock_level": 32
+            "stock_level": 32,
+            "unit": "Stk"
         },
     ],
     "specification": "Pouch"
