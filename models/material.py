@@ -17,6 +17,6 @@ class Material(db.Model):
             'safety_stock': self.safety_stock,
             'lot_size': self.lot_size,
             'stock_level': self.stock_level,
-            'strategy': self.strategy,
+            'strategy': self.strategy.name if self.strategy else None,
             'unit': self.unit
         }

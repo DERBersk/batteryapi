@@ -1,25 +1,22 @@
 # import external packages
-import random
+import pandas as pd
+import pycountry
 import json
 
-# Function to generate a random number between 0 and 1
-def calculate_country_risk_index():
-    return round(random.uniform(0, 1), 3)
+def CountryRisk():
+    df = pd.read_excel("https://www.matteoiacoviello.com/gpr_files/data_gpr_export.xls")
 
-# Function to transform the JSON data
-def transform_country_data(country_data):
-    transformed_data = []
-    for country_code, description in country_data.items():
-        transformed_entry = {
-            "countrycode": country_code,
-            "description": description,
-            "index": calculate_country_risk_index()
+    cols = [col for col in df.columns if col.startswith("GPRC_")]
+
+    data = []
+    tail = df.tail(1)
+    for col in cols:
+        country = pycountry.countries.get(alpha_3=col.split("_")[-1])
+        col_data = {
+            "countrycode": country.alpha_2,
+            "description": country.name,
+            "index": tail[col].item()
         }
-        transformed_data.append(transformed_entry)
-    return transformed_data
+        data.append(col_data)
 
-# Load the countryCode.json data
-def load_country_data():
-    with open('lib/json/countryCode.json') as file:
-        country_data = json.load(file)
-    return country_data
+    return data
