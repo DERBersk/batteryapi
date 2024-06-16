@@ -71,7 +71,7 @@ def IncomingOrderCalculation():
     today = datetime.now()
     
     # Query to fetch all incoming orders
-    incoming_orders = db.session.query(Order).filter(Order.delivery_date > today).all()
+    incoming_orders = db.session.query(Order).filter(Order.delivery_date is None).all()
     
     # Serialize the orders
     result = [order.serialize() for order in incoming_orders]
