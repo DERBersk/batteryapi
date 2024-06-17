@@ -1,5 +1,8 @@
 from extensions import db
 
+from models.material import Material
+from models.materials_per_supplier import MaterialsPerSupplier
+
 class Supplier(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -14,6 +17,13 @@ class Supplier(db.Model):
     email = db.Column(db.String(250), nullable=True)
     
     def serialize(self):
+        mat_count = Material.query.join(MaterialsPerSupplier)\
+                                  .join(Supplier)\
+                                  .filter(MaterialsPerSupplier.supplier_id==self.id)\
+                                  .filter(Material.id==MaterialsPerSupplier.material_id)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit)\
+                                  .count()
+        
         return {
             'id': self.id,
             'name': self.name,
@@ -25,5 +35,6 @@ class Supplier(db.Model):
             'reliability':self.reliability, # Reliability = Compliance
             'availability':self.availability,
             'country':self.country,
-            'email': self.email
+            'email': self.email,
+            'mat_count': mat_count
         }

@@ -34,7 +34,8 @@ Show data of a All Suppliers.
         "sustainability_index": 8.28791629020131,
         "availability": "True",
         "country": "France",
-        "email": ""
+        "email": "",
+        "mat_count": 2
     },
     {
         "availability": 0.9874379222633706,
@@ -48,7 +49,8 @@ Show data of a All Suppliers.
         "sustainability_index": 6.025667519196149,
         "availability": "False",
         "country": "China",
-        "email": "maxmustermann@gmail.com"
+        "email": "maxmustermann@gmail.com",
+        "mat_count": 3
     },
     ...
 ]
@@ -115,3 +117,59 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
 **Code** : `404 NOT FOUND`
 
 **Content** : `{'message': 'Supplier with id {supplier_id} not found'}`
+
+# Show Multiple Suppliers with Provision of one specific Material ID
+
+Show data of a All Suppliers with Provision of one specific Material ID.
+
+**URL** : `/api/supplier/material/<material_id>`
+
+**Method** : `GET`
+
+**Data**: 
+
+```json
+{
+    
+}
+```
+
+## Success Response
+
+**Code** : `200 OK`
+
+**Content example**:
+
+```json
+[
+    {
+        "mPs_co2emissions": null,
+        "mPs_lead_time": 1,
+        "material_id": 11,
+        "supplier_availability": true,
+        "supplier_country": "France",
+        "supplier_id": 12,
+        "supplier_lat": 47.1985431981444,
+        "supplier_long": -1.58932183135905,
+        "supplier_name": "Armor Battery Films",
+        "supplier_reliability": -0.3,
+        "supplier_risk_index": 0.251099950171836,
+        "supplier_sustainability_index": 0.22483555123122
+    },
+    {
+        "mPs_co2emissions": null,
+        "mPs_lead_time": 2,
+        "material_id": 11,
+        "supplier_availability": true,
+        "supplier_country": "Germany",
+        "supplier_id": 13,
+        "supplier_lat": 52.0506998740152,
+        "supplier_long": 7.64411887190933,
+        "supplier_name": "BASF",
+        "supplier_reliability": null,
+        "supplier_risk_index": 0.691806793403764,
+        "supplier_sustainability_index": 0.825091751085014
+    },
+    ...
+]
+```

@@ -61,7 +61,7 @@ def get_supplier(supplier_id):
                 'sustainability_index':supplier.sustainability_index,
                 'quality':supplier.quality,
                 'reliability':supplier.reliability,
-                'availability':str(supplier.availability),
+                'availability':supplier.availability,
                 'country': supplier.country,
                 'email': supplier.email,
                 'materials': materials_list
@@ -160,3 +160,38 @@ def delete_supplier(supplier_id):
         return jsonify({'message': 'Supplier and associated records deleted successfully'}), 200
     else:
         return jsonify({'error': 'Supplier not found'}), 404
+    
+###################################################
+# Get for a single Suppliers based on Material id
+# (inc. Material Data)
+###################################################
+@supplier_bp.route('/material/<int:material_id>', methods=['GET'])
+def get_supplier_on_material_id(material_id):
+    supplier_per_material = []
+    
+    materials = MaterialsPerSupplier.query.join(Material).\
+                                        filter(Material.id == MaterialsPerSupplier.material_id).\
+                                        join(Supplier).\
+                                        filter(Supplier.id == MaterialsPerSupplier.supplier_id).\
+                                        filter(Material.id == material_id).\
+                                        add_columns(MaterialsPerSupplier.material_id,Material.unit,Material.lot_size,Material.stock_level,Material.strategy,MaterialsPerSupplier.lead_time,MaterialsPerSupplier.co2_emissions,Supplier.availability,Supplier.id,Supplier.name,Supplier.country,Supplier.email,Supplier.lat,Supplier.long,Supplier.reliability,Supplier.sustainability_index,Supplier.risk_index).\
+                                        all()
+    
+    for material in materials:
+        material_json = {
+            'supplier_id': material.id,
+            'material_id': material.material_id,
+            'supplier_name': material.name,
+            'supplier_lat': material.lat,
+            'supplier_long': material.long,
+            'supplier_risk_index': material.risk_index,
+            'supplier_reliability': material.reliability,
+            'supplier_sustainability_index': material.sustainability_index,
+            'supplier_availability': material.availability,
+            'supplier_country': material.country,
+            'mPs_lead_time': material.lead_time,
+            'mPs_co2emissions': material.co2_emissions
+        }
+        supplier_per_material.append(material_json)
+    
+    return jsonify(supplier_per_material)
