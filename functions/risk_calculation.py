@@ -26,7 +26,7 @@ def CountryRisk():
         country_info = {
             "countrycode": code,
             "description": name,
-            "index": "NA"
+            "index": 0
         }
 
         # Überprüfen, ob das Land in den Spalten der Excel-Datei vorhanden ist
@@ -37,16 +37,5 @@ def CountryRisk():
                 break
 
         data.append(country_info)
-
-    print(data)
-
-    for col in cols:
-        country = pycountry.countries.get(alpha_3=col.split("_")[-1])
-        col_data = {
-            "countrycode": country.alpha_2,
-            "description": country.name,
-            "index": tail[col].item()
-        }
-        data.append(col_data)
         
     return data
