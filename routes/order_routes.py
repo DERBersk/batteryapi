@@ -37,13 +37,15 @@ def post_orders():
             order.amount = entry.get('amount', order.amount)
             order.planned_delivery_date = datetime.datetime.strptime(entry.get('plannded_delivery_date'),'%m-%d-%y').date()
             order.delivery_date = datetime.datetime.strptime(entry.get('delivery_date'),'%m-%d-%y').date()
+            order.external_id = entry.get('external_id', order.external_id)
         else:
             order = Order(
                 material_id=entry['material_id'],
                 supplier_id=entry['supplier_id'],
                 amount=entry['amount'],
                 planned_delivery_date=datetime.datetime.strptime(entry['planned_delivery_date'],'%m-%d-%y').date(),
-                delivery_date=datetime.datetime.strptime(entry['delivery_date'],'%m-%d-%y').date()
+                delivery_date=datetime.datetime.strptime(entry['delivery_date'],'%m-%d-%y').date(),
+                external_id=entry['external_id']
             )
             db.session.add(order)
     

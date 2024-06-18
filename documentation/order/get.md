@@ -29,7 +29,8 @@ Show data of a All Orders.
         "amount": 50.5,
         "planned_delivery_date": "2024-06-10",
         "delivery_date": "2024-06-09",
-        "unit":"Stk"
+        "unit":"Stk",
+        "external_id":"19-DCO"
     },
     {
         "id": 2,
@@ -38,7 +39,8 @@ Show data of a All Orders.
         "amount": 75.0,
         "planned_delivery_date": "2024-06-12",
         "delivery_date": "2024-06-13",
-        "unit":"kg"
+        "unit":"kg",
+        "external_id":"KLO-11131"
     },
     {
         "id": 3,
@@ -47,7 +49,8 @@ Show data of a All Orders.
         "amount": 100.0,
         "planned_delivery_date": "2024-06-15",
         "delivery_date": null,
-        "unit":"g"
+        "unit":"g",
+        "external_id":"NAVA-13114"
     }
 ]
 ```

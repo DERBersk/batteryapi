@@ -35,7 +35,8 @@ Show data of a All Suppliers.
         "availability": "True",
         "country": "France",
         "email": "",
-        "mat_count": 2
+        "mat_count": 2,
+        "external_id":"FRA-131"
     },
     {
         "availability": 0.9874379222633706,
@@ -50,7 +51,8 @@ Show data of a All Suppliers.
         "availability": "False",
         "country": "China",
         "email": "maxmustermann@gmail.com",
-        "mat_count": 3
+        "mat_count": 3,
+        "external_id":"MAX-5456"
     },
     ...
 ]
@@ -98,13 +100,15 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
             "price": 10.95,
             "safety_stock": 7,
             "stock_level": 86,
-            "unit": "kg"
+            "unit": "kg",
+            "external_id":"14114"
         }
     ],
     "name": "Fisher-Diaz",
     "quality": 5.92,
     "reliability": 0.317,
     "risk_index": 0.81,
+    "external_id":"aafs-1314",
     "sustainability_index": 8.28,
     "email": "monikamustermann@fisher.ch"
 }

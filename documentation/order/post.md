@@ -15,7 +15,8 @@ Create or modify one or many Orders
         "supplier_id": 201,
         "amount": 50.5,
         "planned_delivery_date": "2024-06-10",
-        "delivery_date": "2024-06-09"
+        "delivery_date": "2024-06-09",
+        "external_id":"adda-13113"
     },
     {
         "id": 2,
@@ -23,14 +24,16 @@ Create or modify one or many Orders
         "supplier_id": 202,
         "amount": 75.0,
         "planned_delivery_date": "2024-06-12",
-        "delivery_date": "2024-06-13"
+        "delivery_date": "2024-06-13",
+        "external_id":""
     },
     {
         "material_id": 103,
         "supplier_id": 203,
         "amount": 100.0,
         "planned_delivery_date": "2024-06-15",
-        "delivery_date": null
+        "delivery_date": null,
+        "external_id":"NAN-1314"
     }
 ]
 ```

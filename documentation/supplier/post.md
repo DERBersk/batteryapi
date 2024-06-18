@@ -23,6 +23,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "availability": "True",
         "country": "Germany",
         "email": "",
+        "external_id":"ROTTERDAM-12",
         "materials": [
             {
                 "id": 2,
@@ -31,7 +32,8 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "lot_size": 50,
                 "stock_level": 200,
                 "lead_time": 3,
-                "unit": "kg"
+                "unit": "kg",
+                "external_id":"753813"   
             },
             {
                 "name": "New Zinc",
@@ -39,7 +41,8 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "lot_size": 75,
                 "stock_level": 300,
                 "lead_time": 7,
-                "unit": "Stk"
+                "unit": "Stk",
+                "external_id":"ZINC"
             }
         ]
     },
@@ -55,6 +58,7 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
         "availability": "False",
         "country": "USA",
         "email": "maxmustermann@gmail.com",
+        "external_id":"afwf-1411"
         "materials": [
             {
                 "id": 1,
@@ -63,7 +67,8 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "lot_size": 60,
                 "stock_level": 250,
                 "lead_time": 4,
-                "unit": "Stk"
+                "unit": "Stk",
+                "external_id":"4646"
             }
         ]
     }

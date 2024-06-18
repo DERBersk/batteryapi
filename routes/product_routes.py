@@ -28,7 +28,7 @@ def get_product(product_id):
                                   .join(Product)\
                                   .filter(MaterialsPerProduct.product_id==product_id)\
                                   .filter(Material.id==MaterialsPerProduct.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount,Material.unit)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount,Material.unit,Material.external_id)\
                                   .all()
         materials_list = []
         for material in materials:
@@ -40,13 +40,15 @@ def get_product(product_id):
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
                     'amount': material.amount,
-                    'unit': material.unit
+                    'unit': material.unit,
+                    'external_id': material.external_id
                 }
             )
         product_data = {
                 'id': product.id,
                 'description': product.description,
                 'specification': product.specification,
+                'external_id': product.external_id,
                 'materials': materials_list
         }
         return jsonify(product_data), 200
@@ -68,7 +70,8 @@ def create_or_update_products():
         # Extract product data
         product_data = {
             'description': product_data.get('description'),
-            'specification': product_data.get('specification')
+            'specification': product_data.get('specification'),
+            'external_id': product_data.get('external_id')
         }
 
         # Create or update product
@@ -100,6 +103,7 @@ def create_or_update_products():
             material.lot_size = material_data.get('lot_size')
             material.stock_level = material_data.get('stock_level')
             material.unit = material_data.get('unit')
+            material.external_id = material_data.get('external_id')
 
             # Add or update MaterialsPerProduct
             amount = material_data.get('amount')

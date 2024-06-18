@@ -27,7 +27,7 @@ def get_project(project_id):
                                 .join(Project)\
                                 .filter(ProductsPerProject.project_id==project_id)\
                                 .filter(Product.id==ProductsPerProject.product_id)\
-                                .add_columns(Product.id,Product.description,Product.specification,ProductsPerProject.amount,ProductsPerProject.raw_material_type,ProductsPerProject.component_parts_type)\
+                                .add_columns(Product.id,Product.description,Product.specification,ProductsPerProject.amount,ProductsPerProject.raw_material_type,ProductsPerProject.component_parts_type,Product.external_id)\
                                 .all()
         print(products)
         products_list = []
@@ -39,7 +39,8 @@ def get_project(project_id):
                     'specification': product.specification,
                     'amount': product.amount,
                     'raw_material_type': product.raw_material_type,
-                    'component_parts_type': product.component_parts_type
+                    'component_parts_type': product.component_parts_type,
+                    "external_id": product.external_id
                 }
             )
         st_wk = Week.query.filter(Week.id == project.start_week).first()
@@ -108,6 +109,7 @@ def create_or_update_project():
             
             product.description = product_data.get('description')
             product.specification = product_data.get('specification')
+            product.external_id = product_data.get('external_id')
 
             # Add or update ProductsPerProject
             amount = product_data.get('amount')
