@@ -35,7 +35,7 @@ def CountryRisk():
             if country_code_3 in alpha3_to_code and alpha3_to_code[country_code_3] == code:
                 country_info["index"] = tail[col].item()
                 break
-
-        data.append(country_info)
+        if(country_info["index"] >= 0):      
+            data.append(country_info)
         
     return data
