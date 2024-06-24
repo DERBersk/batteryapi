@@ -26,7 +26,7 @@ def CountryRisk():
         country_info = {
             "countrycode": code,
             "description": name,
-            "index": float('nan')
+            "index": -1.0
         }
 
         # Überprüfen, ob das Land in den Spalten der Excel-Datei vorhanden ist
