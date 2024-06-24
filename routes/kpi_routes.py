@@ -20,7 +20,7 @@ def get_sus_index():
 ###################################################
 @kpi_bp.route('/countryrisk', methods=['GET'])
 def CountryRiskGet():
-    return jsonify(CountryRisk())
+    return CountryRisk()
 
 ###################################################
 # Route for the Return and Calculation
