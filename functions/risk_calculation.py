@@ -33,7 +33,8 @@ def CountryRisk():
         for col in cols:
             country_code_3 = col.split("_")[-1]
             if country_code_3 in alpha3_to_code and alpha3_to_code[country_code_3] == code:
-                country_info["index"] = tail[col].item()
+                val = tail[col].item()
+                country_info["index"] = val / 2 
                 break
         if(country_info["index"] >= 0):      
             data.append(country_info)
