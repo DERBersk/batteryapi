@@ -6,7 +6,7 @@ from models.base_production_volume import BaseProductionVolume
 from models.project import Project
 from models.material import Material
 from models.supplier import Supplier
-from models.options import StrategyEnum, Options
+from models.options import Options
 from models.week import Week
 from models.price import Price
 from models.products_per_project import ProductsPerProject
@@ -75,8 +75,6 @@ def OptimalOrderCalculation():
     rec_order_dict = {}
 
     today = date.today()
-    start_week = today.isocalendar()[1]
-    start_year = today.isocalendar()[0]
     
     for material in materials:
         material_id = material.id
@@ -117,7 +115,6 @@ def OptimalOrderCalculation():
         if not supplier:
             continue
         
-        supplier_name = supplier.name
         supplier_id = supplier.id
         price = price_dict.get((supplier_id, material_id))
         price = price.cost if price else None
@@ -153,9 +150,8 @@ def OptimalOrderCalculation():
                 min_order = total_demand - material.stock_level
                 material_recommendation = {
                     "material_id": material_id,
-                    "unit": unit,
+                    "unit": unit.value,
                     "name": name,
-                    "order_needed": True,
                     "strategy": strategy,
                     "min_order": min_order,
                     "supplier_id": supplier_id,

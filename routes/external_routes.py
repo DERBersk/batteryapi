@@ -75,11 +75,14 @@ def update_data(token):
                         material_id = material_per_supplier.material_id
                         lead_time = request.form.get(f'lead_time_{material_id}')
                         co2_emissions = request.form.get(f'co2_emissions_{material_id}')
+                        distance = request.form.get(f'distance_{material_id}')
 
                         if lead_time is not None:
                             material_per_supplier.lead_time = lead_time
                         if co2_emissions is not None:
                             material_per_supplier.co2_emissions = co2_emissions
+                        if distance is not None:
+                            material_per_supplier.distance = distance
 
                     # Commit changes to the database
                     db.session.commit()
@@ -99,7 +102,8 @@ def update_data(token):
                     'id': material.id,
                     'name': material.name,
                     'lead_time': material_per_supplier.lead_time,
-                    'co2_emissions': material_per_supplier.co2_emissions
+                    'co2_emissions': material_per_supplier.co2_emissions,
+                    'distance': material_per_supplier.distance
                 })
 
             # Render the form with existing supplier data and materials

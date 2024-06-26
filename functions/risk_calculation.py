@@ -40,3 +40,5 @@ def CountryRisk():
             data.append(country_info)
         
     return data
+
+    

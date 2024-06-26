@@ -25,7 +25,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            width: 1000px;
             box-sizing: border-box;
         }
 
@@ -75,7 +75,7 @@
         }
 
         .material-inputs input[type="number"] {
-            width: calc(50% - 10px);
+            width: calc(33% - 10px);
         }
     </style>
 </head>
@@ -96,11 +96,13 @@
                 <h3>{{ material.name }}</h3>
                 <div class="material-labels">
                     <label for="co2_emissions_{{ material.id }}">CO2 Emissions (kg CO2/kg Material)</label>
-                    <label for="lead_time_{{ material.id }}">Lead Time (weeks)</label>
+                    <label for="lead_time_{{ material.id }}">Lead Time (weeks)</label> 
+                    <label for="distance_{{ material.id }}">Distance</label>
                 </div>
                 <div class="material-inputs">
                     <input type="number" id="co2_emissions_{{ material.id }}" name="co2_emissions_{{ material.id }}" value="{{ material.co2_emissions }}" step="0.01" />
                     <input type="number" id="lead_time_{{ material.id }}" name="lead_time_{{ material.id }}" value="{{ material.lead_time }}" />
+                    <input type="number" id="distance_{{ material.id }}" name="distance_{{ material.id }}" value="{{ material.distance }}" />
                 </div>
             </div>
             {% endfor %}

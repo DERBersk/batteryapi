@@ -3,12 +3,12 @@ from models.options import StrategyEnum
 from enum import Enum
 
 class UnitEnum(Enum):
-    Pcs = "Pcs",
+    Pcs = "Pcs"
     t = "t"
     kg = "kg"
-    g = "g",
-    mg = "mg",
-    l = "l",
+    g = "g"
+    mg = "mg"
+    l = "l"
     ml = "ml"
     
 
@@ -30,6 +30,6 @@ class Material(db.Model):
             'lot_size': self.lot_size,
             'stock_level': self.stock_level,
             'strategy': self.strategy.name if self.strategy else None,
-            'unit': self.unit,
+            'unit': self.unit.value,
             'external_id': self.external_id,
         }
