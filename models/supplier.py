@@ -15,6 +15,7 @@ class Supplier(db.Model):
     availability = db.Column(db.Boolean, nullable=True)
     country = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(250), nullable=True)
+    external_id = db.Column(db.String(20), nullable=True)
     
     def serialize(self):
         mat_count = Material.query.join(MaterialsPerSupplier)\
@@ -36,5 +37,6 @@ class Supplier(db.Model):
             'availability':self.availability,
             'country':self.country,
             'email': self.email,
+            'external_id': self.external_id,
             'mat_count': mat_count
         }

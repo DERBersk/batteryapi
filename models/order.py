@@ -8,6 +8,7 @@ class Order(db.Model):
     amount = db.Column(db.Float)
     planned_delivery_date = db.Column(db.Date, nullable = True)
     delivery_date = db.Column(db.Date, nullable = True)
+    external_id = db.Column(db.String(20), nullable=True)
         
     def serialize(self):
         material=Material.query.filter(Material.id == self.material_id).first()
@@ -19,7 +20,8 @@ class Order(db.Model):
             'amount': self.amount,
             'planned_delivery_date': self.planned_delivery_date,
             'delivery_date': self.delivery_date,
-            'unit': material.unit
+            'unit': material.unit,
+            'external_id': self.external_id,
         }
     
     def is_punctual(self):

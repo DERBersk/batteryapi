@@ -85,7 +85,8 @@ Show data of a single Project and its associated tables: Products and ProductsPe
             "description": "Lithium-Ion Battery Pouch v1",
             "id": 5,
             "raw_material_type": null,
-            "specification": "Pouch"
+            "specification": "Pouch",
+            "external_id":"1131-USA"
         },
         {
             "amount": 45,
@@ -93,7 +94,8 @@ Show data of a single Project and its associated tables: Products and ProductsPe
             "description": "Lithium-Ion Battery Pouch v3",
             "id": 1,
             "raw_material_type": null,
-            "specification": "Pouch"
+            "specification": "Pouch",
+            "external_id":""
         }
     ],
     "partner": "Greene PLC",

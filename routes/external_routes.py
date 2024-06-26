@@ -108,3 +108,23 @@ def update_data(token):
             return jsonify('Link has expired.'),403
     else:
         return jsonify('Invalid link.'),400
+    
+#####################################################
+# TODO:
+#   Product Route
+#   Order Route
+#   Supplier Route
+#   Material Route
+#   ProductionVolumeRoute (Sum up per week)
+#   
+# Structure:
+#   Fetch Data from Secondary API
+#   Fetch Data from own DB
+#   Create Dictionaries
+#   For each Datapoint in Secondary API Dict
+#       If Data from Secondary API via external_id in
+#       Data from Own db
+#           Modify the data from own db
+#       Else
+#           Insert as new datapoint with id as external_id
+#####################################################

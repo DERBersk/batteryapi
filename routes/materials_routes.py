@@ -45,7 +45,8 @@ def create_or_update_materials():
             "safety_stock": material_data.get('safety_stock'),
             "lot_size": material_data.get('lot_size'),
             "stock_level": material_data.get('stock_level'),
-            "unit": material_data.get('unit')
+            "unit": material_data.get('unit'),
+            "external_id": material_data.get('external_id')
         }
         
         # Check if ID is provided

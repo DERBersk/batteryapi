@@ -29,7 +29,8 @@ Show data of a All Materials.
         "safety_stock": 7,
         "stock_level": 86,
         "strategy": "Sustainability",
-        "unit": "Stk"
+        "unit": "Stk",
+        "external_id":"29-LIT"
     },
     {
         "id": 2,
@@ -38,7 +39,8 @@ Show data of a All Materials.
         "safety_stock": 8,
         "stock_level": 32.7,
         "strategy": "Price",
-        "unit": "kg"
+        "unit": "kg",
+        "external_id":"28-COP"
     },
     ...
 ]

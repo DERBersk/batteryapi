@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify
 from functions.risk_calculation import CountryRisk
 from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation
 from functions.reliability_calculation import ReliabilityCalculation
-from functions.dashboard_calculations import CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct
+from functions.dashboard_calculations import ProductDemandCalculation, CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct
 
 kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 
@@ -83,3 +83,10 @@ def MostProducedGet():
 @kpi_bp.route('/incomingOrders', methods=['GET'])
 def IncomingOrdersGet():
     return jsonify(IncomingOrderCalculation())
+
+###################################################
+# Route for upcoming Productions
+###################################################
+@kpi_bp.route('/production', methods=['GET'])
+def ProductionGet():
+    return jsonify(ProductDemandCalculation())

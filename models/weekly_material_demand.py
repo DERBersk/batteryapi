@@ -31,19 +31,7 @@ class WeeklyMaterialDemand(db.Model):
             return week.week >= current_week
         return False
     
-    def is_in_lead_time(self, lead_time):
+    def is_in_lead_time(self, lead_time_end_date):
         week = Week.query.filter(Week.id == self.week_id).first()
-        current_date = datetime.datetime.now()
-        current_year, current_week = current_date.isocalendar()[:2]
-
-        # Calculate the target week and year by adding the lead time
-        target_date = current_date + datetime.timedelta(weeks=lead_time)
-        target_year, target_week = target_date.isocalendar()[:2]
-
-        # Determine if the week falls within the lead time
-        if week.year < current_year or (week.year == current_year and week.week < current_week):
-            return False
-        elif week.year > target_year or (week.year == target_year and week.week > target_week):
-            return False
-        
-        return True
+        week_start_date = datetime.date(week.year, 1, 1) + datetime.timedelta(weeks=week.week) + datetime.timedelta(weeks=-2)
+        return week_start_date <= lead_time_end_date

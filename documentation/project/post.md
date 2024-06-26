@@ -22,19 +22,8 @@ Create or modify one or many Projects and each respective fitted table (Products
         "machine_labor_availability": "High",
         "products": [
         {
-            "description": "New Product",
-            "specification": "Specification for Product A",
-            "amount": 100,
-            "raw_material_type": "Type X",
-            "component_parts_type": "Type Y"
-        },
-        {
             "id": 1,
-            "description": "Changed Lithium-Ion Pouch v3",
-            "specification": "Specification for Product B",
             "amount": 200,
-            "raw_material_type": "Type Z",
-            "component_parts_type": "Type W"
         }
         ]
     },

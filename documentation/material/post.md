@@ -10,23 +10,25 @@ Create or modify one or many Materials.
 
 ```json
 [
-  {
-    "id": 1,
-    "name": "Changed Material X",
-    "safety_stock": 100,
-    "lot_size": 50,
-    "stock_level": 200,
-    "strategy": "risk",
-    "unit": "kg"
-  },
-  {
-    "name": "New Material Y",
-    "safety_stock": 150,
-    "lot_size": 75,
-    "stock_level": 300,
-    "strategy": " ",
-    "unit": "Stk"
-  }
+    {
+        "id": 1,
+        "name": "Changed Material X",
+        "safety_stock": 100,
+        "lot_size": 50,
+        "stock_level": 200,
+        "strategy": "risk",
+        "unit": "kg",
+        "external_id":"10231-X"
+    },
+    {
+        "name": "New Material Y",
+        "safety_stock": 150,
+        "lot_size": 75,
+        "stock_level": 300,
+        "strategy": " ",
+        "unit": "Stk",
+        "external_id":"10123-Y"
+    }
 ]
 ```
 
