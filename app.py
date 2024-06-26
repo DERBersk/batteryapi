@@ -24,6 +24,7 @@ def create_app():
     from routes.kpi_routes import kpi_bp
     from routes.base_production_routes import base_productionbp
     from routes.external_routes import external_bp
+    from routes.options_routes import options_bp
     # Register blueprints
     app.register_blueprint(supplier_bp)
     app.register_blueprint(product_bp)
@@ -34,6 +35,7 @@ def create_app():
     app.register_blueprint(kpi_bp)
     app.register_blueprint(base_productionbp)
     app.register_blueprint(external_bp)
+    app.register_blueprint(options_bp)
     
     return app
 

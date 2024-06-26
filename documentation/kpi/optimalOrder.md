@@ -21,44 +21,85 @@ Calculate the optimal order quantities for materials based on various strategies
 **Content example**:
 
 ```json
-[
-    {
-        "material_id": 1,
-        "name": "Graphit",
-        "order_needed": true,
-        "strategy": "Price",
-        "min_order": 50,
-        "supplier_id": 3,
-        "lead_time": 7,
-        "sustainability_index": 0.75,
-        "risk_index": 0.2,
-        "price": 15.0
-    },
-    {
-        "material_id": 2,
-        "name": "Lithium",
-        "order_needed": false,
-        "strategy": "Sustainability",
-        "min_order": 0,
-        "supplier_id": 1,
-        "lead_time": 10,
-        "sustainability_index": 0.9,
-        "risk_index": 0.1,
-        "price": 12.5
-    },
-    {
-        "material_id": 3,
-        "order_needed": true,
-        "strategy": "LeadTime",
-        "min_order": 30,
-        "supplier_id": 5,
-        "lead_time": 5,
-        "sustainability_index": 0.6,
-        "risk_index": 0.3,
-        "price": 20.0
-    },
-    ...
-]
+{
+   "wk26_2024": [
+      {
+         "lead_time": 2,
+         "material_id": 11,
+         "min_order": 19351.0,
+         "name": "Anodenmaterial (Solid content 50%)",
+         "order_needed": true,
+         "price": 7.0,
+         "risk_index": 0.691806793403764,
+         "strategy": "Price",
+         "supplier_id": 13,
+         "supplier_name": "BASF",
+         "sustainability_index": 0.825091751085014,
+         "unit": null
+      },
+      {
+         "lead_time": 5,
+         "material_id": 12,
+         "min_order": 48251.0,
+         "name": "Graphit",
+         "order_needed": true,
+         "price": 20.0,
+         "risk_index": 0.934643063966633,
+         "strategy": "Sustainability",
+         "supplier_id": 14,
+         "supplier_name": "BTR",
+         "sustainability_index": 0.614823391587686,
+         "unit": null
+      },
+      {
+         "lead_time": 2,
+         "material_id": 13,
+         "min_order": 661.0,
+         "name": "Leitadditiv",
+         "order_needed": true,
+         "price": 50.0,
+         "risk_index": 0.765437063720187,
+         "strategy": "Price",
+         "supplier_id": 16,
+         "supplier_name": "Cuircuit Foil",
+         "sustainability_index": 0.550682969673082,
+         "unit": null
+      },
+      {
+         "lead_time": 4,
+         "material_id": 14,
+         "min_order": 2401.0,
+         "name": "Binder 1 (SBR)",
+         "order_needed": true,
+         "price": 2.0,
+         "risk_index": 0.934643063966633,
+         "strategy": "Price",
+         "supplier_id": 14,
+         "supplier_name": "BTR",
+         "sustainability_index": 0.614823391587686,
+         "unit": null
+      }
+   ],
+   "wk27_2024": [],
+   "wk28_2024": [],
+   "wk29_2024": [],
+   "wk30_2024": [
+      {
+         "lead_time": 2,
+         "material_id": 15,
+         "min_order": 401.0,
+         "name": "Binder 2 (CMC)",
+         "order_needed": true,
+         "price": 2.99,
+         "risk_index": 0.934643063966633,
+         "strategy": "Price",
+         "supplier_id": 14,
+         "supplier_name": "BTR",
+         "sustainability_index": 0.614823391587686,
+         "unit": null
+      }
+   ]
+}
 ```
 
 ## Algorithm
@@ -96,3 +137,4 @@ The following data is required for the `OptimalOrderCalculation` function to wor
    - Current prices for all materials from all suppliers, with details about the cost and validity period.
    - Relationships between materials and suppliers, including lead times for each supplier-material pair.
    - Forecasted weekly demand for each material fetched from the `MaterialDemandCalculation`.
+   - Upcoming Orders either input manually or through the WMS or ERP Connection Setup

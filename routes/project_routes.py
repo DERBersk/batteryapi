@@ -104,24 +104,14 @@ def create_or_update_project():
                 product = Product.query.get(product_id)
                 if not product:
                     return jsonify({'message': f'Product with id {product_id} not found'}), 404
-            else:
-                product = Product()
             
-            product.description = product_data.get('description')
-            product.specification = product_data.get('specification')
-            product.external_id = product_data.get('external_id')
-
             # Add or update ProductsPerProject
             amount = product_data.get('amount')
-            raw_material_type = product_data.get('raw_material_type')
-            component_parts_type = product_data.get('component_parts_type')
 
             products_per_project = ProductsPerProject(
                 project_id=project.id,
-                product_id=product.id,
+                product_id=product_id,
                 amount=amount,
-                raw_material_type=raw_material_type,
-                component_parts_type=component_parts_type
             )
             db.session.add(products_per_project)
 

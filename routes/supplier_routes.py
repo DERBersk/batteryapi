@@ -28,7 +28,7 @@ def get_supplier(supplier_id):
                                   .join(Supplier)\
                                   .filter(MaterialsPerSupplier.supplier_id==supplier_id)\
                                   .filter(Material.id==MaterialsPerSupplier.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit, Material.external_id)\
+                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit, Material.external_id,MaterialsPerSupplier.co2_emissions,MaterialsPerSupplier.distance)\
                                   .all()
         materials_list = []
         for material in materials:
@@ -50,7 +50,9 @@ def get_supplier(supplier_id):
                     'lead_time': material.lead_time,
                     'unit': material.unit,
                     'price': price_val,
-                    'external_id': material.external_id
+                    'external_id': material.external_id,
+                    'co2_emissions': material.co2_emissions,
+                    'distance': material.distance
                 }
             )
         supplier_data = {
@@ -120,27 +122,19 @@ def create_or_update_suppliers():
                 material = Material.query.get(material_id)
                 if not material:
                     return jsonify({'message': f'Material with id {material_id} not found'}), 404
-            else:
-                material = Material()
-
-            material.name = material_data.get('name')
-            material.safety_stock = material_data.get('safety_stock')
-            material.lot_size = material_data.get('lot_size')
-            material.stock_level = material_data.get('stock_level')
-            material.unit = material_data.get('unit')
-            material.external_id = material_data.get('external_id')
 
             # Add or update MaterialsPerSupplier
             lead_time = material_data.get('lead_time')
             co2_emissions = material_data.get('co2_emissions')
+            distance = material_data.get('distance')
 
             materials_per_supplier = MaterialsPerSupplier(
                 supplier_id=supplier.id,
                 material_id=material.id,
                 lead_time=lead_time,
-                co2_emissions=co2_emissions
+                co2_emissions=co2_emissions,
+                distance=distance
             )
-            db.session.add(material)
             db.session.add(materials_per_supplier)
 
     db.session.commit()

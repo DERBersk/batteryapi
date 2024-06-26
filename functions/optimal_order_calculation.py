@@ -1,5 +1,6 @@
 # import external packages
 from collections import defaultdict
+from datetime import date, timedelta, datetime
 # import models
 from models.base_production_volume import BaseProductionVolume
 from models.project import Project
@@ -12,6 +13,7 @@ from models.products_per_project import ProductsPerProject
 from models.materials_per_product import MaterialsPerProduct
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.weekly_material_demand import WeeklyMaterialDemand
+from models.order import Order
 
 ###############################################################################################
 # Main Functions
@@ -53,7 +55,8 @@ def OptimalOrderCalculation():
     prices = Price.query.filter(Price.end_date.is_(None)).all()
     materials_per_supplier = MaterialsPerSupplier.query.all()
     weekly_material_demands = WeeklyMaterialDemand.query.all()
-    
+    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).all()
+
     # Preprocess data for quick lookup
     supplier_dict = {supplier.id: supplier for supplier in suppliers}
     price_dict = {(price.supplier_id, price.material_id): price for price in prices}
@@ -63,14 +66,22 @@ def OptimalOrderCalculation():
         if demand.material_id not in weekly_material_demands_dict:
             weekly_material_demands_dict[demand.material_id] = []
         weekly_material_demands_dict[demand.material_id].append(demand)
+    outstanding_orders_dict = {}
+    for order in outstanding_orders:
+        if order.material_id not in outstanding_orders_dict:
+            outstanding_orders_dict[order.material_id] = []
+        outstanding_orders_dict[order.material_id].append(order)
     
-    rec_order_list = []
+    rec_order_dict = {}
+
+    today = date.today()
+    start_week = today.isocalendar()[1]
+    start_year = today.isocalendar()[0]
     
     for material in materials:
         material_id = material.id
         unit = material.unit
         name = material.name
-        order_needed = False
         strategy = material.strategy.value if material.strategy else options.strategy.value
         supplier = None
         
@@ -106,6 +117,7 @@ def OptimalOrderCalculation():
         if not supplier:
             continue
         
+        supplier_name = supplier.name
         supplier_id = supplier.id
         price = price_dict.get((supplier_id, material_id))
         price = price.cost if price else None
@@ -121,32 +133,45 @@ def OptimalOrderCalculation():
         weekly_material_demand = weekly_material_demands_dict.get(material_id, [])
         filtered_weekly_material_demand = [record for record in weekly_material_demand if record.is_later_or_equal]
         
-        lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time)
-        
-        total_demand = lead_time_demand + material.safety_stock
-        if total_demand <= material.stock_level:
-            order_needed = False
-            min_order = 0
-        else:
-            order_needed = True
-            min_order = total_demand - material.stock_level
-        
-        material_recommendation = {
-            "material_id": material_id,
-            "unit": unit,
-            "name": name,
-            "order_needed": order_needed,
-            "strategy": strategy,
-            "min_order": min_order,
-            "supplier_id": supplier_id,
-            "lead_time": lead_time,
-            "sustainability_index": sustainability_index,
-            "risk_index": risk_index,
-            "price": price
-        }
-        rec_order_list.append(material_recommendation)
+        for week in range(5):
+            week_start = today + timedelta(weeks=week)
+            week_number = week_start.isocalendar()[1]
+            year = week_start.isocalendar()[0]
+            week_key = f"wk{week_number}_{year}"
+
+            lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
+                        
+            # Calculate total outstanding orders for the material within the lead time
+            total_outstanding_orders = 0
+            if material_id in outstanding_orders_dict:
+                for order in outstanding_orders_dict[material_id]:
+                    if is_within_lead_time(order.planned_delivery_date, lead_time, week_start):
+                        total_outstanding_orders += order.amount
+            total_demand = lead_time_demand + material.safety_stock - total_outstanding_orders
+            
+            if total_demand > material.stock_level:
+                min_order = total_demand - material.stock_level
+                material_recommendation = {
+                    "material_id": material_id,
+                    "unit": unit,
+                    "name": name,
+                    "order_needed": True,
+                    "strategy": strategy,
+                    "min_order": min_order,
+                    "supplier_id": supplier_id,
+                    "supplier_name": supplier.name,
+                    "lead_time": lead_time,
+                    "sustainability_index": sustainability_index,
+                    "risk_index": risk_index,
+                    "price": price,
+                }
+                if week_key not in rec_order_dict:
+                    rec_order_dict[week_key] = []
+                    
+                if is_new_material(rec_order_dict,material_id):
+                    rec_order_dict[week_key].append(material_recommendation)
     
-    return rec_order_list
+    return rec_order_dict
     
 ###############################################################################################
 # Support Functions
@@ -235,7 +260,7 @@ def save_weekly_material_demand(material_demand_dict):
         db.session.add(weekly_demand)
     
     db.session.commit()
-    
+
 # Hilfsfunktion zur Berechnung der Anzahl der Wochen zwischen zwei Wochen
 def weeks_between(start_year, start_week, end_year, end_week):
     total_weeks = 0
@@ -248,10 +273,23 @@ def weeks_between(start_year, start_week, end_year, end_week):
             current_year += 1
     return total_weeks
 
-def get_lead_time_demand(weekly_material_demand, lead_time):
+# Helper function to calculate lead time demand
+def get_lead_time_demand(weekly_material_demand, lead_time, week_start):
     total_demand = 0
+    lead_time_end_date = week_start + timedelta(weeks=lead_time)
     for demand in weekly_material_demand:
-        if demand.is_in_lead_time(lead_time):
+        if demand.is_in_lead_time(lead_time_end_date):
             total_demand += demand.amount
-    return total_demand-1
-        
+    return total_demand
+
+# Helper function to determine if a date is within lead time
+def is_within_lead_time(planned_delivery_date, lead_time, week_start):
+    lead_time_end_date = week_start + timedelta(weeks=lead_time+2)
+    return planned_delivery_date <= lead_time_end_date
+
+def is_new_material(data, material_id):
+    for week in data.values():
+        for material in week:
+            if material['material_id'] == material_id:
+                return False
+    return True

@@ -101,7 +101,9 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
             "safety_stock": 7,
             "stock_level": 86,
             "unit": "kg",
-            "external_id":"14114"
+            "external_id":"14114",
+            "distance": 250,
+            "co2_emissions": 1313
         }
     ],
     "name": "Fisher-Diaz",

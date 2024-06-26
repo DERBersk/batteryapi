@@ -11,6 +11,7 @@ Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are C
 * [Show all Materials without Supplier](kpi/materialWithoutSupplier.md) `GET /api/kpi/materialWithoutSupplier`
 * [Show the most produced Product](kpi/mostProduced.md) `GET /api/kpi/mostProduced`
 * [Show the Order Volume in the past year](kpi/orderVolume.md) `GET /api/kpi/orderVolume`
+* [Show and Calculate Weekly Production](kpi/production.md) `GET /api/kpi/production`
 
 ### Material related
 
@@ -71,7 +72,7 @@ The Base Production endpoint allows for management of additional production plan
 
 ### Order related
 
-The Order endpoint allows for management of Historical and current. Order Data can be retrieved, created and deleted using respective HTTP methods.
+The Order endpoint allows for management of Historical and current Orders. Order Data can be retrieved, created and deleted using respective HTTP methods.
 
 * [Show Orders](order/get.md) : `GET /api/order/`
 * [Create Orders](order/post.md) : `POST /api/order/`
@@ -83,3 +84,10 @@ The Communication endpoints allow for emails to be sent out to suppliers includi
 
 * [Send Email Link](external/generate_link.md) : `POST /api/external/generate_link/`
 * [Update Supplier Data Form](external/update_data.md) : `POST,GET /api/external/generate_link/`
+
+### Options related
+
+The Options endpoint allows for management of the general Options. Order Data can be retrieved, created and edited using respective HTTP methods.
+
+* [Show Options](options/get.md) : `GET /api/options/`
+* [Create/Edit Options](Options/post.md) : `POST /api/options/`

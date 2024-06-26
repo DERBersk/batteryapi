@@ -95,22 +95,13 @@ def create_or_update_products():
                 material = Material.query.get(material_id)
                 if not material:
                     return jsonify({'message': f'Material with id {material_id} not found'}), 404
-            else:
-                material = Material()
-
-            material.name = material_data.get('name')
-            material.safety_stock = material_data.get('safety_stock')
-            material.lot_size = material_data.get('lot_size')
-            material.stock_level = material_data.get('stock_level')
-            material.unit = material_data.get('unit')
-            material.external_id = material_data.get('external_id')
 
             # Add or update MaterialsPerProduct
             amount = material_data.get('amount')
 
             materials_per_product = MaterialsPerProduct(
                 product_id=product.id,
-                material_id=material.id,
+                material_id=material_id,
                 amount=amount
             )
             db.session.add(materials_per_product)

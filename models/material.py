@@ -1,5 +1,16 @@
 from extensions import db
 from models.options import StrategyEnum
+from enum import Enum
+
+class UnitEnum(Enum):
+    Pcs = "Pcs",
+    t = "t"
+    kg = "kg"
+    g = "g",
+    mg = "mg",
+    l = "l",
+    ml = "ml"
+    
 
 class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,7 +19,7 @@ class Material(db.Model):
     lot_size = db.Column(db.Float)
     stock_level = db.Column(db.Float)
     strategy = db.Column(db.Enum(StrategyEnum), nullable=False, default=StrategyEnum.NONE)
-    unit = db.Column(db.String(50))
+    unit = db.Column(db.Enum(UnitEnum), nullable=False, default=UnitEnum.Pcs)
     external_id = db.Column(db.String(20), nullable=True)
         
     def serialize(self):
