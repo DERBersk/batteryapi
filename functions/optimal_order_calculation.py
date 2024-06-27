@@ -78,7 +78,7 @@ def OptimalOrderCalculation():
     
     for material in materials:
         material_id = material.id
-        unit = material.unit
+        unit = material.unit.name if material.unit else None
         name = material.name
         strategy = material.strategy.value if material.strategy else options.strategy.value
         supplier = None

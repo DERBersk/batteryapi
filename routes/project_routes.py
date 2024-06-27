@@ -52,8 +52,6 @@ def get_project(project_id):
                 'start_year': st_wk.year,
                 'end_week': en_wk.week,
                 'end_year': en_wk.year,
-                'production_schedule': project.production_schedule,
-                'machine_labor_availability': project.machine_labor_availability,
                 'materials': products_list
         }
         return jsonify(project_data), 200
@@ -79,8 +77,6 @@ def create_or_update_project():
             'partner': project_data.get('partner'),
             'start_week': start_week.id,
             'end_week': end_week.id,
-            'production_schedule': project_data.get('production_schedule'),
-            'machine_labor_availability': project_data.get('machine_labor_availability')
         }
 
         # Create or update project

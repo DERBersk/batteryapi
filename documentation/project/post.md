@@ -18,8 +18,6 @@ Create or modify one or many Projects and each respective fitted table (Products
         "start_year": 2025,
         "end_week": 14,
         "end_year": 2025,
-        "production_schedule": "Two shifts per day",
-        "machine_labor_availability": "High",
         "products": [
         {
             "id": 1,

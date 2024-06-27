@@ -20,7 +20,7 @@ class Order(db.Model):
             'amount': self.amount,
             'planned_delivery_date': self.planned_delivery_date,
             'delivery_date': self.delivery_date,
-            'unit': material.unit,
+            'unit': material.unit.name if material.unit else None,
             'external_id': self.external_id,
         }
     
