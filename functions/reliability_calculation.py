@@ -10,10 +10,7 @@ from models.supplier import Supplier
 with open('config.json', 'r') as file:
     config = json.load(file)
 
-def ReliabilityCalculation():
-    # Set threshold for supplier deliveries
-    threshold = config['RELIABILITY_THRESHOLD']
-    
+def ReliabilityCalculation():    
     # Initialize a dictionary to store punctual deliveries and total deliveries per supplier
     supplier_data = defaultdict(lambda: {'punctual_deliveries': 0, 'total_deliveries': 0})
     
@@ -33,7 +30,7 @@ def ReliabilityCalculation():
         if supplier.id in supplier_data:
             data = supplier_data[supplier.id]
             reliability = data['punctual_deliveries'] / data['total_deliveries']
-            supplier.reliability = reliability - threshold
+            supplier.reliability = reliability
         else:
             supplier.reliability = None  # No orders found for this supplier
     

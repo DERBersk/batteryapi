@@ -28,7 +28,6 @@ Show data of a All Suppliers.
         "lat": -68.37832013303877,
         "long": -72.47398735322135,
         "name": "Fisher-Diaz",
-        "quality": 5.924827825576889,
         "reliability": 0.3174353388376102,
         "risk_index": 0.8108719323659386,
         "sustainability_index": 8.28791629020131,
@@ -45,7 +44,6 @@ Show data of a All Suppliers.
         "lat": -37.9774473130205,
         "long": -139.9946895181667,
         "name": "Martinez LLC",
-        "quality": 4.117976905451678,
         "reliability": 0.3862772420817989,
         "risk_index": 2.6539343594064366,
         "sustainability_index": 6.025667519196149,
@@ -120,7 +118,6 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
             "supplier_id": 14
         }
     ],
-    "quality": 5.92,
     "reliability": 0.317,
     "risk_index": 0.81,
     "external_id":"aafs-1314",
