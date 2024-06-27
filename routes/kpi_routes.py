@@ -2,6 +2,7 @@
 from flask import Blueprint, jsonify
 # import functions and data
 from functions.risk_calculation import CountryRisk
+from functions.sustainability_calculations import calculate_sustainability_index
 from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation
 from functions.reliability_calculation import ReliabilityCalculation
 from functions.dashboard_calculations import ProductDemandCalculation, CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct
@@ -13,7 +14,7 @@ kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 ###################################################
 @kpi_bp.route('/susindex', methods=['GET'])
 def get_sus_index():
-    return jsonify('Returns Sustainability Index!')
+    return jsonify(calculate_sustainability_index)
 
 ###################################################
 # Get Risk of each Country
