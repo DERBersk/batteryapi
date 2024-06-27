@@ -6,6 +6,7 @@ from models.supplier import Supplier
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.price import Price
+from models.order import Order
 
 supplier_bp = Blueprint('supplier', __name__, url_prefix='/api/supplier')
 
@@ -48,13 +49,30 @@ def get_supplier(supplier_id):
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
                     'lead_time': material.lead_time,
-                    'unit': material.unit,
+                    'unit': material.unit.name if material.unit else None,
                     'price': price_val,
                     'external_id': material.external_id,
                     'co2_emissions': material.co2_emissions,
                     'distance': material.distance
                 }
             )
+            
+        orders = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == supplier_id).all()
+        order_list = []
+        for order in orders:
+            
+            order_list.append(
+                {
+                    'id': order.id,
+                    'material_id': order.material_id,
+                    'supplier_id': order.supplier_id,
+                    'amount': order.amount,
+                    'planned_delivery_date': order.planned_delivery_date,
+                    'delivery_date': order.delivery_date,
+                    'external_id': order.external_id,
+                }
+            )
+            
         supplier_data = {
                 'id': supplier.id,
                 'name': supplier.name,
@@ -68,7 +86,8 @@ def get_supplier(supplier_id):
                 'country': supplier.country,
                 'email': supplier.email,
                 'external_id': supplier.external_id,
-                'materials': materials_list
+                'materials': materials_list,
+                'open_orders': order_list
         }
         return jsonify(supplier_data), 200
     else:

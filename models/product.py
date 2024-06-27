@@ -1,5 +1,7 @@
 from extensions import db
 
+from models.materials_per_product import MaterialsPerProduct
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(100), nullable=False)
@@ -7,9 +9,12 @@ class Product(db.Model):
     external_id = db.Column(db.String(20), nullable=True)
     
     def serialize(self):
+        material_count = MaterialsPerProduct.query.filter(MaterialsPerProduct.product_id == self.id).count()
+        
         return {
             'id': self.id,
             'description': self.description,
             'specification': self.specification,
             'external_id': self.external_id,
+            'material_count': material_count
         }

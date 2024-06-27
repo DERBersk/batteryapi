@@ -19,7 +19,7 @@ class WeeklyMaterialDemand(db.Model):
             'week': week.week,
             'year': week.year,
             'amount': self.amount,
-            'unit': material.unit
+            'unit': material.unit.name if material.unit else None
         }
     
     def is_later_or_equal(self):

@@ -2,6 +2,7 @@ from extensions import db
 
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
+from models.order import Order
 
 class Supplier(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +26,8 @@ class Supplier(db.Model):
                                   .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit)\
                                   .count()
         
+        ord_count = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == self.id).count()
+        
         return {
             'id': self.id,
             'name': self.name,
@@ -38,5 +41,6 @@ class Supplier(db.Model):
             'country':self.country,
             'email': self.email,
             'external_id': self.external_id,
-            'mat_count': mat_count
+            'mat_count': mat_count,
+            'order_count': ord_count
         }

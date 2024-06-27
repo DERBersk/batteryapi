@@ -1,18 +1,22 @@
-from extensions import db
 import datetime 
+
+from extensions import db
+
 from models.week import Week
+from models.products_per_project import ProductsPerProject
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     partner = db.Column(db.String(100), nullable=False)
     start_week = db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     end_week =  db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
-    production_schedule = db.Column(db.String(10))
-    machine_labor_availability = db.Column(db.Float)
     
     def serialize(self):
         startweek = Week.query.filter(Week.id == self.start_week).first()
         endweek = Week.query.filter(Week.id == self.end_week).first()
+        
+        product_count = ProductsPerProject.query.filter(ProductsPerProject.project_id == self.id).count()
+        
         return {
             'id': self.id,
             'partner': self.partner,
@@ -20,8 +24,7 @@ class Project(db.Model):
             'start_year': startweek.year,
             'end_week': endweek.week,
             'end_year': endweek.year,
-            'production_schedule': self.production_schedule,
-            'machine_labor_availability': self.machine_labor_availability
+            'product_count': product_count
         }
         
     def check_project_week(self):

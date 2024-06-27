@@ -26,21 +26,19 @@ Show data of a All Projects.
         "end_week": 5,
         "end_year": 2025,
         "id": 1,
-        "machine_labor_availability": 0.38051291175043056,
         "partner": "Greene PLC",
-        "production_schedule": "static",
         "start_week": 1,
-        "start_year": 2025 
+        "start_year": 2025,
+        "product_count": 2
     },
     {
         "end_week": 50,
         "end_year": 2024,
         "id": 2,
-        "machine_labor_availability": 0.9875034373413405,
         "partner": "Allen-Gonzales",
-        "production_schedule": "static",
         "start_week": 48,
-        "start_year": 2024 
+        "start_year": 2024,
+        "product_count": 20
     },
     ...
 ]
@@ -77,7 +75,6 @@ Show data of a single Project and its associated tables: Products and ProductsPe
     "id": 1,
     "end_week": 20,
     "end_year": 2024,
-    "machine_labor_availability": 0.38,
     "materials": [
         {
             "amount": 12,
@@ -99,7 +96,6 @@ Show data of a single Project and its associated tables: Products and ProductsPe
         }
     ],
     "partner": "Greene PLC",
-    "production_schedule": "static",
     "start_week": 14,
     "start_year": 2024 
 }

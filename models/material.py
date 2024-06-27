@@ -30,6 +30,6 @@ class Material(db.Model):
             'lot_size': self.lot_size,
             'stock_level': self.stock_level,
             'strategy': self.strategy.name if self.strategy else None,
-            'unit': self.unit.value,
+            'unit': self.unit.name if self.unit else None,
             'external_id': self.external_id,
         }

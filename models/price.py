@@ -17,7 +17,7 @@ class Price(db.Model):
             'material_id': self.material_id,
             'supplier_id': self.supplier_id,
             'cost': self.cost,
-            'unit': material.unit,
+            'unit': material.unit.name if material.unit else None,
             'start_date': self.start_date,
             'end_date': self.end_date
         }

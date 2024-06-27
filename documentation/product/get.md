@@ -25,12 +25,14 @@ Show data of a All Products.
     {
         "description": "down",
         "id": 1,
-        "specification": "play"
+        "specification": "play",
+        "material_count": 2
     },
     {
         "description": "agent",
         "id": 2,
-        "specification": "better"
+        "specification": "better",
+        "material_count": 20
     },
     ...
 ]

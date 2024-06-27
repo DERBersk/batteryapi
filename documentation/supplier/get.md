@@ -36,6 +36,7 @@ Show data of a All Suppliers.
         "country": "France",
         "email": "",
         "mat_count": 2,
+        "order_count": 3,
         "external_id":"FRA-131"
     },
     {
@@ -52,6 +53,7 @@ Show data of a All Suppliers.
         "country": "China",
         "email": "maxmustermann@gmail.com",
         "mat_count": 3,
+        "order_count": 0,
         "external_id":"MAX-5456"
     },
     ...
@@ -107,6 +109,17 @@ Show data of a single Supplier and its associated tables: Material, Price and Ma
         }
     ],
     "name": "Fisher-Diaz",
+    "open_orders": [
+        {
+            "amount": 500.0,
+            "delivery_date": null,
+            "external_id": null,
+            "id": 11,
+            "material_id": 15,
+            "planned_delivery_date": "Tue, 13 Aug 2024 00:00:00 GMT",
+            "supplier_id": 14
+        }
+    ],
     "quality": 5.92,
     "reliability": 0.317,
     "risk_index": 0.81,
