@@ -9,3 +9,4 @@ apscheduler
 pycountry
 xlrd
 pandas
+requests
