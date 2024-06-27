@@ -150,7 +150,7 @@ def OptimalOrderCalculation():
                 min_order = total_demand - material.stock_level
                 material_recommendation = {
                     "material_id": material_id,
-                    "unit": unit.value,
+                    "unit": unit,
                     "name": name,
                     "strategy": strategy,
                     "min_order": min_order,
