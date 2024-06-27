@@ -1,0 +1,83 @@
+import numpy as np
+
+from extensions import db
+
+from models.materials_per_supplier import MaterialsPerSupplier
+from models.supplier import Supplier
+
+# Normalization function
+def normalize(value, min_value, max_value):
+    if min_value == max_value:  # To avoid division by zero
+        return 0
+    return (value - min_value) / (max_value - min_value)
+
+# Calculate Euclidean norm (Green Value)
+def euclidean_norm(values):
+    return np.sqrt(sum(val ** 2 for val in values))
+
+
+def calculate_sustainability_index():
+    # Fetch all MaterialsPerSupplier records
+    materials_per_supplier = MaterialsPerSupplier.query.all()
+    
+    # Group data by material and supplier
+    material_supplier_data = {}
+    for mps in materials_per_supplier:
+        if mps.material_id not in material_supplier_data:
+            material_supplier_data[mps.material_id] = {}
+        if mps.supplier_id not in material_supplier_data[mps.material_id]:
+            material_supplier_data[mps.material_id][mps.supplier_id] = {
+                'co2_emissions': [],
+                'distances': []
+            }
+        if mps.co2_emissions is not None:
+            material_supplier_data[mps.material_id][mps.supplier_id]['co2_emissions'].append(mps.co2_emissions)
+        if mps.distance is not None:
+            material_supplier_data[mps.material_id][mps.supplier_id]['distances'].append(mps.distance)
+
+    # Calculate normalized values and green value for each supplier
+    green_values = {}
+    for material_id, suppliers in material_supplier_data.items():
+        for supplier_id, data in suppliers.items():
+            co2_values = data['co2_emissions']
+            distance_values = data['distances']
+            
+            if not co2_values or not distance_values:
+                continue
+            
+            # Reference values (max and min) within this material group
+            co2_max = max(co2_values)
+            co2_min = min(co2_values)
+            distance_max = max(distance_values)
+            distance_min = min(distance_values)
+            
+            # Normalize values
+            normalized_co2_values = [normalize(value, co2_min, co2_max) for value in co2_values]
+            normalized_distance_values = [normalize(value, distance_min, distance_max) for value in distance_values]
+            
+            # Calculate average normalized values
+            avg_normalized_co2 = np.mean(normalized_co2_values)
+            avg_normalized_distance = np.mean(normalized_distance_values)
+            
+            # Calculate green value (Euclidean norm)
+            green_value = euclidean_norm([avg_normalized_co2, avg_normalized_distance])
+            
+            # Accumulate the green value for each supplier
+            if supplier_id not in green_values:
+                green_values[supplier_id] = []
+            green_values[supplier_id].append(green_value)
+    
+    # Calculate average green value for each supplier
+    supplier_sustainability_index = {supplier_id: np.mean(values) for supplier_id, values in green_values.items()}
+    
+    # Update sustainability_index in the Supplier table
+    for supplier_id, green_value in supplier_sustainability_index.items():
+        supplier = Supplier.query.filter(Supplier.id==supplier_id).first()
+        if supplier:
+            supplier.sustainability_index = green_value
+    
+    # Commit the changes to the database
+    db.session.commit()
+    
+    suppliers = Supplier.query.all()
+    return [supplier.serialize() for supplier in suppliers]
