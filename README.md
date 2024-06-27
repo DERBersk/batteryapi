@@ -29,7 +29,6 @@ The Battery API offers a range of endpoints to facilitate interactions with user
     * the Email information
     * the Company Name
     * the database (when developing, a path to a data.db file suffices)
-    * the reliability threshold for the calculation of the reliability index
 5. Run `python app.py` in the terminal (also possible in VSCode or other editors)
 
 When completing the steps, the BatteryAPI is running. An other way to launch the application is to use Docker, which is described in the following.
@@ -42,7 +41,6 @@ When completing the steps, the BatteryAPI is running. An other way to launch the
     * the Email information
     * the Company Name
     * the database (when developing, a path to a data.db file suffices)
-    * the reliability threshold for the calculation of the reliability index
 4. Run `docker build --tag batteryapi .` to build an image
 5. Run `docker run -d -p 5000:5000 batteryapi` to start the image
 

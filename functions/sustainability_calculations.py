@@ -74,8 +74,7 @@ def calculate_sustainability_index():
     for supplier_id, green_value in supplier_sustainability_index.items():
         supplier = Supplier.query.filter(Supplier.id==supplier_id).first()
         if supplier:
-            supplier.sustainability_index = green_value
-    
+            supplier.sustainability_index = green_value / np.sqrt(2)
     # Commit the changes to the database
     db.session.commit()
     

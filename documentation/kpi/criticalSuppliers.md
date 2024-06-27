@@ -31,7 +31,6 @@ Show critical Suppliers, meaning Suppliers that have an index that is in a criti
       "lat": 35.195581226251,
       "long": 118.265431433867,
       "name": "AME energy Co.,Limited",
-      "quality": 0.603596833213583,
       "reliability": -0.1,
       "risk_index": 0.76722545748501,
       "sustainability_index": 0.899024302173073
@@ -47,7 +46,6 @@ Show critical Suppliers, meaning Suppliers that have an index that is in a criti
       "lat": 52.9063952752977,
       "long": 9.66385927388883,
       "name": "DDP Specialty Products GmbH & Co. KG",
-      "quality": 0.897368177294015,
       "reliability": null,
       "risk_index": 0.700980868468645,
       "sustainability_index": 0.525231594912317
@@ -63,7 +61,6 @@ Show critical Suppliers, meaning Suppliers that have an index that is in a criti
       "lat": 47.1985431981444,
       "long": -1.58932183135905,
       "name": "Armor Battery Films",
-      "quality": 0.645443775181449,
       "reliability": -0.3,
       "risk_index": 0.251099950171836,
       "sustainability_index": 0.22483555123122
