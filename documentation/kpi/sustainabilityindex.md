@@ -1,8 +1,8 @@
 # Sustainability Calculation
 
-Calculate and update the risk index for each supplier using country risk data and the supplier's reliability.
+Calculate the sustainability index for each supplier based on their environmental performance metrics, specifically CO2 emissions and transportation distances associated with materials they supply.
 
-**URL** : `/api/kpi/riskindex`
+**URL** : `/api/kpi/susindex`
 
 **Method** : `GET`
 
@@ -35,7 +35,7 @@ Calculate and update the risk index for each supplier using country risk data an
         "order_count": 0,
         "reliability": null,
         "risk_index": 0.0,
-        "sustainability_index": null
+        "sustainability_index": 0.2425
     },
     {
         "availability": true,
@@ -50,7 +50,7 @@ Calculate and update the risk index for each supplier using country risk data an
         "order_count": 0,
         "reliability": null,
         "risk_index": 0.0350877,
-        "sustainability_index": 0.0
+        "sustainability_index": 1
     },
     ...
 ]
@@ -60,7 +60,7 @@ Calculate and update the risk index for each supplier using country risk data an
 
 ### Algorithm Explanation
 
-The update_supplier_risk_indices function calculates the risk index for each supplier based on their country's risk index and their reliability. The risk index is determined by applying weights to both the country risk index and the supplier's reliability. The calculated risk index is then written into the risk_index field of the Supplier table in the database.
+The calculate_sustainability_index function computes the sustainability index for each supplier by aggregating their environmental impact metrics. This index reflects the supplier's overall environmental sustainability based on normalized CO2 emissions and distances for materials supplied.
 
 ### Necessary Data
 
