@@ -21,80 +21,95 @@ Calculate the optimal order quantities for materials based on various strategies
 **Content example**:
 
 ```json
-{
-   "wk26_2024": [
-      {
-         "lead_time": 2,
-         "material_id": 11,
-         "min_order": 19351.0,
-         "name": "Anodenmaterial (Solid content 50%)",
-         "price": 7.0,
-         "risk_index": 0.691806793403764,
-         "strategy": "Price",
-         "supplier_id": 13,
-         "supplier_name": "BASF",
-         "sustainability_index": 0.825091751085014,
-         "unit": null
-      },
-      {
-         "lead_time": 5,
+[
+   {
+      "data": [
+         {
+         "lead_time": 4,
          "material_id": 12,
-         "min_order": 48251.0,
+         "min_order": 48251,
          "name": "Graphit",
-         "price": 20.0,
-         "risk_index": 0.934643063966633,
+         "price": 10,
+         "risk_index": 0.398684,
          "strategy": "Sustainability",
-         "supplier_id": 14,
-         "supplier_name": "BTR",
-         "sustainability_index": 0.614823391587686,
-         "unit": null
-      },
-      {
+         "supplier_id": 12,
+         "supplier_name": "Armor Battery Films",
+         "sustainability_index": 0.7,
+         "unit": "kg"
+         },
+         {
          "lead_time": 2,
          "material_id": 13,
-         "min_order": 661.0,
+         "min_order": 661,
          "name": "Leitadditiv",
-         "price": 50.0,
-         "risk_index": 0.765437063720187,
+         "price": 50,
+         "risk_index": 0,
          "strategy": "Price",
          "supplier_id": 16,
          "supplier_name": "Cuircuit Foil",
-         "sustainability_index": 0.550682969673082,
-         "unit": null
-      },
-      {
+         "sustainability_index": 0.22,
+         "unit": "g"
+         },
+         {
          "lead_time": 4,
          "material_id": 14,
-         "min_order": 2401.0,
+         "min_order": 2401,
          "name": "Binder 1 (SBR)",
-         "price": 2.0,
-         "risk_index": 0.934643063966633,
+         "price": 2,
+         "risk_index": 0.135965,
          "strategy": "Price",
          "supplier_id": 14,
          "supplier_name": "BTR",
-         "sustainability_index": 0.614823391587686,
-         "unit": null
-      }
-   ],
-   "wk27_2024": [],
-   "wk28_2024": [],
-   "wk29_2024": [],
-   "wk30_2024": [
-      {
+         "sustainability_index": 0.1,
+         "unit": "Pcs"
+         },
+         {
+         "lead_time": 2,
+         "material_id": 11,
+         "min_order": 19351,
+         "name": "Anodenmaterial (Solid content 50%)",
+         "price": 7,
+         "risk_index": 0.135965,
+         "strategy": "Price",
+         "supplier_id": 13,
+         "supplier_name": "BASF",
+         "sustainability_index": 0.9,
+         "unit": "g"
+         }
+      ],
+      "week": "wk26_2024"
+   },
+   {
+      "data": [],
+      "week": "wk27_2024"
+   },
+   {
+      "data": [],
+      "week": "wk28_2024"
+   },
+   {
+      "data": [],
+      "week": "wk29_2024"
+   },
+   {
+      "data": [
+         {
          "lead_time": 2,
          "material_id": 15,
-         "min_order": 401.0,
+         "min_order": 401,
          "name": "Binder 2 (CMC)",
          "price": 2.99,
-         "risk_index": 0.934643063966633,
+         "risk_index": 0.135965,
          "strategy": "Price",
          "supplier_id": 14,
          "supplier_name": "BTR",
-         "sustainability_index": 0.614823391587686,
-         "unit": null
-      }
-   ]
-}
+         "sustainability_index": 0.1,
+         "unit": "Pcs"
+         }
+      ],
+      "week": "wk30_2024"
+   }
+]
 ```
 
 ## Algorithm

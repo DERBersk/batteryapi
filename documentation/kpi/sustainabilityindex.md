@@ -78,16 +78,13 @@ The following data is required for the Risk Calculation function to work effecti
 The normalized value $N$ is calculated using the following formula:
 
 $$
-N = \frac{V-V_min}{V_min-V_max}
+N = \frac{V}{V_max}
 $$
 
 where:
 
 - $V$ is the value to be normalized.
-- $V_min$ is the minimum value in the dataset.
 - $V_max$ is the maximum value in the dataset.
-
-If $V_max = V_min$, the normalized value $N$ is set to 0 to avoid division by zero.
 
 #### Euclidean Norm
 
