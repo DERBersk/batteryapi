@@ -84,33 +84,112 @@ def OptimalOrderCalculation():
         supplier = None
         
         if strategy == "Sustainability":
-            supplier = max(
-                [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict],
-                key=lambda s: s.sustainability_index,
-                default=None
-            )
+            valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.sustainability_index is not None]
+            if valid_suppliers:
+                supplier = max(valid_suppliers, key=lambda s: s.sustainability_index)
+            else:
+                supplier = None
+                material_recommendation = {
+                    "material_id": material_id,
+                    "unit": unit,
+                    "name": name,
+                    "strategy": "Sustainability",
+                    "min_order": -1,
+                    "supplier_id": -1,
+                    "supplier_name": -1,
+                    "lead_time": -1,
+                    "sustainability_index": -1,
+                    "risk_index": -1,
+                    "price": -1,
+                }
+                
+                if 'NA' not in rec_order_dict:
+                    rec_order_dict['NA'] = []
+                    
+                if is_new_material(rec_order_dict,material_id):
+                    rec_order_dict['NA'].append(material_recommendation)
+                
+                continue
         elif strategy == "Risk":
-            supplier = max(
-                [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict],
-                key=lambda s: s.risk_index,
-                default=None
-            )
+            valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.risk_index is not None]
+            if valid_suppliers:
+                supplier = max(valid_suppliers, key=lambda s: s.risk_index)
+            else:
+                supplier = None
+                material_recommendation = {
+                    "material_id": material_id,
+                    "unit": unit,
+                    "name": name,
+                    "strategy": "Risk",
+                    "min_order": -1,
+                    "supplier_id": -1,
+                    "supplier_name": -1,
+                    "lead_time": -1,
+                    "sustainability_index": -1,
+                    "risk_index": -1,
+                    "price": -1,
+                }
+                
+                if 'NA' not in rec_order_dict:
+                    rec_order_dict['NA'] = []
+                    
+                if is_new_material(rec_order_dict,material_id):
+                    rec_order_dict['NA'].append(material_recommendation)
+                
+                continue
         elif strategy == "Price":
-            supplier = min(
-                [p for p in prices if p.material_id == material_id],
-                key=lambda p: p.cost,
-                default=None
-            )
-            if supplier:
-                supplier = supplier_dict[supplier.supplier_id]
+            valid_prices = [p for p in prices if p.material_id == material_id and p.cost is not None]
+            if valid_prices:
+                cheapest_price = min(valid_prices, key=lambda p: p.cost)
+                supplier = supplier_dict[cheapest_price.supplier_id]
+            else:
+                supplier = None
+                material_recommendation = {
+                    "material_id": material_id,
+                    "unit": unit,
+                    "name": name,
+                    "strategy": "Price",
+                    "min_order": -1,
+                    "supplier_id": -1,
+                    "supplier_name": -1,
+                    "lead_time": -1,
+                    "sustainability_index": -1,
+                    "risk_index": -1,
+                    "price": -1,
+                }
+                
+                if 'NA' not in rec_order_dict:
+                    rec_order_dict['NA'] = []
+                    
+                if is_new_material(rec_order_dict,material_id):
+                    rec_order_dict['NA'].append(material_recommendation)
+                continue
         elif strategy == "LeadTime":
-            supplier = min(
-                [mps for mps in materials_per_supplier if mps.material_id == material_id],
-                key=lambda mps: mps.lead_time,
-                default=None
-            )
-            if supplier:
-                supplier = supplier_dict[supplier.supplier_id]
+            valid_materials = [mps for mps in materials_per_supplier if mps.material_id == material_id and mps.lead_time is not None]
+            if valid_materials:
+                shortest_lead_time = min(valid_materials, key=lambda mps: mps.lead_time)
+                supplier = supplier_dict[shortest_lead_time.supplier_id]
+            else:
+                supplier = None
+                material_recommendation = {
+                    "material_id": material_id,
+                    "unit": unit,
+                    "name": name,
+                    "strategy": "LeadTime",
+                    "min_order": -1,
+                    "supplier_id": -1,
+                    "supplier_name": -1,
+                    "lead_time": -1,
+                    "sustainability_index": -1,
+                    "risk_index": -1,
+                    "price": -1,
+                }
+                
+                if 'NA' not in rec_order_dict:
+                    rec_order_dict['NA'] = []
+                    
+                if is_new_material(rec_order_dict,material_id):
+                    rec_order_dict['NA'].append(material_recommendation)
         
         if not supplier:
             continue

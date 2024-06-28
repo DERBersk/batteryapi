@@ -6,10 +6,8 @@ from models.materials_per_supplier import MaterialsPerSupplier
 from models.supplier import Supplier
 
 # Normalization function
-def normalize(value, min_value, max_value):
-    if min_value == max_value:  # To avoid division by zero
-        return 0
-    return (value - min_value) / (max_value - min_value)
+def normalize(value, max_value):
+    return (value) / (max_value)
 
 # Calculate Euclidean norm (Green Value)
 def euclidean_norm(values):
@@ -37,7 +35,7 @@ def calculate_sustainability_index():
 
     # Calculate normalized values and green value for each supplier
     green_values = {}
-    for material_id, suppliers in material_supplier_data.items():
+    for material_id,suppliers in material_supplier_data.items():
         for supplier_id, data in suppliers.items():
             co2_values = data['co2_emissions']
             distance_values = data['distances']
@@ -45,15 +43,13 @@ def calculate_sustainability_index():
             if not co2_values or not distance_values:
                 continue
             
-            # Reference values (max and min) within this material group
+            # Reference values (max) within this material group
             co2_max = max(co2_values)
-            co2_min = min(co2_values)
             distance_max = max(distance_values)
-            distance_min = min(distance_values)
             
             # Normalize values
-            normalized_co2_values = [normalize(value, co2_min, co2_max) for value in co2_values]
-            normalized_distance_values = [normalize(value, distance_min, distance_max) for value in distance_values]
+            normalized_co2_values = [normalize(value, co2_max) for value in co2_values]
+            normalized_distance_values = [normalize(value, distance_max) for value in distance_values]
             
             # Calculate average normalized values
             avg_normalized_co2 = np.mean(normalized_co2_values)
