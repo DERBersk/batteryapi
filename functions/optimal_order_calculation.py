@@ -245,8 +245,10 @@ def OptimalOrderCalculation():
                     
                 if is_new_material(rec_order_dict,material_id):
                     rec_order_dict[week_key].append(material_recommendation)
-    
-    return rec_order_dict
+        new_rec_order_list = []
+        for week in rec_order_dict:
+            new_rec_order_list.append({"week": week, "data": rec_order_dict[week]})
+    return new_rec_order_list
     
 ###############################################################################################
 # Support Functions
