@@ -91,5 +91,5 @@ The Communication endpoints allow for emails to be sent out to suppliers includi
 
 The Options endpoint allows for management of the general Options. Order Data can be retrieved, created and edited using respective HTTP methods.
 
-* [Show Options](options/get.md) : `GET /api/options/`
-* [Create/Edit Options](options/post.md) : `POST /api/options/`
+* [Show Options](options/get.md) : `GET /api/options/` | `GET /api/options/weights`
+* [Create/Edit Options](options/post.md) : `POST /api/options/`| `POST /api/options/weights`
