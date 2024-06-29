@@ -1,6 +1,9 @@
 # import external packages
 from datetime import datetime
 from flask import Blueprint, jsonify, request
+from sqlalchemy import case, func
+#
+from extensions import db
 # import models
 from models.supplier import Supplier
 from models.material import Material
@@ -15,8 +18,40 @@ supplier_bp = Blueprint('supplier', __name__, url_prefix='/api/supplier')
 ###################################################
 @supplier_bp.route('/', methods=['GET'])
 def get_suppliers():
-    suppliers = Supplier.query.all()
-    return jsonify([supplier.serialize() for supplier in suppliers])
+    mat_counts = db.session.query(
+        Supplier.id,
+        func.count(Material.id).label('mat_count')
+    ).outerjoin(MaterialsPerSupplier, Supplier.id == MaterialsPerSupplier.supplier_id) \
+    .outerjoin(Material, Material.id == MaterialsPerSupplier.material_id) \
+    .group_by(Supplier.id) \
+    .subquery()
+
+    # Step 2: Count open orders (delivery_date is None) per supplier
+    open_order_counts = db.session.query(
+        Supplier.id,
+        func.count(Order.id).filter(Order.delivery_date.is_(None)).label('open_order_count')
+    ).outerjoin(Order, Order.supplier_id == Supplier.id) \
+    .filter(Order.delivery_date.is_(None)) \
+    .group_by(Supplier.id) \
+    .subquery()
+
+    # Final query joining all counts
+    suppliers_query = db.session.query(
+        Supplier,
+        mat_counts.c.mat_count,
+        open_order_counts.c.open_order_count
+    ).join(mat_counts, mat_counts.c.id == Supplier.id) \
+    .join(open_order_counts, open_order_counts.c.id == Supplier.id)
+
+    # Fetch results and prepare data
+    suppliers_data = []
+    for supplier, mat_count, open_order_count in suppliers_query:
+        supplier_data = supplier.serialize()
+        supplier_data['mat_count'] = mat_count
+        supplier_data['order_count'] = open_order_count
+        suppliers_data.append(supplier_data)
+
+    return jsonify(suppliers_data)
 
 ###################################################
 # Get for a single Suppliers (inc. Material Data)

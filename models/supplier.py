@@ -18,15 +18,6 @@ class Supplier(db.Model):
     external_id = db.Column(db.String(20), nullable=True)
     
     def serialize(self):
-        mat_count = Material.query.join(MaterialsPerSupplier)\
-                                  .join(Supplier)\
-                                  .filter(MaterialsPerSupplier.supplier_id==self.id)\
-                                  .filter(Material.id==MaterialsPerSupplier.material_id)\
-                                  .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit)\
-                                  .count()
-        
-        ord_count = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == self.id).count()
-        
         return {
             'id': self.id,
             'name': self.name,
@@ -38,7 +29,5 @@ class Supplier(db.Model):
             'availability':self.availability,
             'country':self.country,
             'email': self.email,
-            'external_id': self.external_id,
-            'mat_count': mat_count,
-            'order_count': ord_count
+            'external_id': self.external_id
         }
