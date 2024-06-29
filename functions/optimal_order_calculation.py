@@ -166,7 +166,8 @@ def OptimalOrderCalculation():
                     rec_order_dict[week_key].append(material_recommendation)
         new_rec_order_list = []
         for week in rec_order_dict:
-            new_rec_order_list.append({"week": week, "data": rec_order_dict[week]})
+            wk = Week.query.filter(Week.id == week).first()
+            new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week]})
     return new_rec_order_list
     
 ###############################################################################################
