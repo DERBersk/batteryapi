@@ -147,7 +147,9 @@ def OptimalOrderCalculation():
                         total_outstanding_orders += order.amount
             total_demand = lead_time_demand + material.safety_stock - total_outstanding_orders
             
-            if total_demand > material.stock_level:
+            if total_demand <= material.stock_level:
+                continue
+            else:
                 min_order = total_demand - material.stock_level
                 material_recommendation = {
                     "material_id": material_id,
