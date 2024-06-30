@@ -139,19 +139,6 @@ def create_or_update_suppliers():
         return jsonify({'message': 'Invalid data format. Expected a list of suppliers.'}), 400
 
     for supplier_data in data:
-        # Extract supplier data
-        supplier_data = {
-            'name': supplier_data.get('name'),
-            'lat': supplier_data.get('lat'),
-            'long': supplier_data.get('long'),
-            'risk_index': supplier_data.get('risk_index'),
-            'sustainability_index': supplier_data.get('sustainability_index'),
-            'reliability': supplier_data.get('reliability'),
-            'availability': (supplier_data.get('availability')=="True")|(supplier_data.get('availability') == "true"),
-            'country': supplier_data.get('country'),
-            'email': supplier_data.get('email'),
-            'external_id': supplier_data.get('external_id')
-        }
 
         # Create or update supplier
         if 'id' in supplier_data:
