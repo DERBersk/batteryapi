@@ -139,16 +139,17 @@ def create_or_update_suppliers():
         return jsonify({'message': 'Invalid data format. Expected a list of suppliers.'}), 400
 
     for supplier_data in data:
-
         # Create or update supplier
         if 'id' in supplier_data:
             supplier = Supplier.query.get(supplier_data['id'])
             if not supplier:
                 return jsonify({'message': f'Supplier with id {supplier_data["id"]} not found'}), 404
             for key, value in supplier_data.items():
-                setattr(supplier, key, value)
+                if key != 'id' and key != 'materials':
+                    setattr(supplier, key, value)
         else:
-            supplier = Supplier(**supplier_data)
+            supplier_data['availability'] = (supplier_data.get('availability') == "True") | (supplier_data.get('availability') == "true")
+            supplier = Supplier(**{k: v for k, v in supplier_data.items() if k != 'materials'})
 
         db.session.add(supplier)
 
