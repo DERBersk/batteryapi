@@ -8,13 +8,10 @@ class Product(db.Model):
     specification = db.Column(db.String(100))
     external_id = db.Column(db.String(20), nullable=True)
     
-    def serialize(self):
-        material_count = MaterialsPerProduct.query.filter(MaterialsPerProduct.product_id == self.id).count()
-        
+    def serialize(self):        
         return {
             'id': self.id,
             'description': self.description,
             'specification': self.specification,
             'external_id': self.external_id,
-            'material_count': material_count
         }

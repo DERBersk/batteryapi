@@ -1,5 +1,8 @@
 # import external packages
 from flask import Blueprint, jsonify, request
+from sqlalchemy import func
+
+from extensions import db
 # import models
 from models.product import Product
 from models.material import Material
@@ -14,8 +17,26 @@ product_bp = Blueprint('product', __name__, url_prefix='/api/products')
 ###################################################
 @product_bp.route('/', methods=['GET'])
 def get_products():
-    products = Product.query.all()
-    return jsonify([product.serialize() for product in products])
+    # Subquery to count the materials per product
+    material_counts = db.session.query(
+        MaterialsPerProduct.product_id,
+        func.count(MaterialsPerProduct.material_id).label('material_count')
+    ).group_by(MaterialsPerProduct.product_id).subquery()
+
+    # Main query joining the product and material counts
+    products_query = db.session.query(
+        Product,
+        material_counts.c.material_count
+    ).outerjoin(material_counts, material_counts.c.product_id == Product.id)
+
+    # Fetch results and prepare data
+    products_data = []
+    for product, material_count in products_query:
+        product_data = product.serialize()
+        product_data['material_count'] = material_count
+        products_data.append(product_data)
+
+    return jsonify(products_data)
 
 ###################################################
 # Get for a single product

@@ -1,5 +1,9 @@
 # import external packages
 from flask import Blueprint, jsonify, request
+from sqlalchemy import func
+from sqlalchemy.orm import aliased
+
+from extensions import db
 # import models
 from models.project import Project
 from models.product import Product
@@ -12,9 +16,45 @@ project_bp = Blueprint('project', __name__, url_prefix='/api/projects')
 # Get for multiple projects
 ###################################################
 @project_bp.route('/', methods=['GET'])
-def get_projects():
-    projects = Project.query.all()
-    return jsonify([project.serialize() for project in projects])
+def get_projects():    
+    # Alias the Week table for start and end weeks
+    start_week_alias = aliased(Week)
+    end_week_alias = aliased(Week)
+    
+    # Subquery to count the products per project
+    product_counts = db.session.query(
+        ProductsPerProject.project_id,
+        func.count(ProductsPerProject.product_id).label('product_count')
+    ).group_by(ProductsPerProject.project_id).subquery()
+
+    # Main query joining all necessary data
+    projects_query = db.session.query(
+        Project,
+        start_week_alias.week.label('start_week'),
+        start_week_alias.year.label('start_year'),
+        end_week_alias.week.label('end_week'),
+        end_week_alias.year.label('end_year'),
+        product_counts.c.product_count
+    ).join(start_week_alias, start_week_alias.id == Project.start_week) \
+     .join(end_week_alias, end_week_alias.id == Project.end_week) \
+     .outerjoin(product_counts, product_counts.c.project_id == Project.id)
+
+    # Fetch results and prepare data
+    projects_data = []
+    for project, start_week, start_year, end_week, end_year, product_count in projects_query:
+        project_data = project.serialize()
+        if not product_count:
+            product_count = 0
+        project_data.update({
+            'start_week': start_week,
+            'start_year': start_year,
+            'end_week': end_week,
+            'end_year': end_year,
+            'product_count': product_count
+        })
+        projects_data.append(project_data)
+
+    return jsonify(projects_data)
 
 ###################################################
 # Get for a single project
