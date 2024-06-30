@@ -44,7 +44,7 @@ def get_suppliers():
     .join(open_order_counts, open_order_counts.c.id == Supplier.id)
 
     # Fetch results and prepare data
-    suppliers_data = []
+    suppliers_data = [] 
     for supplier, mat_count, open_order_count in suppliers_query:
         supplier_data = supplier.serialize()
         supplier_data['mat_count'] = mat_count
