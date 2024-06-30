@@ -56,6 +56,7 @@ def OptimalOrderCalculation():
     materials_per_supplier = MaterialsPerSupplier.query.all()
     weekly_material_demands = WeeklyMaterialDemand.query.all()
     outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).all()
+    weeks = Week.query.all()
 
     # Preprocess data for quick lookup
     supplier_dict = {supplier.id: supplier for supplier in suppliers}
@@ -71,6 +72,8 @@ def OptimalOrderCalculation():
         if order.material_id not in outstanding_orders_dict:
             outstanding_orders_dict[order.material_id] = []
         outstanding_orders_dict[order.material_id].append(order)
+    
+    week_dict = {f"wk{week.week}_{week.year}": week for week in weeks}
     
     rec_order_dict = {}
 
@@ -165,9 +168,9 @@ def OptimalOrderCalculation():
                 if is_new_material(rec_order_dict,material_id):
                     rec_order_dict[week_key].append(material_recommendation)
         new_rec_order_list = []
-        for week in rec_order_dict:
-            wk = Week.query.filter(Week.id == week).first()
-            new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week]})
+        for week_key in rec_order_dict:
+            wk = week_dict.get(week_key)
+            new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week_key]})
     return new_rec_order_list
     
 ###############################################################################################

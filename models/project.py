@@ -11,20 +11,10 @@ class Project(db.Model):
     start_week = db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     end_week =  db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     
-    def serialize(self):
-        startweek = Week.query.filter(Week.id == self.start_week).first()
-        endweek = Week.query.filter(Week.id == self.end_week).first()
-        
-        product_count = ProductsPerProject.query.filter(ProductsPerProject.project_id == self.id).count()
-        
+    def serialize(self):    
         return {
             'id': self.id,
             'partner': self.partner,
-            'start_week': startweek.week,
-            'start_year': startweek.year,
-            'end_week': endweek.week,
-            'end_year': endweek.year,
-            'product_count': product_count
         }
         
     def check_project_week(self):
