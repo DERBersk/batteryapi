@@ -155,8 +155,7 @@ def ProductDemandCalculation():
             "year": year,
             "week": week,
             "amount": amount
-        })
-        
+        })   
     
     return result
     

@@ -77,19 +77,23 @@ Calculate the optimal order quantities for materials based on various strategies
          "unit": "g"
          }
       ],
-      "week": "wk26_2024"
+      "week": 26,
+      "year": 2024
    },
    {
       "data": [],
-      "week": "wk27_2024"
+      "week": 27,
+      "year": 2024
    },
    {
       "data": [],
-      "week": "wk28_2024"
+      "week": 28,
+      "year": 2024
    },
    {
       "data": [],
-      "week": "wk29_2024"
+      "week": 29,
+      "year": 2024
    },
    {
       "data": [
@@ -107,7 +111,8 @@ Calculate the optimal order quantities for materials based on various strategies
          "unit": "Pcs"
          }
       ],
-      "week": "wk30_2024"
+      "week": 30,
+      "year": 2024
    }
 ]
 ```
