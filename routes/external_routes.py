@@ -5,6 +5,7 @@ from flask import Blueprint, request,render_template,current_app,jsonify
 # import functions and data
 from functions.email import send_email
 from functions.token_manager import generate_token,tokens
+from functions.fetch_updates import update_or_create_orders
 from extensions import db
 # import models
 from models.supplier import Supplier
@@ -113,22 +114,9 @@ def update_data(token):
     else:
         return jsonify('Invalid link.'),400
     
-#####################################################
-# TODO:
-#   Product Route
-#   Order Route
-#   Supplier Route
-#   Material Route
-#   ProductionVolumeRoute (Sum up per week)
-#   
-# Structure:
-#   Fetch Data from Secondary API
-#   Fetch Data from own DB
-#   Create Dictionaries
-#   For each Datapoint in Secondary API Dict
-#       If Data from Secondary API via external_id in
-#       Data from Own db
-#           Modify the data from own db
-#       Else
-#           Insert as new datapoint with id as external_id
-#####################################################
+###################################################
+# Route for Fetch and update of orders
+###################################################
+@external_bp.route('/orders/',methods=["POST"])
+def fetch_and_update_orders():
+    return jsonify(update_or_create_orders())

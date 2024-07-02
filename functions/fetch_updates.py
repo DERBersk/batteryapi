@@ -54,7 +54,9 @@ def fetch_api_data_orders():
     response.raise_for_status()  # Raise an exception for HTTP errors
     return response.json()
 
-def update_or_create_orders(api_data):
+def update_or_create_orders():
+    api_data = fetch_api_data_orders()
+    
     for item in api_data:
         # Find the material by external_id
         material = Material.query.filter(Material.external_id==item['material_id']).first()
@@ -92,6 +94,9 @@ def update_or_create_orders(api_data):
     
     # Commit the changes to the database
     db.session.commit()
+    
+    orders = Order.query.all()
+    return [order.serialize() for order in orders]
 
 def fetch_api_data_production_volume():
     url = "https://secondaryapi-mes.vercel.app/productionvolume/"
