@@ -84,10 +84,6 @@ def update_supplier_risk_indices():
             supplier.risk_index = country_risk_index
             continue
 
-        print(supplier.reliability)
-        
-        print(country_risk_index)
-
         # Calculate risk_index using weights from options and supplier's reliability
         risk_index = (options.risk_index_weight_country_risk * country_risk_index) + \
                      (options.risk_index_weight_reliability * supplier.reliability)
