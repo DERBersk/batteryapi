@@ -2,11 +2,12 @@ from extensions import db
 import datetime
 from models.week import Week
 
-class BaseProductionVolume(db.Model):
+class ExternalProductionData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     week_id = db.Column(db.String(10), db.ForeignKey('week.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    external_id = db.Column(db.String(20))
     
     def serialize(self):
         week = Week.query.filter(Week.id == self.week_id).first()

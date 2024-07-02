@@ -167,6 +167,29 @@ def create_or_update_suppliers():
             lead_time = material_data.get('lead_time')
             co2_emissions = material_data.get('co2_emissions')
             distance = material_data.get('distance')
+            
+            new_price = material_data.get('price')
+            
+            cur_price = Price.query.filter(Price.supplier_id == supplier.id).filter(Price.material_id==material_id).filter(Price.end_date is None).first()
+            
+            if cur_price:
+                if cur_price.cost != new_price:
+                    cur_price.end_date = datetime.today().date() 
+                price = Price(
+                    supplier_id=supplier.id,
+                    material_id=material_id,
+                    cost = new_price,
+                    start_date = datetime.today().date()     
+                )
+                db.session.add(price)
+            else:
+                price = Price(
+                    supplier_id=supplier.id,
+                    material_id=material_id,
+                    cost = new_price,
+                    start_date = datetime.today().date()     
+                )
+                db.session.add(price)
 
             materials_per_supplier = MaterialsPerSupplier(
                 supplier_id=supplier.id,

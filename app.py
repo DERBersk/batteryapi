@@ -22,7 +22,7 @@ def create_app():
     from routes.price_routes import price_bp
     from routes.user_routes import user_bp
     from routes.kpi_routes import kpi_bp
-    from routes.base_production_routes import base_productionbp
+    from routes.external_production_routes import external_production_bp
     from routes.external_routes import external_bp
     from routes.options_routes import options_bp
     # Register blueprints
@@ -33,7 +33,7 @@ def create_app():
     app.register_blueprint(price_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(kpi_bp)
-    app.register_blueprint(base_productionbp)
+    app.register_blueprint(external_production_bp)
     app.register_blueprint(external_bp)
     app.register_blueprint(options_bp)
     
