@@ -1,8 +1,8 @@
-# Show Multiple Base Productions
+# Show Multiple External Production Data
 
-Show data of a All Base Productions.
+Show data of a All External Productions.
 
-**URL** : `/api/baseproduction/`
+**URL** : `/api/externalproduction/`
 
 **Method** : `GET`
 

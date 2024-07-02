@@ -8,7 +8,7 @@ from models.supplier import Supplier
 from models.material import Material
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.order import Order
-from models.base_production_volume import BaseProductionVolume
+from models.external_production_data import ExternalProductionData
 from models.project import Project
 from models.product import Product
 from models.products_per_project import ProductsPerProject
@@ -82,16 +82,16 @@ def IncomingOrderCalculation():
 # File for Order Calculation Function
 def MostProducedProduct():
     # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
-    base_volume_weekly_all = BaseProductionVolume.query.all()
+    external_production_data = ExternalProductionData.query.all()
     
-    filtered_base_volume = [record for record in base_volume_weekly_all if record.is_later_or_equal]
+    filtered_production_data = [record for record in external_production_data if record.is_later_or_equal]
     
     # Fetch the Project Data, weekly basis (next month)
     product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
     
     filtered_product_per_projects = [project for project in product_per_projects_all if project.Project.check_project_week_past_year()]
     
-    res = get_highest_product_total(filtered_base_volume,filtered_product_per_projects)
+    res = get_highest_product_total(filtered_production_data,filtered_product_per_projects)
     
     return res
 
@@ -135,9 +135,9 @@ def get_highest_product_total(base_volume_weekly, product_per_projects):
     
 def ProductDemandCalculation():
     # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
-    base_volume_weekly_all = BaseProductionVolume.query.all()
+    production_data = ExternalProductionData.query.all()
     
-    filtered_base_volume = [record for record in base_volume_weekly_all if record.is_later_or_equal]
+    filtered_production_data = [record for record in production_data if record.is_later_or_equal]
     
     # Fetch the Project Data, weekly basis (next month)
     product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
@@ -145,7 +145,7 @@ def ProductDemandCalculation():
     filtered_product_per_projects = [project for project in product_per_projects_all if project.Project.check_project_week()]
         
     # Calculate weekly total Product demand (Sum of Demands)
-    weekly_total = get_weekly_totals(filtered_base_volume, filtered_product_per_projects)
+    weekly_total = get_weekly_totals(filtered_production_data, filtered_product_per_projects)
     
     result = []
     

@@ -2,7 +2,7 @@
 from collections import defaultdict
 from datetime import date, timedelta, datetime
 # import models
-from models.base_production_volume import BaseProductionVolume
+from models.external_production_data import ExternalProductionData
 from models.project import Project
 from models.material import Material
 from models.supplier import Supplier
@@ -22,9 +22,9 @@ from models.order import Order
 # File for Order Calculation Function
 def MaterialDemandCalculation():
     # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
-    base_volume_weekly_all = BaseProductionVolume.query.all()
+    external_production_data = ExternalProductionData.query.all()
     
-    filtered_base_volume = [record for record in base_volume_weekly_all if record.is_later_or_equal]
+    filtered_external_production_data = [record for record in external_production_data if record.is_later_or_equal]
     
     # Fetch the Project Data, weekly basis (next month)
     product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
@@ -35,7 +35,7 @@ def MaterialDemandCalculation():
     materials_per_products = MaterialsPerProduct.query.all()
     
     # Calculate weekly total Product demand (Sum of Demands)
-    weekly_total = get_weekly_totals(filtered_base_volume, filtered_product_per_projects)
+    weekly_total = get_weekly_totals(filtered_external_production_data, filtered_product_per_projects)
     
     # Calculate weekly total Material demand (Demand and Composition fit)
     material_demand_dict = calculate_material_demand(weekly_total,materials_per_products)

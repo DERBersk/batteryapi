@@ -64,13 +64,12 @@ The Project endpoint facilitates the management of project information within th
 * [Create Project](project/post.md) : `POST /api/project/`
 * [Delete Project](project/delete.md) : `DELETE /api/project/`
 
-### Base Production related
+### External Production Data related
 
-The Base Production endpoint allows for management of additional production plans to the projects. Base Production Data can be retrieved, created and deleted using respective HTTP methods.
+The External Production Data endpoint allows for management of additional production plans to the projects. External Production Data can be retrieved and updated using respective HTTP methods.
 
-* [Show Base Production](base_production/get.md) : `GET /api/baseproduction/`
-* [Create Base Production](base_production/post.md) : `POST /api/baseproduction/`
-* [Delete Base Production](base_production/delete.md) : `DELETE /api/baseproduction/`
+* [Show External Production Data](external_production/get.md) : `GET /api/externalproduction/`
+* [Create External Production Data](external_production/post.md) : `POST /api/externalproduction/`
 
 ### Order related
 
