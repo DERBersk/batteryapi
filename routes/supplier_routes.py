@@ -175,6 +175,7 @@ def create_or_update_suppliers():
             if cur_price:
                 if cur_price.cost != new_price:
                     cur_price.end_date = datetime.today().date() 
+                    db.session.commit()
                 price = Price(
                     supplier_id=supplier.id,
                     material_id=material_id,

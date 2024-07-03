@@ -1,6 +1,6 @@
 # Show and Calculate Weekly Production
 
-Calculation based on Baseline Production and Projects
+Calculation based on External Production and Projects (next 10 weeks)
 
 **URL** : `/api/kpi/production`
 
@@ -22,30 +22,48 @@ Calculation based on Baseline Production and Projects
 
 ```json
 [
-  {
-    "amount": 300.0,
-    "product_id": 11,
-    "week": 24,
-    "year": 2024
-  },
-  {
-    "amount": 500.0,
-    "product_id": 12,
-    "week": 24,
-    "year": 2024
-  },
-  {
-    "amount": 400.0,
-    "product_id": 11,
-    "week": 25,
-    "year": 2024
-  },
-  {
-    "amount": 150.0,
-    "product_id": 12,
-    "week": 25,
-    "year": 2024
-  },
-  ...
+    {
+      "data": [
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 11
+        },
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 12
+        },
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 13
+        }
+      ],
+      "week": 24,
+      "year": 2024
+    },
+    {
+      "data": [
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 11
+        },
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 12
+        },
+        {
+          "amount": 0.0,
+          "name": "21700-Zelle 4.5 Ah",
+          "product_id": 13
+        }
+      ],
+      "week": 25,
+      "year": 2024
+    },
+    ...
 ]
 ```
