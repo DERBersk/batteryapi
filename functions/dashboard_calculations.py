@@ -135,6 +135,58 @@ def get_highest_product_total(base_volume_weekly, product_per_projects):
     
 def ProductDemandCalculation():
     # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
+    
+    def transform_data(input_data, product_names):
+            # Create a dictionary to store data by week and year
+            weekly_data = defaultdict(lambda: defaultdict(lambda: {"amount": 0.0}))
+
+            # Process input data
+            for entry in input_data:
+                week = entry["week"]
+                year = entry["year"]
+                product_id = entry["product_id"]
+                amount = entry["amount"]
+                
+                weekly_data[(year, week)][product_id]["amount"] += amount
+
+            # Collect all product IDs from the input data
+            all_product_ids = {entry["product_id"] for entry in input_data}
+
+            # Create the transformed data for the next 6 weeks
+            transformed_data = []
+
+            # Assuming the input data has the current week and year
+            current_year = 2024
+            current_week = 24
+
+            for i in range(10):
+                week = current_week + i
+                year = current_year
+                if week > 52:
+                    week -= 52
+                    year += 1
+                
+                week_data = {
+                    "week": week,
+                    "year": year,
+                    "data": []
+                }
+                
+                for product_id in all_product_ids:
+                    amount = weekly_data[(year, week)][product_id]["amount"]
+                    product_entry = {
+                        "amount": amount,
+                        "product_id": product_id
+                    }
+                    if product_id in product_names:
+                        product_entry["name"] = product_names[product_id]
+                    
+                    week_data["data"].append(product_entry)
+                
+                transformed_data.append(week_data)
+
+            return transformed_data   
+        
     production_data = ExternalProductionData.query.all()
     
     filtered_production_data = [record for record in production_data if record.is_later_or_equal]
@@ -149,6 +201,10 @@ def ProductDemandCalculation():
     
     result = []
     
+    products = Product.query.all()
+    
+    product_names = {product.id: product.description for product in products}
+    
     for (product_id, year, week), amount in weekly_total.items():
         result.append({
             "product_id": product_id,
@@ -156,8 +212,11 @@ def ProductDemandCalculation():
             "week": week,
             "amount": amount
         })   
+        
+    # Transform the data
+    output_data = transform_data(result, product_names)
     
-    return result
+    return output_data
     
 
 def get_weekly_totals(base_volume_weekly, product_per_projects):
