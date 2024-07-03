@@ -156,8 +156,8 @@ def ProductDemandCalculation():
             transformed_data = []
 
             # Assuming the input data has the current week and year
-            current_year = 2024
-            current_week = 24
+            today = datetime.today()
+            current_year, current_week, _ = today.isocalendar()
 
             for i in range(10):
                 week = current_week + i
