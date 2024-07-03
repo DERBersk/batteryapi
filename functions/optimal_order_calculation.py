@@ -116,6 +116,11 @@ def OptimalOrderCalculation():
         if not supplier:
             continue
         
+        lt = materials_per_supplier_dict[(supplier.id, material_id)]
+        
+        if not lt.lead_time:
+            continue
+        
         supplier_id = supplier.id
         price = price_dict.get((supplier_id, material_id))
         price = price.cost if price else None
