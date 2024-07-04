@@ -1,6 +1,6 @@
 # Show Multiple Material
 
-Show data of a All Materials.
+Show data of a All Materials ordered by id.
 
 **URL** : `/api/materials/`
 

@@ -13,7 +13,7 @@ material_bp = Blueprint('material', __name__, url_prefix='/api/materials')
 ###################################################
 @material_bp.route('/', methods=['GET'])
 def get_materials():
-    materials = Material.query.filter()
+    materials = Material.query.order_by(Material.id.asc()).all()
     return jsonify([material.serialize() for material in materials])
 
 ###################################################

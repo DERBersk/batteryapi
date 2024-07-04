@@ -33,7 +33,12 @@ def MaterialsWoSuppliersCalculation():
                                                 .all()
     
     # Serialize the results
-    result = [material.serialize() for material in materials_with_no_suppliers]
+    materials = [material.serialize() for material in materials_with_no_suppliers]
+    
+    result = {
+        "data": materials,
+        "count": len(materials)
+    }
     
     return result
 

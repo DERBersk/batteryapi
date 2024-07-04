@@ -24,6 +24,7 @@ def get_suppliers():
     ).outerjoin(MaterialsPerSupplier, Supplier.id == MaterialsPerSupplier.supplier_id) \
     .outerjoin(Material, Material.id == MaterialsPerSupplier.material_id) \
     .group_by(Supplier.id) \
+    .order_by(Supplier.id.asc()) \
     .subquery()
 
     # Step 2: Count open orders (delivery_date is None) per supplier
@@ -33,6 +34,7 @@ def get_suppliers():
     ).outerjoin(Order, Order.supplier_id == Supplier.id) \
     .filter(Order.delivery_date.is_(None)) \
     .group_by(Supplier.id) \
+    .order_by(Supplier.id.asc()) \
     .subquery()
 
     # Final query joining all counts
@@ -40,8 +42,9 @@ def get_suppliers():
         Supplier,
         mat_counts.c.mat_count,
         open_order_counts.c.open_order_count
-    ).join(mat_counts, mat_counts.c.id == Supplier.id) \
-    .join(open_order_counts, open_order_counts.c.id == Supplier.id)
+    ).outerjoin(mat_counts, mat_counts.c.id == Supplier.id) \
+    .outerjoin(open_order_counts, open_order_counts.c.id == Supplier.id)\
+    .order_by(Supplier.id.asc()) \
 
     # Fetch results and prepare data
     suppliers_data = [] 

@@ -1,6 +1,6 @@
 # Show Multiple Project
 
-Show data of a All Projects.
+Show data of a All Projects ordered by id.
 
 **URL** : `/api/projects/`
 

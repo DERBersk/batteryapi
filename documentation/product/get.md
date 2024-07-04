@@ -1,6 +1,6 @@
 # Show Multiple Product
 
-Show data of a All Products.
+Show data of a All Products ordered by id.
 
 **URL** : `/api/products/`
 

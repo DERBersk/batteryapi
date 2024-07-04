@@ -153,3 +153,72 @@ The following data is required for the `OptimalOrderCalculation` function to wor
    - Relationships between materials and suppliers, including lead times for each supplier-material pair.
    - Forecasted weekly demand for each material fetched from the `MaterialDemandCalculation`.
    - Upcoming Orders either input manually or through the WMS or ERP Connection Setup
+
+# Optimal Order Calculation One Week
+
+Calculate the optimal order quantities for materials based on various strategies. This endpoint gets the optimal Orders for the current week
+
+**URL** : `/api/kpi/optimalOrdersOneWeek`
+
+**Method** : `GET`
+
+**Data**: 
+
+```json
+{
+    
+}
+```
+
+## Success Response
+
+**Code** : `200 OK`
+
+**Content example**:
+
+```json
+[
+  {
+    "lead_time": 4,
+    "material_id": 12,
+    "min_order": 156251.0,
+    "name": "Graphit",
+    "price": 10.0,
+    "risk_index": 0.420783,
+    "strategy": "Sustainability",
+    "supplier_id": 12,
+    "supplier_name": "Armor Battery Films",
+    "sustainability_index": 0.7,
+    "unit": "kg"
+  },
+  {
+    "lead_time": 2,
+    "material_id": 13,
+    "min_order": 511.0,
+    "name": "Leitadditiv",
+    "price": 50.0,
+    "risk_index": 0.0,
+    "strategy": "Price",
+    "supplier_id": 16,
+    "supplier_name": "Cuircuit Foil",
+    "sustainability_index": 0.22,
+    "unit": "g"
+  },
+  {
+    "lead_time": 4,
+    "material_id": 14,
+    "min_order": 10501.0,
+    "name": "Binder 1 (SBR)",
+    "price": 2.0,
+    "risk_index": 0.154098,
+    "strategy": "Price",
+    "supplier_id": 14,
+    "supplier_name": "BTR",
+    "sustainability_index": null,
+    "unit": "Pcs"
+  },
+  {
+   ...
+  }
+]
+```

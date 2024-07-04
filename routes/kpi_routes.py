@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify
 # import functions and data
 from functions.risk_calculation import CountryRisk, update_supplier_risk_indices
 from functions.sustainability_calculations import calculate_sustainability_index
-from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation
+from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation, OptimalOrderCalculationOneWeek
 from functions.reliability_calculation import ReliabilityCalculation
 from functions.dashboard_calculations import ProductDemandCalculation, CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct
 
@@ -55,6 +55,10 @@ def calculateWeeklyDemand():
 @kpi_bp.route('/optimalOrders', methods=['GET'])
 def OptimalOrders():
     return jsonify(OptimalOrderCalculation())
+
+@kpi_bp.route('/optimalOrdersOneWeek', methods=['GET'])
+def OptimalOrdersOneWeek():
+    return jsonify(OptimalOrderCalculationOneWeek())
 
 ###################################################
 # Route for all critical Suppliers

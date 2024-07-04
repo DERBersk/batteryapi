@@ -27,7 +27,8 @@ def get_products():
     products_query = db.session.query(
         Product,
         material_counts.c.material_count
-    ).outerjoin(material_counts, material_counts.c.product_id == Product.id)
+    ).outerjoin(material_counts, material_counts.c.product_id == Product.id) \
+    .order_by(Product.id.asc())
 
     # Fetch results and prepare data
     products_data = []
