@@ -1,6 +1,6 @@
 # Show Multiple Suppliers
 
-Show data of a All Suppliers.
+Show data of a All Suppliers ordered by id.
 
 **URL** : `/api/supplier/`
 

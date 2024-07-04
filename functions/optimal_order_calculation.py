@@ -179,6 +179,136 @@ def OptimalOrderCalculation():
             wk = week_dict.get(week_key)
             new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week_key]})
     return new_rec_order_list
+
+def OptimalOrderCalculationOneWeek():
+    # Fetch all necessary data before the loop
+    materials = Material.query.all()
+    options = Options.query.first()
+    suppliers = Supplier.query.filter(Supplier.availability == True).all()
+    prices = Price.query.filter(Price.end_date.is_(None)).all()
+    materials_per_supplier = MaterialsPerSupplier.query.all()
+    weekly_material_demands = WeeklyMaterialDemand.query.all()
+    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).all()
+    weeks = Week.query.all()
+
+    # Preprocess data for quick lookup
+    supplier_dict = {supplier.id: supplier for supplier in suppliers}
+    price_dict = {(price.supplier_id, price.material_id): price for price in prices}
+    materials_per_supplier_dict = {(mps.supplier_id, mps.material_id): mps for mps in materials_per_supplier}
+    weekly_material_demands_dict = {}
+    for demand in weekly_material_demands:
+        if demand.material_id not in weekly_material_demands_dict:
+            weekly_material_demands_dict[demand.material_id] = []
+        weekly_material_demands_dict[demand.material_id].append(demand)
+    outstanding_orders_dict = {}
+    for order in outstanding_orders:
+        if order.material_id not in outstanding_orders_dict:
+            outstanding_orders_dict[order.material_id] = []
+        outstanding_orders_dict[order.material_id].append(order)
+    
+    week_dict = {f"wk{week.week}_{week.year}": week for week in weeks}
+    
+    rec_order_dict = {}
+
+    today = date.today()
+    
+    for material in materials:
+        material_id = material.id
+        unit = material.unit.name if material.unit else None
+        name = material.name
+        strategy = material.strategy.value if material.strategy else options.strategy.value
+        supplier = None
+        
+        if strategy == "Sustainability":
+            valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.sustainability_index is not None]
+            if valid_suppliers:
+                supplier = max(valid_suppliers, key=lambda s: s.sustainability_index)
+            else:   
+                continue
+        elif strategy == "Risk":
+            valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.risk_index is not None]
+            if valid_suppliers:
+                supplier = max(valid_suppliers, key=lambda s: s.risk_index)
+            else:
+                continue
+        elif strategy == "Price":
+            valid_prices = [p for p in prices if p.material_id == material_id and p.cost is not None]
+            if valid_prices:
+                cheapest_price = min(valid_prices, key=lambda p: p.cost)
+                supplier = supplier_dict[cheapest_price.supplier_id]
+            else:
+                continue
+        elif strategy == "LeadTime":
+            valid_materials = [mps for mps in materials_per_supplier if mps.material_id == material_id and mps.lead_time is not None]
+            if valid_materials:
+                shortest_lead_time = min(valid_materials, key=lambda mps: mps.lead_time)
+                supplier = supplier_dict[shortest_lead_time.supplier_id]
+            else:
+                continue
+        
+        if not supplier:
+            continue
+        
+        lt = materials_per_supplier_dict[(supplier.id, material_id)]
+        
+        if not lt.lead_time:
+            continue
+        
+        supplier_id = supplier.id
+        price = price_dict.get((supplier_id, material_id))
+        price = price.cost if price else None
+        
+        if not price:
+            continue
+        
+        lead_time = materials_per_supplier_dict.get((supplier_id, material_id)).lead_time
+        
+        sustainability_index = supplier.sustainability_index
+        risk_index = supplier.risk_index
+        
+        weekly_material_demand = weekly_material_demands_dict.get(material_id, [])
+        filtered_weekly_material_demand = [record for record in weekly_material_demand if record.is_later_or_equal]
+        
+        week = 0
+        
+        week_start = today + timedelta(weeks=week)
+        week_number = week_start.isocalendar()[1]
+        year = week_start.isocalendar()[0]
+        week_key = f"wk{week_number}_{year}"
+
+        lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
+                    
+        # Calculate total outstanding orders for the material within the lead time
+        total_outstanding_orders = 0
+        if material_id in outstanding_orders_dict:
+            for order in outstanding_orders_dict[material_id]:
+                if is_within_lead_time(order.planned_delivery_date, lead_time, week_start):
+                    total_outstanding_orders += order.amount
+        total_demand = lead_time_demand + material.safety_stock - total_outstanding_orders
+        
+        if total_demand <= material.stock_level:
+            continue
+        else:
+            min_order = total_demand - material.stock_level
+            material_recommendation = {
+                "material_id": material_id,
+                "unit": unit,
+                "name": name,
+                "strategy": strategy,
+                "min_order": min_order,
+                "supplier_id": supplier_id,
+                "supplier_name": supplier.name,
+                "lead_time": lead_time,
+                "sustainability_index": sustainability_index,
+                "risk_index": risk_index,
+                "price": price,
+            }
+            if week_key not in rec_order_dict:
+                rec_order_dict[week_key] = []
+                
+            if is_new_material(rec_order_dict,material_id):
+                rec_order_dict[week_key].append(material_recommendation)
+    return rec_order_dict[week_key]
     
 ###############################################################################################
 # Support Functions

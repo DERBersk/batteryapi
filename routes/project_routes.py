@@ -37,7 +37,8 @@ def get_projects():
         product_counts.c.product_count
     ).join(start_week_alias, start_week_alias.id == Project.start_week) \
      .join(end_week_alias, end_week_alias.id == Project.end_week) \
-     .outerjoin(product_counts, product_counts.c.project_id == Project.id)
+     .outerjoin(product_counts, product_counts.c.project_id == Project.id) \
+     .order_by(Project.id.asc())
 
     # Fetch results and prepare data
     projects_data = []

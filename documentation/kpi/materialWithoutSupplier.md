@@ -21,25 +21,30 @@ Show critical Materials, meaning Materials that do not have an existing connecti
 **Content example**:
 
 ```json
-[
-    {
-        "id": 20,
-        "lot_size": 3.0,
-        "name": "Leitadditiv 2",
+{
+    "count": 79,
+    "data": [
+        {
+        "external_id": "M1589",
+        "id": 16,
+        "lot_size": 136.0,
+        "name": "L\u00f6semittel (Wasser) - 50%",
         "safety_stock": 100.0,
         "stock_level": 99.0,
         "strategy": null,
-        "unit": null
-    },
-    {
-        "id": 82,
-        "lot_size": 1.0,
-        "name": "SuperC45",
+        "unit": "ml"
+        },
+        {
+        "external_id": "M7090",
+        "id": 17,
+        "lot_size": 136.0,
+        "name": "Kathodenmaterial (Solid Content 70%)",
         "safety_stock": 100.0,
         "stock_level": 99.0,
         "strategy": null,
-        "unit": null
-    },
-    ...
-]
+        "unit": "ml"
+        },
+        ...
+    ]
+}   
 ```
