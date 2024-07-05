@@ -1,5 +1,7 @@
-from extensions import db
+# import external packages
 from enum import Enum
+# import functions and data
+from extensions import db
 
 class StrategyEnum(Enum):
     Sustainability = "Sustainability"

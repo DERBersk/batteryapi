@@ -1,3 +1,4 @@
+# import functions and data
 from extensions import db
 
 class ProductsPerProject(db.Model):

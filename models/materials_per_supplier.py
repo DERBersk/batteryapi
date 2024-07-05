@@ -1,5 +1,7 @@
-from extensions import db
+# import external packages
 import datetime
+# import functions and data
+from extensions import db
 
 class MaterialsPerSupplier(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,9 +1,9 @@
+# import external packages
 import datetime 
-
+# import functions and data
 from extensions import db
-
+# import models
 from models.week import Week
-from models.products_per_project import ProductsPerProject
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)

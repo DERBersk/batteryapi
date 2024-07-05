@@ -1,7 +1,7 @@
 # import external packages
 from flask import Blueprint, jsonify, request
 from sqlalchemy import func
-
+# import functions and data
 from extensions import db
 # import models
 from models.product import Product

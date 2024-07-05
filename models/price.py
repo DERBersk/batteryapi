@@ -1,4 +1,6 @@
+# import functions and data
 from extensions import db
+# import models
 from models.material import Material
 
 class Price(db.Model):

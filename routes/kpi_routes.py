@@ -50,12 +50,16 @@ def calculateWeeklyDemand():
 
 ###################################################
 # Route for the Return and Calculation
-# of optimal orders
+# of optimal orders for the next 5 weeks
 ###################################################
 @kpi_bp.route('/optimalOrders', methods=['GET'])
 def OptimalOrders():
     return jsonify(OptimalOrderCalculation())
 
+###################################################
+# Route for the Return and Calculation
+# of for this week
+###################################################
 @kpi_bp.route('/optimalOrdersOneWeek', methods=['GET'])
 def OptimalOrdersOneWeek():
     return jsonify(OptimalOrderCalculationOneWeek())

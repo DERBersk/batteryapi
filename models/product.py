@@ -1,6 +1,5 @@
+# import functions and data
 from extensions import db
-
-from models.materials_per_product import MaterialsPerProduct
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)

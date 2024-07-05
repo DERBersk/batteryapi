@@ -1,3 +1,4 @@
+# import external packages
 from extensions import db
 
 class MaterialsPerProduct(db.Model):
