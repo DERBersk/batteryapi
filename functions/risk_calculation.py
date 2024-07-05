@@ -2,7 +2,6 @@
 import pandas as pd
 import pycountry
 import json
-
 # import models
 from models.options import Options
 from models.supplier import Supplier

@@ -2,7 +2,7 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request
 from sqlalchemy import case, func
-#
+# import functions and data
 from extensions import db
 # import models
 from models.supplier import Supplier

@@ -1,10 +1,11 @@
+# import external packages
 import requests
 import datetime
 from collections import defaultdict
 from sqlalchemy.exc import IntegrityError
-
+# import functions and data
 from extensions import db
-
+# import models
 from models.material import Material, UnitEnum, StrategyEnum
 from models.order import Order
 from models.supplier import Supplier

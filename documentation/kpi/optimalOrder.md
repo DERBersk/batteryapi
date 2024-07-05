@@ -129,6 +129,8 @@ The `OptimalOrderCalculation` function determines the optimal order quantities f
 2. **Supplier Selection**:
    - Based on the chosen strategy, the function selects the most appropriate supplier for each material. For example, it might choose the supplier with the highest sustainability score, the lowest risk, the lowest price, or the shortest lead time.
 
+**Note:** The following part is generated over the upcoming 5 weeks, meaning the code is executed 5 times over with a changing start week
+
 3. **Demand Calculation**:
    - The function calculates the total demand for each material by considering future demand and adding a safety stock buffer.
 

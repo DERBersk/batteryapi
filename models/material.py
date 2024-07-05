@@ -1,6 +1,9 @@
-from extensions import db
-from models.options import StrategyEnum
+# import external packages
 from enum import Enum
+# import functions and data
+from extensions import db
+# import models
+from models.options import StrategyEnum
 
 class UnitEnum(Enum):
     Pcs = "Pcs"

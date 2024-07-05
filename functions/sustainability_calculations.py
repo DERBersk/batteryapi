@@ -1,7 +1,8 @@
+# import external packages
 import numpy as np
-
+# import functions and data
 from extensions import db
-
+# import models
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.supplier import Supplier
 

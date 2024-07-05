@@ -28,7 +28,7 @@ Show critical Materials, meaning Materials that do not have an existing connecti
         "external_id": "M1589",
         "id": 16,
         "lot_size": 136.0,
-        "name": "L\u00f6semittel (Wasser) - 50%",
+        "name": "Lösemittel (Wasser) - 50%",
         "safety_stock": 100.0,
         "stock_level": 99.0,
         "strategy": null,

@@ -1,5 +1,8 @@
-from extensions import db
+# import external packages
 import datetime
+# import functions and data
+from extensions import db
+# import models
 from models.week import Week
 
 class ExternalProductionData(db.Model):

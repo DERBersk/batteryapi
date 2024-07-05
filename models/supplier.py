@@ -1,8 +1,5 @@
+# import functions and data
 from extensions import db
-
-from models.material import Material
-from models.materials_per_supplier import MaterialsPerSupplier
-from models.order import Order
 
 class Supplier(db.Model):
     id = db.Column(db.Integer, primary_key=True)
