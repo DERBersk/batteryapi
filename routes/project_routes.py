@@ -68,7 +68,7 @@ def get_project(project_id):
                                 .join(Project)\
                                 .filter(ProductsPerProject.project_id==project_id)\
                                 .filter(Product.id==ProductsPerProject.product_id)\
-                                .add_columns(Product.id,Product.description,Product.specification,ProductsPerProject.amount,ProductsPerProject.raw_material_type,ProductsPerProject.component_parts_type,Product.external_id)\
+                                .add_columns(Product.id,Product.description,Product.specification,ProductsPerProject.amount,Product.external_id)\
                                 .all()
         print(products)
         products_list = []
@@ -79,8 +79,6 @@ def get_project(project_id):
                     'description': product.description,
                     'specification': product.specification,
                     'amount': product.amount,
-                    'raw_material_type': product.raw_material_type,
-                    'component_parts_type': product.component_parts_type,
                     "external_id": product.external_id
                 }
             )
