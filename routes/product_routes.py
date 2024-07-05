@@ -89,12 +89,6 @@ def create_or_update_products():
         return jsonify({'message': 'Invalid data format. Expected a list of products.'}), 400
 
     for product_data in data:
-        # Extract product data
-        product_data = {
-            'description': product_data.get('description'),
-            'specification': product_data.get('specification'),
-            'external_id': product_data.get('external_id')
-        }
 
         # Create or update product
         if 'id' in product_data:
@@ -102,7 +96,8 @@ def create_or_update_products():
             if not product:
                 return jsonify({'message': f'Product with id {product_data["id"]} not found'}), 404
             for key, value in product_data.items():
-                setattr(product, key, value)
+                if key != 'id' and key != 'materials':
+                    setattr(product, key, value)
         else:
             product = Product(**product_data)
 

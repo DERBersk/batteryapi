@@ -111,22 +111,14 @@ def create_or_update_project():
         return jsonify({'message': 'Invalid data format. Expected a list of projects.'}), 400
 
     for project_data in data:
-        # Extract project data
-        start_week = Week.query.filter(Week.year == project_data.get['start_year']).filter(Week.week == project_data.get['start_week'])
-        end_week = Week.query.filter(Week.year == project_data.get['end_year']).filter(Week.week == project_data.get['end_week'])
-        project_data = {
-            'partner': project_data.get('partner'),
-            'start_week': start_week.id,
-            'end_week': end_week.id,
-        }
-
         # Create or update project
         if 'id' in project_data:
             project = Project.query.get(project_data['id'])
             if not project:
                 return jsonify({'message': f'Project with id {project_data["id"]} not found'}), 404
             for key, value in project_data.items():
-                setattr(project, key, value)
+                if key != 'id' and key != 'products':
+                    setattr(project, key, value)
         else:
             project = Project(**project_data)
 

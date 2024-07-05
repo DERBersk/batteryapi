@@ -38,17 +38,6 @@ def create_or_update_materials():
         return jsonify({'message': 'Invalid data format. Expected a list of materials.'}), 400
 
     for material_data in data:
-        # Prepare material data
-        material_data = {
-            "id": material_data.get('id'),
-            "name": material_data.get('name'),
-            "safety_stock": material_data.get('safety_stock'),
-            "lot_size": material_data.get('lot_size'),
-            "stock_level": material_data.get('stock_level'),
-            "unit": material_data.get('unit'),
-            "external_id": material_data.get('external_id')
-        }
-        
         # Check if ID is provided
         if 'id' in material_data:
             material = Material.query.get(material_data['id'])
@@ -56,7 +45,8 @@ def create_or_update_materials():
                 return jsonify({'error': f'Material with id {material_data["id"]} not found'}), 404
             # Update existing material
             for key, value in material_data.items():
-                setattr(material, key, value)
+                if key != 'id':
+                    setattr(material, key, value)
         else:
             # Create new material
             material = Material(**material_data)
