@@ -28,13 +28,15 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "id": 2,
                 "lead_time": 3,
                 "co2_emissions": 2200,
-                "distance": 20                 
+                "distance": 20,
+                "price": 12.99                  
             },
             {
                 "name": "New Zinc",
                 "lead_time": 2,
                 "co2_emissions": 10,
-                "distance": 1500  
+                "distance": 1500,
+                "price": 12.99  
             }
         ]
     },
@@ -55,7 +57,8 @@ Create or modify one or many Suppliers and each respective fitted table (Materia
                 "id": 1,
                 "lead_time": 1,
                 "co2_emissions": 100,
-                "distance": 5  
+                "distance": 5,
+                "price": 12.99 
             }
         ]
     }
