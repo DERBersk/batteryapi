@@ -486,7 +486,7 @@ def aggregate_demand(data,product=False):
     demand_aggregate = defaultdict(float)
 
     # Fetch material and product details from the database
-    materials = {material.id: material.name for material in Material.query.all()}
+    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level} for material in Material.query.all()}
     products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.all()}
       
     
@@ -497,12 +497,14 @@ def aggregate_demand(data,product=False):
                 demand_aggregate[id] += data[(id, next_year, next_week)]
     
     if product:
+        total_demand_sum = sum(demand_aggregate.values())
         return [
             {
                 "product_id": id, 
                 "demand_sum": demand_sum,
                 "description": products[id]['description'] if id in products else None,
-                "specification": products[id]['specification'] if id in products else None
+                "specification": products[id]['specification'] if id in products else None,
+                "percentage_of_total_output": (demand_sum / total_demand_sum * 100) if total_demand_sum > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
@@ -511,7 +513,8 @@ def aggregate_demand(data,product=False):
             {
                 "material_id": id, 
                 "demand_sum": demand_sum,
-                "material_name": materials[id] if id in materials else None
+                "material_name": materials[id]['name'] if id in materials else None,
+                "percentage_of_current_stock": (demand_sum / materials[id]['stock_level'] * 100) if id in materials and materials[id]['stock_level'] > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
