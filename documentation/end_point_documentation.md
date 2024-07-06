@@ -11,9 +11,13 @@ Under this endpoint, all KPIs can be accessed and / or generated. The KPIs are C
 * [Show Critical Suppliers](kpi/criticalSuppliers.md) `GET /api/kpi/criticalSuppliers`
 * [Show all incoming Orders](kpi/incomingOrders.md) `GET /api/kpi/incomingOrders`
 * [Show all Materials without Supplier](kpi/materialWithoutSupplier.md) `GET /api/kpi/materialWithoutSupplier`
+* [Show Material Per Supplier Entries Without Price](kpi/materialPerSupplierWithoutPrice.md) `GET /api/kpi/MaterialPerSupplierWithoutPrice`
+* [Show Products without BOM](kpi/productsWithoutMaterials.md) `GET /api/kpi/productsWithoutMaterials`
 * [Show the most produced Product](kpi/mostProduced.md) `GET /api/kpi/mostProduced`
 * [Show the Order Volume in the past year](kpi/orderVolume.md) `GET /api/kpi/orderVolume`
 * [Show and Calculate Weekly Production](kpi/production.md) `GET /api/kpi/production`
+* [Show Material Demand over the next 5 weeks](kpi/materialDemand5Weeks.md) `GET /api/kpi/materialDemand5Weeks`
+* [Show Product Demand over the next 5 weeks](kpi/productDemand5Weeks.md) `GET /api/kpi/productDemand5Weeks`
 
 ### Material related
 
