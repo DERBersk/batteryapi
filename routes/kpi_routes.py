@@ -3,9 +3,10 @@ from flask import Blueprint, jsonify
 # import functions and data
 from functions.risk_calculation import CountryRisk, update_supplier_risk_indices
 from functions.sustainability_calculations import calculate_sustainability_index
-from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation, OptimalOrderCalculationOneWeek
+from functions.optimal_order_calculation import MaterialDemandCalculation, OptimalOrderCalculation, OptimalOrderCalculationOneWeek,MaterialDemand5Weeks, ProductDemand5Weeks
 from functions.reliability_calculation import ReliabilityCalculation
-from functions.dashboard_calculations import ProductDemandCalculation, CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct
+from functions.dashboard_calculations import ProductDemandCalculation, CriticalSupplierCalculation, MaterialsWoSuppliersCalculation, OrderVolumeLastYearCalculation,IncomingOrderCalculation,MostProducedProduct,get_products_without_material, get_materials_per_supplier_without_price
+
 
 kpi_bp = Blueprint('kpi', __name__, url_prefix='/api/kpi')
 
@@ -47,6 +48,24 @@ def Reliability():
 def calculateWeeklyDemand():
     res = MaterialDemandCalculation()
     return jsonify([mdc.serialize() for mdc in res])
+
+###################################################
+# Route for Return of the material Demand over the
+# next 5 Weeks
+###################################################
+@kpi_bp.route('/materialDemand5Weeks', methods=['GET'])
+def calculateWeeklyDemand5Weeks():
+    res = MaterialDemand5Weeks()
+    return jsonify(res)
+
+###################################################
+# Route for Return of the product Demand over the
+# next 5 Weeks
+###################################################
+@kpi_bp.route('/productDemand5Weeks', methods=['GET'])
+def calculateProductWeeklyDemand5Weeks():
+    res = ProductDemand5Weeks()
+    return jsonify(res)
 
 ###################################################
 # Route for the Return and Calculation
@@ -106,3 +125,17 @@ def IncomingOrdersGet():
 @kpi_bp.route('/production', methods=['GET'])
 def ProductionGet():
     return jsonify(ProductDemandCalculation())
+
+###################################################
+# Route for Products without compositions
+###################################################
+@kpi_bp.route('/productsWithoutMaterials', methods=['GET'])
+def ProductWithoutMaterialGet():
+    return jsonify(get_products_without_material())
+
+###################################################
+# Route for MaterialPerSupplier without Price
+###################################################
+@kpi_bp.route('/MaterialPerSupplierWithoutPrice', methods=['GET'])
+def MaterialPerSupplierWithoutPriceGet():
+    return jsonify(get_materials_per_supplier_without_price())

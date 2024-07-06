@@ -13,6 +13,8 @@ from models.project import Project
 from models.product import Product
 from models.products_per_project import ProductsPerProject
 from models.week import Week
+from models.materials_per_product import MaterialsPerProduct
+from models.price import Price
 
 def CriticalSupplierCalculation():
     risky = Supplier.query.filter(Supplier.risk_index>0.5).all()
@@ -287,3 +289,40 @@ def weeks_between(start_year, start_week, end_year, end_week):
             current_week = 1
             current_year += 1
     return total_weeks
+
+def get_products_without_material():
+    # Subquery to get all product_ids that have a material connection
+    subquery = db.session.query(MaterialsPerProduct.product_id).distinct()
+    # Query to get all products that do not have a product_id in the subquery
+    products_without_material = Product.query.filter(Product.id.notin_(subquery)).all()
+    # Serialize the result
+    data = [product.serialize() for product in products_without_material]
+    
+    result = {
+        "count": len(data),
+        "data": data
+    }
+    
+    return result
+
+def get_materials_per_supplier_without_price():
+    # Subquery to find all material_id and supplier_id pairs where end_date is None
+    subquery = db.session.query(Price.material_id, Price.supplier_id).filter(Price.end_date == None).distinct()
+    
+    # Main query to find all MaterialsPerSupplier records that do not match any pair in the subquery
+    materials_per_supplier_without_price = db.session.query(MaterialsPerSupplier).filter(
+        ~db.and_(
+            MaterialsPerSupplier.material_id.in_([item[0] for item in subquery]),
+            MaterialsPerSupplier.supplier_id.in_([item[1] for item in subquery])
+        )
+    ).all()
+    
+    # Serialize the result
+    data = [mps.serialize() for mps in materials_per_supplier_without_price]
+    
+    result = {
+        "count": len(data),
+        "data": data
+    }
+    
+    return result

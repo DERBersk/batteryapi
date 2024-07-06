@@ -13,6 +13,7 @@ from models.products_per_project import ProductsPerProject
 from models.materials_per_product import MaterialsPerProduct
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.weekly_material_demand import WeeklyMaterialDemand
+from models.product import Product
 from models.order import Order
 
 ###############################################################################################
@@ -430,3 +431,87 @@ def is_new_material(data, material_id):
             if material['material_id'] == material_id:
                 return False
     return True
+
+def MaterialDemand5Weeks():
+    # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
+    external_production_data = ExternalProductionData.query.all()
+    
+    filtered_external_production_data = [record for record in external_production_data if record.is_later_or_equal]
+    
+    # Fetch the Project Data, weekly basis (next month)
+    product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
+    
+    filtered_product_per_projects = [project for project in product_per_projects_all if project.Project.check_project_week()]
+    
+    # Fetch Data for Product composition
+    materials_per_products = MaterialsPerProduct.query.all()
+    
+    # Calculate weekly total Product demand (Sum of Demands)
+    weekly_total = get_weekly_totals(filtered_external_production_data, filtered_product_per_projects)
+    
+    # Calculate weekly total Material demand (Demand and Composition fit)
+    material_demand_dict = calculate_material_demand(weekly_total,materials_per_products)
+    
+    result = aggregate_demand(material_demand_dict,False)
+    
+    return result
+
+def ProductDemand5Weeks():
+    # Fetch Base Production Data for each product with all weeks later than Current week, weekly basis
+    external_production_data = ExternalProductionData.query.all()
+    
+    filtered_external_production_data = [record for record in external_production_data if record.is_later_or_equal]
+    
+    # Fetch the Project Data, weekly basis (next month)
+    product_per_projects_all = Project.query.join(ProductsPerProject).filter(Project.id==ProductsPerProject.project_id).add_columns(Project.id,Project.start_week,Project.end_week,ProductsPerProject.amount, ProductsPerProject.product_id).all()
+    
+    filtered_product_per_projects = [project for project in product_per_projects_all if project.Project.check_project_week()]
+    
+    # Calculate weekly total Product demand (Sum of Demands)
+    weekly_total = get_weekly_totals(filtered_external_production_data, filtered_product_per_projects)
+    
+    result = aggregate_demand(weekly_total,True)        
+
+    return result
+
+def get_next_weeks(year, week, num_weeks=5):
+    current_date = datetime.strptime(f'{year}-W{week-1}-1', "%Y-W%U-%w")
+    next_weeks = []
+    for _ in range(num_weeks):
+        current_date += timedelta(weeks=1)
+        next_weeks.append((current_date.isocalendar()[0], current_date.isocalendar()[1]))
+    return next_weeks
+
+def aggregate_demand(data,product=False):
+    demand_aggregate = defaultdict(float)
+
+    # Fetch material and product details from the database
+    materials = {material.id: material.name for material in Material.query.all()}
+    products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.all()}
+      
+    
+    for (id, year, week), demand in data.items():
+        next_weeks = get_next_weeks(year, week, num_weeks=5)
+        for next_year, next_week in next_weeks:
+            if (id, next_year, next_week) in data:
+                demand_aggregate[id] += data[(id, next_year, next_week)]
+    
+    if product:
+        return [
+            {
+                "product_id": id, 
+                "demand_sum": demand_sum,
+                "description": products[id]['description'] if id in products else None,
+                "specification": products[id]['specification'] if id in products else None
+            }
+            for id, demand_sum in demand_aggregate.items()
+        ]
+    else:
+        return [
+            {
+                "material_id": id, 
+                "demand_sum": demand_sum,
+                "material_name": materials[id] if id in materials else None
+            }
+            for id, demand_sum in demand_aggregate.items()
+        ]

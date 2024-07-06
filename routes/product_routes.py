@@ -8,6 +8,8 @@ from models.product import Product
 from models.material import Material
 from models.materials_per_product import MaterialsPerProduct
 from models.products_per_project import ProductsPerProject
+from models.external_production_data import ExternalProductionData
+from models.week import Week
 
 
 product_bp = Blueprint('product', __name__, url_prefix='/api/products')
@@ -52,6 +54,26 @@ def get_product(product_id):
                                   .filter(Material.id==MaterialsPerProduct.material_id)\
                                   .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount,Material.unit,Material.external_id)\
                                   .all()
+        external_production = ExternalProductionData.query.join(Product)\
+                                                        .join(Week)\
+                                                        .filter(ExternalProductionData.product_id == Product.id)\
+                                                        .filter(ExternalProductionData.week_id == Week.id)\
+                                                        .filter(ExternalProductionData.product_id == product_id)\
+                                                        .add_columns(Week.week, Week.year, ExternalProductionData.amount)\
+                                                        .order_by(Week.year, Week.week)\
+                                                        .all()
+        
+        external_production_list = []
+        for prod in external_production:
+            external_production_list.append(
+                {
+                    'week': prod.week,
+                    'year': prod.year,
+                    'amount': prod.amount
+                }
+            )
+        
+        
         materials_list = []
         for material in materials:
             materials_list.append(
@@ -62,7 +84,7 @@ def get_product(product_id):
                     'lot_size': material.lot_size,
                     'stock_level': material.stock_level,
                     'amount': material.amount,
-                    'unit': material.unit,
+                    'unit': material.unit.value,
                     'external_id': material.external_id
                 }
             )
@@ -71,7 +93,8 @@ def get_product(product_id):
                 'description': product.description,
                 'specification': product.specification,
                 'external_id': product.external_id,
-                'materials': materials_list
+                'materials': materials_list,
+                'external_production': external_production_list
         }
         return jsonify(product_data), 200
     else:
