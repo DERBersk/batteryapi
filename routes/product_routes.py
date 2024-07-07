@@ -122,7 +122,7 @@ def create_or_update_products():
                 if key != 'id' and key != 'materials':
                     setattr(product, key, value)
         else:
-            product = Product(**product_data)
+            product = Product(**{k: v for k, v in product_data.items() if k != 'materials'})
 
         db.session.add(product)
 

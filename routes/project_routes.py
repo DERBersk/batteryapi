@@ -131,7 +131,7 @@ def create_or_update_project():
                 if key != 'id' and key != 'products':
                     setattr(project, key, value)
         else:
-            project = Project(**project_data)
+            project = Project(**{k: v for k, v in project_data.items() if k != 'products'})
 
         db.session.add(project)
 
