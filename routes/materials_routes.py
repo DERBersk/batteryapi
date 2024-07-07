@@ -39,7 +39,7 @@ def create_or_update_materials():
 
     for material_data in data:
         # Check if ID is provided
-        if 'id' in material_data:
+        if 'id' in material_data and material_data.get('id') != None:
             material = Material.query.get(material_data['id'])
             if not material:
                 return jsonify({'error': f'Material with id {material_data["id"]} not found'}), 404

@@ -114,7 +114,7 @@ def create_or_update_products():
     for product_data in data:
 
         # Create or update product
-        if 'id' in product_data:
+        if 'id' in product_data and product_data.get('id') != None:
             product = Product.query.get(product_data['id'])
             if not product:
                 return jsonify({'message': f'Product with id {product_data["id"]} not found'}), 404

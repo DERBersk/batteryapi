@@ -123,7 +123,7 @@ def create_or_update_project():
         if(project_end_id):
             project_data["end_week"] = project_end_id
         
-        if 'id' in project_data:
+        if 'id' in project_data and project_data.get('id') != None:
             project = Project.query.get(project_data['id'])
             if not project:
                 return jsonify({'message': f'Project with id {project_data["id"]} not found'}), 404

@@ -143,7 +143,7 @@ def create_or_update_suppliers():
 
     for supplier_data in data:
         # Create or update supplier
-        if 'id' in supplier_data:
+        if 'id' in supplier_data and supplier_data.get('id') != None:
             supplier = Supplier.query.get(supplier_data['id'])
             if not supplier:
                 return jsonify({'message': f'Supplier with id {supplier_data["id"]} not found'}), 404
@@ -218,9 +218,9 @@ def delete_supplier(supplier_id):
     supplier = Supplier.query.get(supplier_id)
     if supplier:
         # Delete from the database
-        MaterialsPerSupplier.query.filter_by(MaterialsPerSupplier.supplier_id == supplier_id).delete()
+        MaterialsPerSupplier.query.filter_by(supplier_id = supplier_id).delete()
         
-        Price.query.filter_by(Price.supplier_id == supplier_id).delete()
+        Price.query.filter_by(supplier_id = supplier_id).delete()
         
         db.session.delete(supplier)
         db.session.commit()
