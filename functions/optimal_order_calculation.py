@@ -129,7 +129,9 @@ def OptimalOrderCalculation():
         if not price:
             continue
         
-        lead_time = materials_per_supplier_dict.get((supplier_id, material_id)).lead_time
+        mps = materials_per_supplier_dict.get((supplier_id, material_id))
+        lead_time = mps.lead_time
+        co2_emissions = mps.co2_emissions
         
         sustainability_index = supplier.sustainability_index
         risk_index = supplier.risk_index
@@ -167,6 +169,7 @@ def OptimalOrderCalculation():
                     "supplier_name": supplier.name,
                     "lead_time": lead_time,
                     "sustainability_index": sustainability_index,
+                    "co2_emissions": co2_emissions,
                     "risk_index": risk_index,
                     "price": price,
                 }
@@ -262,7 +265,9 @@ def OptimalOrderCalculationOneWeek():
         if not price:
             continue
         
-        lead_time = materials_per_supplier_dict.get((supplier_id, material_id)).lead_time
+        mps = materials_per_supplier_dict.get((supplier_id, material_id))
+        lead_time = mps.lead_time
+        co2_emissions = mps.co2_emissions
         
         sustainability_index = supplier.sustainability_index
         risk_index = supplier.risk_index
@@ -486,7 +491,7 @@ def aggregate_demand(data,product=False):
     demand_aggregate = defaultdict(float)
 
     # Fetch material and product details from the database
-    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level} for material in Material.query.all()}
+    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level, 'unit': material.unit.name if material.unit else ""} for material in Material.query.all()}
     products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.all()}
       
     
@@ -501,10 +506,10 @@ def aggregate_demand(data,product=False):
         return [
             {
                 "product_id": id, 
-                "demand_sum": demand_sum,
+                "demand_sum": round(demand_sum,2),
                 "description": products[id]['description'] if id in products else None,
                 "specification": products[id]['specification'] if id in products else None,
-                "percentage_of_total_output": (demand_sum / total_demand_sum * 100) if total_demand_sum > 0 else 0
+                "percentage_of_total_output": round(demand_sum / total_demand_sum * 100) if total_demand_sum > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
@@ -512,9 +517,10 @@ def aggregate_demand(data,product=False):
         return [
             {
                 "material_id": id, 
-                "demand_sum": demand_sum,
+                "demand_sum": round(demand_sum,2),
+                "unit": materials[id]['unit'],
                 "material_name": materials[id]['name'] if id in materials else None,
-                "percentage_of_current_stock": (demand_sum / materials[id]['stock_level'] * 100) if id in materials and materials[id]['stock_level'] > 0 else 0
+                "percentage_of_current_stock": round(demand_sum / materials[id]['stock_level'] * 100) if id in materials and materials[id]['stock_level'] > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]

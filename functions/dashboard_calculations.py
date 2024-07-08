@@ -17,21 +17,59 @@ from models.materials_per_product import MaterialsPerProduct
 from models.price import Price
 
 def CriticalSupplierCalculation():
-    risky = Supplier.query.filter(Supplier.risk_index>0.5).all()
-    unsustainable = Supplier.query.filter(Supplier.sustainability_index<0.5).all()
-    unreliable = Supplier.query.filter(Supplier.reliability<0).all()
+    risky_suppliers = Supplier.query.filter(Supplier.risk_index > 0.5).all()
+    unsustainable_suppliers = Supplier.query.filter(Supplier.sustainability_index < 0.5).all()
+    unreliable_suppliers = Supplier.query.filter(Supplier.reliability < 0).all()
     
-    res = {
-        "risk": [risk.serialize() for risk in risky],
-        "sustainability": [sus.serialize() for sus in unsustainable],
-        "reliability": [rel.serialize() for rel in unreliable]
-    }
+    unique_suppliers = {}
+    
+    # Helper function to add or update supplier in the unique_suppliers dictionary
+    def add_or_update_supplier(supplier, risk=False, sustainability=False, reliability=False):
+        if supplier.id not in unique_suppliers:
+            unique_suppliers[supplier.id] = {
+                "supplier": supplier,
+                "risk": risk,
+                "sustainability": sustainability,
+                "reliability": reliability
+            }
+        else:
+            if risk:
+                unique_suppliers[supplier.id]["risk"] = True
+            if sustainability:
+                unique_suppliers[supplier.id]["sustainability"] = True
+            if reliability:
+                unique_suppliers[supplier.id]["reliability"] = True
+    
+    # Add suppliers to the unique_suppliers dictionary
+    for supplier in risky_suppliers:
+        add_or_update_supplier(supplier, risk=True)
+    
+    for supplier in unsustainable_suppliers:
+        add_or_update_supplier(supplier, sustainability=True)
+    
+    for supplier in unreliable_suppliers:
+        add_or_update_supplier(supplier, reliability=True)
+    
+    # Sort suppliers by their ID
+    sorted_suppliers = sorted(unique_suppliers.values(), key=lambda x: x["supplier"].id)
+    
+    # Serialize the results
+    res = [
+        {
+            "supplier": supplier_data["supplier"].serialize(),
+            "risk": supplier_data["risk"],
+            "sustainability": supplier_data["sustainability"],
+            "reliability": supplier_data["reliability"]
+        }
+        for supplier_data in sorted_suppliers
+    ]
     
     return res
 
 def MaterialsWoSuppliersCalculation():
     materials_with_no_suppliers = Material.query.outerjoin(MaterialsPerSupplier, Material.id == MaterialsPerSupplier.material_id)\
                                                 .filter(MaterialsPerSupplier.id == None)\
+                                                .order_by(Material.id.asc())\
                                                 .all()
     
     # Serialize the results
@@ -182,7 +220,7 @@ def ProductDemandCalculation():
                 for product_id in all_product_ids:
                     amount = weekly_data[(year, week)][product_id]["amount"]
                     product_entry = {
-                        "amount": amount,
+                        "amount": round(amount,2),
                         "product_id": product_id
                     }
                     if product_id in product_names:
@@ -310,15 +348,30 @@ def get_materials_per_supplier_without_price():
     subquery = db.session.query(Price.material_id, Price.supplier_id).filter(Price.end_date == None).distinct()
     
     # Main query to find all MaterialsPerSupplier records that do not match any pair in the subquery
-    materials_per_supplier_without_price = db.session.query(MaterialsPerSupplier).filter(
+    materials_per_supplier_without_price = db.session.query(
+        MaterialsPerSupplier,
+        Material.name,
+        Supplier.name
+    ).filter(
         ~db.and_(
             MaterialsPerSupplier.material_id.in_([item[0] for item in subquery]),
             MaterialsPerSupplier.supplier_id.in_([item[1] for item in subquery])
         )
-    ).all()
+    ).join(Supplier).\
+        join(Material).\
+        filter(MaterialsPerSupplier.material_id == Material.id).\
+        filter(MaterialsPerSupplier.supplier_id == Supplier.id).\
+        all()
     
     # Serialize the result
-    data = [mps.serialize() for mps in materials_per_supplier_without_price]
+    data = [
+        {
+            **mps.serialize(),
+            "material_name": material_name,
+            "supplier_name": supplier_name
+        }
+        for mps, material_name, supplier_name in materials_per_supplier_without_price
+    ]
     
     result = {
         "count": len(data),
