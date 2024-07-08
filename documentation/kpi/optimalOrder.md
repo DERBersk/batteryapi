@@ -25,25 +25,27 @@ Calculate the optimal order quantities for materials based on various strategies
    {
       "data": [
          {
-         "lead_time": 4,
+         "co2_emissions": null,
+         "lead_time": 6,
          "material_id": 12,
-         "min_order": 48251,
+         "min_order": 156251.0,
          "name": "Graphit",
-         "price": 10,
-         "risk_index": 0.398684,
+         "price": 5.0,
+         "risk_index": 0.66705,
          "strategy": "Sustainability",
-         "supplier_id": 12,
-         "supplier_name": "Armor Battery Films",
-         "sustainability_index": 0.7,
+         "supplier_id": 15,
+         "supplier_name": "Celgrad",
+         "sustainability_index": 0.56,
          "unit": "kg"
          },
          {
+         "co2_emissions": null,
          "lead_time": 2,
          "material_id": 13,
-         "min_order": 661,
+         "min_order": 2011.0,
          "name": "Leitadditiv",
-         "price": 50,
-         "risk_index": 0,
+         "price": 50.0,
+         "risk_index": 0.0,
          "strategy": "Price",
          "supplier_id": 16,
          "supplier_name": "Cuircuit Foil",
@@ -51,25 +53,27 @@ Calculate the optimal order quantities for materials based on various strategies
          "unit": "g"
          },
          {
+         "co2_emissions": null,
          "lead_time": 4,
          "material_id": 14,
-         "min_order": 2401,
+         "min_order": 10501.0,
          "name": "Binder 1 (SBR)",
-         "price": 2,
-         "risk_index": 0.135965,
+         "price": 2.0,
+         "risk_index": 0.154098,
          "strategy": "Price",
          "supplier_id": 14,
          "supplier_name": "BTR",
-         "sustainability_index": 0.1,
+         "sustainability_index": null,
          "unit": "Pcs"
          },
          {
+         "co2_emissions": null,
          "lead_time": 2,
          "material_id": 11,
-         "min_order": 19351,
+         "min_order": 51751.0,
          "name": "Anodenmaterial (Solid content 50%)",
-         "price": 7,
-         "risk_index": 0.135965,
+         "price": 7.0,
+         "risk_index": 0.154098,
          "strategy": "Price",
          "supplier_id": 13,
          "supplier_name": "BASF",
@@ -77,41 +81,42 @@ Calculate the optimal order quantities for materials based on various strategies
          "unit": "g"
          }
       ],
-      "week": 26,
-      "year": 2024
-   },
-   {
-      "data": [],
-      "week": 27,
-      "year": 2024
-   },
-   {
-      "data": [],
       "week": 28,
-      "year": 2024
-   },
-   {
-      "data": [],
-      "week": 29,
       "year": 2024
    },
    {
       "data": [
          {
+         "co2_emissions": null,
          "lead_time": 2,
          "material_id": 15,
-         "min_order": 401,
+         "min_order": 3901.0,
          "name": "Binder 2 (CMC)",
          "price": 2.99,
-         "risk_index": 0.135965,
+         "risk_index": 0.154098,
          "strategy": "Price",
          "supplier_id": 14,
          "supplier_name": "BTR",
-         "sustainability_index": 0.1,
+         "sustainability_index": null,
          "unit": "Pcs"
          }
       ],
+      "week": 29,
+      "year": 2024
+   },
+   {
+      "data": [],
       "week": 30,
+      "year": 2024
+   },
+   {
+      "data": [],
+      "week": 31,
+      "year": 2024
+   },
+   {
+      "data": [],
+      "week": 32,
       "year": 2024
    }
 ]
