@@ -80,8 +80,13 @@ def update_or_create_orders():
             order.supplier_id = supplier.id
             order.amount = item['amount']
             order.planned_delivery_date = datetime.datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
-            order.delivery_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+            if item['delivery_date']:
+                order.delivery_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
         else:
+            if item['delivery_date']:
+                d_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+            else:
+                d_date = None
             # Create a new order
             new_order = Order(
                 external_id=item['id'],
@@ -89,7 +94,7 @@ def update_or_create_orders():
                 supplier_id=supplier.id,
                 amount=item['amount'],
                 planned_delivery_date=datetime.datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z'),
-                delivery_date=datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+                delivery_date=d_date
             )
             db.session.add(new_order)
     

@@ -182,7 +182,9 @@ def OptimalOrderCalculation():
         for week_key in rec_order_dict:
             wk = week_dict.get(week_key)
             new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week_key]})
-    return new_rec_order_list
+        
+        sorted_data = sorted(new_rec_order_list, key=lambda x: (x['year'], x['week']))
+    return sorted_data
 
 def OptimalOrderCalculationOneWeek():
     # Fetch all necessary data before the loop
