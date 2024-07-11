@@ -1,7 +1,7 @@
 # import external packages
 from datetime import datetime
 from flask import Blueprint, jsonify, request
-from sqlalchemy import case, func
+from sqlalchemy import case, func, and_
 import requests
 # import functions and data
 from extensions import db
@@ -224,6 +224,20 @@ def create_or_update_suppliers():
             db.session.add(materials_per_supplier)
 
     db.session.commit()
+    
+    # Subquery to get all material_id and supplier_id combinations from MaterialPerSupplier
+    subquery = db.session.query(
+        MaterialsPerSupplier.material_id,
+        MaterialsPerSupplier.supplier_id
+    ).subquery()
+
+    # Delete all Price entries that do not have a corresponding MaterialPerSupplier entry
+    db.session.query(Price).filter(
+        ~and_(
+            Price.material_id == subquery.c.material_id,
+            Price.supplier_id == subquery.c.supplier_id
+        )
+    ).delete(synchronize_session='fetch')
 
     return jsonify({'message': 'Suppliers created/updated successfully'}), 200
 

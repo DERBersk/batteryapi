@@ -53,10 +53,10 @@ def OptimalOrderCalculation():
     materials = Material.query.all()
     options = Options.query.first()
     suppliers = Supplier.query.filter(Supplier.availability == True).all()
-    prices = Price.query.filter(Price.end_date.is_(None)).all()
-    materials_per_supplier = MaterialsPerSupplier.query.all()
+    prices = Price.query.filter(Price.end_date.is_(None)).join(Supplier).filter(Supplier.id == Price.supplier_id).filter(Supplier.availability == True).all()
+    materials_per_supplier = MaterialsPerSupplier.query.join(Supplier).filter(Supplier.id == MaterialsPerSupplier.supplier_id).filter(Supplier.availability == True).all()
     weekly_material_demands = WeeklyMaterialDemand.query.all()
-    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).all()
+    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).join(Supplier).filter(Supplier.id == Order.supplier_id).filter(Supplier.availability == True).all()
     weeks = Week.query.all()
 
     # Preprocess data for quick lookup
@@ -191,10 +191,10 @@ def OptimalOrderCalculationOneWeek():
     materials = Material.query.all()
     options = Options.query.first()
     suppliers = Supplier.query.filter(Supplier.availability == True).all()
-    prices = Price.query.filter(Price.end_date.is_(None)).all()
-    materials_per_supplier = MaterialsPerSupplier.query.all()
+    prices = Price.query.filter(Price.end_date.is_(None)).join(Supplier).filter(Supplier.id == Price.supplier_id).filter(Supplier.availability == True).all()
+    materials_per_supplier = MaterialsPerSupplier.query.join(Supplier).filter(Supplier.id == MaterialsPerSupplier.supplier_id).filter(Supplier.availability == True).all()
     weekly_material_demands = WeeklyMaterialDemand.query.all()
-    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).all()
+    outstanding_orders = Order.query.filter(Order.delivery_date.is_(None)).join(Supplier).filter(Supplier.id == Order.supplier_id).filter(Supplier.availability == True).all()
     weeks = Week.query.all()
 
     # Preprocess data for quick lookup
