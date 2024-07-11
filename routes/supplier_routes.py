@@ -188,7 +188,11 @@ def create_or_update_suppliers():
             
             new_price = material_data.get('price')
             
-            cur_price = Price.query.filter(Price.supplier_id == supplier.id).filter(Price.material_id==material_id).filter(Price.end_date is None).first()
+            cur_price = Price.query.filter(
+                Price.supplier_id == supplier.id,
+                Price.material_id == material_id,
+                Price.end_date.is_(None)
+            ).first()
             
             if cur_price:
                 if cur_price.cost != new_price:
