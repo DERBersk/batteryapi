@@ -20,7 +20,7 @@ def get_prices():
 @price_bp.route('/<int:material_id>', methods=['GET'])
 def get_material(material_id):
     price = Price.query.filter(Price.material_id == material_id)\
-                       .filter(Price.end_date == "")\
+                       .filter(Price.end_date.is_(None))\
                        .order_by(Price.cost).first()
     if price:
         return jsonify(price.serialize())
