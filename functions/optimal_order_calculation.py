@@ -471,7 +471,7 @@ def MaterialDemand5Weeks():
     
     # Calculate weekly total Material demand (Demand and Composition fit)
     material_demand_dict = calculate_material_demand(weekly_total,materials_per_products)
-    
+        
     result = aggregate_demand(material_demand_dict,False)
     
     return result
@@ -498,20 +498,21 @@ def get_next_weeks(year, week, num_weeks=5):
     current_date = datetime.strptime(f'{year}-W{week-1}-1', "%Y-W%U-%w")
     next_weeks = []
     for _ in range(num_weeks):
-        current_date += timedelta(weeks=1)
         next_weeks.append((current_date.isocalendar()[0], current_date.isocalendar()[1]))
+        current_date += timedelta(weeks=1)
     return next_weeks
 
 def aggregate_demand(data,product=False):
     demand_aggregate = defaultdict(float)
 
     # Fetch material and product details from the database
-    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level, 'unit': material.unit.name if material.unit else ""} for material in Material.query.all()}
-    products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.all()}
+    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level, 'unit': material.unit.name if material.unit else ""} for material in Material.query.order_by(Material.id.asc()).all()}
+    products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.order_by(Product.id.asc()).all()}
       
     
     for (id, year, week), demand in data.items():
-        next_weeks = get_next_weeks(year, week, num_weeks=5)
+        check_year, check_week = datetime.now().isocalendar()[:2]
+        next_weeks = get_next_weeks(check_year, check_week, num_weeks=5)
         for next_year, next_week in next_weeks:
             if (id, next_year, next_week) in data:
                 demand_aggregate[id] += data[(id, next_year, next_week)]
@@ -524,7 +525,7 @@ def aggregate_demand(data,product=False):
                 "demand_sum": round(demand_sum,2),
                 "description": products[id]['description'] if id in products else None,
                 "specification": products[id]['specification'] if id in products else None,
-                "percentage_of_total_output": round(demand_sum / total_demand_sum * 100) if total_demand_sum > 0 else 0
+                "percentage_of_total_output": round(demand_sum / total_demand_sum * 100,2) if total_demand_sum > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
@@ -535,7 +536,7 @@ def aggregate_demand(data,product=False):
                 "demand_sum": round(demand_sum,2),
                 "unit": materials[id]['unit'],
                 "material_name": materials[id]['name'] if id in materials else None,
-                "percentage_of_current_stock": round(demand_sum / materials[id]['stock_level'] * 100) if id in materials and materials[id]['stock_level'] > 0 else 0
+                "percentage_of_current_stock": round(demand_sum / materials[id]['stock_level']* 100,2) if id in materials and materials[id]['stock_level'] > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
