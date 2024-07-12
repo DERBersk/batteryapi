@@ -103,7 +103,7 @@ def get_product(product_id):
 ###################################################
 # Post a single or multiple products
 ###################################################
-@product_bp.route('/', methods=['POST'])
+@product_bp.route('', methods=['POST'])
 def create_or_update_products():
     from app import db
     data = request.json
