@@ -100,7 +100,7 @@ def get_project(project_id):
 ###################################################
 # Post a single or multiple project
 ###################################################
-@project_bp.route('/', methods=['POST'])
+@project_bp.route('', methods=['POST'])
 def create_or_update_project():
     from app import db
     data = request.json

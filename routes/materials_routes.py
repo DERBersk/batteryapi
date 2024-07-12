@@ -30,6 +30,7 @@ def get_material(material_id):
 ###################################################
 # Post a single or multiple materials
 ###################################################
+@material_bp.route('', methods=['POST'])
 def create_or_update_materials():
     from app import db
     data = request.json
