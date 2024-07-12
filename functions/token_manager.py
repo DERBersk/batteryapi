@@ -1,9 +1,12 @@
 # import external packages
 import uuid
+from extensions import db
+from models.external_token import Token
+import secrets
 
-tokens = {}
-
-def generate_token(email, expiration_time,id):
-    token = str(uuid.uuid4())
-    tokens[token] = {'email': email, 'expiration_time': expiration_time, 'id': id}
+def generate_token(expiration_time,id):
+    token = secrets.token_hex(16)
+    new_token = Token(token=token, supplier_id=id, expires_at=expiration_time)
+    db.session.add(new_token)
+    db.session.commit()
     return token

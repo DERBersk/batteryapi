@@ -104,7 +104,7 @@ def get_product(product_id):
 ###################################################
 # Post a single or multiple products
 ###################################################
-@product_bp.route('/', methods=['POST'])
+@product_bp.route('', methods=['POST'])
 def create_or_update_products():
     from app import db
     data = request.json
@@ -115,7 +115,7 @@ def create_or_update_products():
     for product_data in data:
 
         # Create or update product
-        if 'id' in product_data:
+        if 'id' in product_data and product_data.get('id') != None:
             product = Product.query.get(product_data['id'])
             if not product:
                 return jsonify({'message': f'Product with id {product_data["id"]} not found'}), 404
@@ -123,7 +123,7 @@ def create_or_update_products():
                 if key != 'id' and key != 'materials':
                     setattr(product, key, value)
         else:
-            product = Product(**product_data)
+            product = Product(**{k: v for k, v in product_data.items() if k != 'materials'})
 
         db.session.add(product)
 

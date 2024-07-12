@@ -101,7 +101,7 @@ def get_project(project_id):
 ###################################################
 # Post a single or multiple project
 ###################################################
-@project_bp.route('/', methods=['POST'])
+@project_bp.route('', methods=['POST'])
 def create_or_update_project():
     from app import db
     data = request.json
@@ -111,7 +111,20 @@ def create_or_update_project():
 
     for project_data in data:
         # Create or update project
-        if 'id' in project_data:
+
+        project_start_id = get_project_date_id(project_data.get("start_week"), project_data.get("start_year"))
+        project_end_id = get_project_date_id(project_data.get("end_week"), project_data.get("end_year"))
+        
+        project_start_id = create_or_get_week(project_start_id,project_data.get("start_week"),project_data.get("start_year"),db)
+        project_end_id = create_or_get_week(project_end_id,project_data.get("end_week"),project_data.get("end_year"),db)
+
+        if(project_start_id):
+            project_data["start_week"] = project_start_id
+        
+        if(project_end_id):
+            project_data["end_week"] = project_end_id
+        
+        if 'id' in project_data and project_data.get('id') != None:
             project = Project.query.get(project_data['id'])
             if not project:
                 return jsonify({'message': f'Project with id {project_data["id"]} not found'}), 404
@@ -119,7 +132,7 @@ def create_or_update_project():
                 if key != 'id' and key != 'products':
                     setattr(project, key, value)
         else:
-            project = Project(**project_data)
+            project = Project(**{k: v for k, v in project_data.items() if k != 'products'})
 
         db.session.add(project)
 
@@ -163,3 +176,21 @@ def delete_project(project_id):
         return jsonify({'message': 'Project and associated records deleted successfully'}), 200
     else:
         return jsonify({'error': 'Project not found'}), 404
+
+def get_project_date_id(week, year):
+    if week and year:
+        if(week < 1 or week > 53):
+            return jsonify({'message': f'Week number {week} is invalid'}), 501
+        return 'wk'+ str(week) + '_' + str(year)
+    return None
+
+def create_or_get_week(week_year,w,y,db):
+    if(week_year):
+        st_wk = Week.query.filter(Week.id == week_year).first()
+        if(st_wk):
+            return week_year
+        else:
+            new_week = Week(**{"id": week_year,"week":w,"year":y})
+            db.session.add(new_week)
+            return week_year
+    return None

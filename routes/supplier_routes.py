@@ -33,36 +33,49 @@ def get_external_suppliers():
 ###################################################
 @supplier_bp.route('/', methods=['GET'])
 def get_suppliers():
-    mat_counts = db.session.query(
+    # Get the filter parameters from the request
+    material_ids = request.args.getlist('material_ids', type=int)
+
+    # Step 1: Count materials per supplier
+    mat_counts_query = db.session.query(
         Supplier.id,
         func.count(Material.id).label('mat_count')
     ).outerjoin(MaterialsPerSupplier, Supplier.id == MaterialsPerSupplier.supplier_id) \
     .outerjoin(Material, Material.id == MaterialsPerSupplier.material_id) \
     .group_by(Supplier.id) \
-    .order_by(Supplier.id.asc()) \
-    .subquery()
+    .order_by(Supplier.id.asc())
+
+    mat_counts = mat_counts_query.subquery()
 
     # Step 2: Count open orders (delivery_date is None) per supplier
-    open_order_counts = db.session.query(
+    open_order_counts_query = db.session.query(
         Supplier.id,
         func.count(Order.id).filter(Order.delivery_date.is_(None)).label('open_order_count')
     ).outerjoin(Order, Order.supplier_id == Supplier.id) \
     .filter(Order.delivery_date.is_(None)) \
     .group_by(Supplier.id) \
-    .order_by(Supplier.id.asc()) \
-    .subquery()
+    .order_by(Supplier.id.asc())
 
-    # Final query joining all counts
+    open_order_counts = open_order_counts_query.subquery()
+
+    # Final query joining all counts and filtering by material IDs if provided
     suppliers_query = db.session.query(
         Supplier,
         mat_counts.c.mat_count,
         open_order_counts.c.open_order_count
     ).outerjoin(mat_counts, mat_counts.c.id == Supplier.id) \
-    .outerjoin(open_order_counts, open_order_counts.c.id == Supplier.id)\
-    .order_by(Supplier.id.asc()) \
+    .outerjoin(open_order_counts, open_order_counts.c.id == Supplier.id) \
+    .outerjoin(MaterialsPerSupplier, Supplier.id == MaterialsPerSupplier.supplier_id) \
+    .outerjoin(Material, Material.id == MaterialsPerSupplier.material_id)
+
+    if material_ids:
+        suppliers_query = suppliers_query.filter(Material.id.in_(material_ids))
+
+    suppliers_query = suppliers_query.group_by(Supplier.id, mat_counts.c.mat_count, open_order_counts.c.open_order_count) \
+                                     .order_by(Supplier.id.asc())
 
     # Fetch results and prepare data
-    suppliers_data = [] 
+    suppliers_data = []
     for supplier, mat_count, open_order_count in suppliers_query:
         supplier_data = supplier.serialize()
         supplier_data['mat_count'] = mat_count
@@ -70,7 +83,6 @@ def get_suppliers():
         suppliers_data.append(supplier_data)
 
     return jsonify(suppliers_data)
-
 ###################################################
 # Get for a single Suppliers (inc. Material Data)
 ###################################################
@@ -159,7 +171,7 @@ def create_or_update_suppliers():
 
     for supplier_data in data:
         # Create or update supplier
-        if 'id' in supplier_data:
+        if 'id' in supplier_data and supplier_data.get('id') != None:
             supplier = Supplier.query.get(supplier_data['id'])
             if not supplier:
                 return jsonify({'message': f'Supplier with id {supplier_data["id"]} not found'}), 404
@@ -252,9 +264,9 @@ def delete_supplier(supplier_id):
     supplier = Supplier.query.get(supplier_id)
     if supplier:
         # Delete from the database
-        MaterialsPerSupplier.query.filter_by(MaterialsPerSupplier.supplier_id == supplier_id).delete()
+        MaterialsPerSupplier.query.filter_by(supplier_id = supplier_id).delete()
         
-        Price.query.filter_by(Price.supplier_id == supplier_id).delete()
+        Price.query.filter_by(supplier_id = supplier_id).delete()
         
         db.session.delete(supplier)
         db.session.commit()

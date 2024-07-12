@@ -4,13 +4,14 @@ from datetime import datetime,timedelta
 from flask import Blueprint, request,render_template,current_app,jsonify
 # import functions and data
 from functions.email import send_email
-from functions.token_manager import generate_token,tokens
+from functions.token_manager import generate_token
 from functions.fetch_updates import update_or_create_orders
 from extensions import db
 # import models
 from models.supplier import Supplier
 from models.materials_per_supplier import MaterialsPerSupplier
 from models.material import Material
+from models.external_token import Token
 
 external_bp = Blueprint('external', __name__, url_prefix='/api/external')
 
@@ -32,7 +33,7 @@ def generate_link(supplier_id):
         else:
             return jsonify("Email field is empty"),404
         expiration_time = datetime.now() + timedelta(days=7)  # Change this to whatever expiration time you want
-        token = generate_token(email, expiration_time, supplier.id)
+        token = generate_token(expiration_time, supplier.id)
         link = request.host_url + 'api/external/update_data/' + token
 
         # Render link.html content
@@ -53,10 +54,11 @@ def generate_link(supplier_id):
 ###################################################
 @external_bp.route('/update_data/<token>', methods=["GET", "POST"])
 def update_data(token):
-    if token in tokens:
-        supplier_data = tokens[token]
-        if datetime.now() < supplier_data['expiration_time']:
-            supplier = Supplier.query.filter(Supplier.id == supplier_data['id']).first()
+    valid_token = Token.query.filter_by(token=token).first()
+    if valid_token:
+        supplier_data = valid_token
+        if datetime.now() < supplier_data.expires_at:
+            supplier = Supplier.query.filter(Supplier.id == supplier_data.supplier_id).first()
             if not supplier:
                 return jsonify('Invalid supplier.'),404
 
