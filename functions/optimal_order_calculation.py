@@ -393,16 +393,29 @@ def save_weekly_material_demand(material_demand_dict):
     from extensions import db
     # Clear existing data (optional)
     db.session.query(WeeklyMaterialDemand).delete()
-
+    
+    # Fetch all needed week IDs in one query
+    weeks_to_query = {(year, week) for _, year, week in material_demand_dict.keys()}
+    week_dict = {
+        (wk.year, wk.week): wk.id
+        for wk in Week.query.filter(
+            db.or_(
+                db.and_(Week.year == year, Week.week == week)
+                for year, week in weeks_to_query
+            )
+        ).all()
+    }
+    
     # Add new data
     for (material_id, year, week), amount in material_demand_dict.items():
-        wk = Week.query.filter(Week.year == year).filter(Week.week == week).first()
-        weekly_demand = WeeklyMaterialDemand(
-            material_id=material_id,
-            week_id=wk.id,
-            amount=amount
-        )
-        db.session.add(weekly_demand)
+        week_id = week_dict.get((year, week))
+        if week_id is not None:
+            weekly_demand = WeeklyMaterialDemand(
+                material_id=material_id,
+                week_id=week_id,
+                amount=amount
+            )
+            db.session.add(weekly_demand)
     
     db.session.commit()
 
