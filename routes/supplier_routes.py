@@ -99,29 +99,28 @@ def get_supplier(supplier_id):
                                   .all()
         materials_list = []
         for material in materials:
-            price = Price.query.filter(Price.supplier_id == supplier_id)\
-                           .filter(Price.end_date is not None)\
-                           .filter(Price.material_id == material.id)\
-                           .order_by(Price.cost).first()
+            price = (Price.query.filter(Price.supplier_id == supplier_id)
+                                .filter(Price.end_date.is_(None))
+                                .filter(Price.material_id == material.id)
+                                .first())
+            
             price_val = 0
             if price:
                 price_val = price.cost
-            
-            materials_list.append(
-                {
-                    'id': material.id,
-                    'name': material.name,
-                    'safety_stock': material.safety_stock,
-                    'lot_size': material.lot_size,
-                    'stock_level': material.stock_level,
-                    'lead_time': material.lead_time,
-                    'unit': material.unit.name if material.unit else None,
-                    'price': price_val,
-                    'external_id': material.external_id,
-                    'co2_emissions': material.co2_emissions,
-                    'distance': material.distance
-                }
-            )
+
+            materials_list.append({
+                'id': material.id,
+                'name': material.name,
+                'safety_stock': material.safety_stock,
+                'lot_size': material.lot_size,
+                'stock_level': material.stock_level,
+                'lead_time': material.lead_time,
+                'unit': material.unit.name if material.unit else None,
+                'price': price_val,
+                'external_id': material.external_id,
+                'co2_emissions': material.co2_emissions,
+                'distance': material.distance
+            })
             
         orders = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == supplier_id).order_by(Order.id).all()
         order_list = []
