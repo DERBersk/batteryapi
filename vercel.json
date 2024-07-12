@@ -14,7 +14,7 @@
   {
   "functions": {
     "app.py": {
-      "maxDuration": 30 // This function can run for a maximum of 30 seconds
+      "maxDuration": 30
     }
   }
 }
