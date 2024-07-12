@@ -28,12 +28,8 @@ class WeeklyMaterialDemand(db.Model):
     def is_later_or_equal(self):
         week = Week.query.filter(Week.id == self.week_id).first()
         current_year, current_week = datetime.datetime.now().isocalendar()[:2]
-        if week.year > current_year:
-            return True
-        elif week.year == current_year:
-            return week.week >= current_week
-        return False
-    
+        return (week.year > current_year) or (week.year == current_year and week.week >= current_week)
+
     def is_in_lead_time(self, lead_time_end_date):
         week = Week.query.filter(Week.id == self.week_id).first()
         week_start_date = datetime.date(week.year, 1, 1) + datetime.timedelta(weeks=week.week) + datetime.timedelta(weeks=-2)
