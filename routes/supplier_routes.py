@@ -1,7 +1,8 @@
 # import external packages
 from datetime import datetime
 from flask import Blueprint, jsonify, request
-from sqlalchemy import case, func
+from sqlalchemy import case, func, and_
+import requests
 # import functions and data
 from extensions import db
 # import models
@@ -13,6 +14,20 @@ from models.order import Order
 
 supplier_bp = Blueprint('supplier', __name__, url_prefix='/api/supplier')
 
+def fetch_api_data_suppliers():
+    url = "https://secondaryapi-wms.vercel.app/supplier/"
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    return response.json()
+
+###################################################
+# Get for external Suppliers
+###################################################
+@supplier_bp.route('/external/', methods=['GET'])
+def get_external_suppliers():
+    api_data = fetch_api_data_suppliers()
+    return jsonify(api_data)
+    
 ###################################################
 # Get for multiple Suppliers
 ###################################################
@@ -173,7 +188,11 @@ def create_or_update_suppliers():
             
             new_price = material_data.get('price')
             
-            cur_price = Price.query.filter(Price.supplier_id == supplier.id).filter(Price.material_id==material_id).filter(Price.end_date is None).first()
+            cur_price = Price.query.filter(
+                Price.supplier_id == supplier.id,
+                Price.material_id == material_id,
+                Price.end_date.is_(None)
+            ).first()
             
             if cur_price:
                 if cur_price.cost != new_price:
@@ -205,6 +224,20 @@ def create_or_update_suppliers():
             db.session.add(materials_per_supplier)
 
     db.session.commit()
+    
+    # Subquery to get all material_id and supplier_id combinations from MaterialPerSupplier
+    subquery = db.session.query(
+        MaterialsPerSupplier.material_id,
+        MaterialsPerSupplier.supplier_id
+    ).subquery()
+
+    # Delete all Price entries that do not have a corresponding MaterialPerSupplier entry
+    db.session.query(Price).filter(
+        ~and_(
+            Price.material_id == subquery.c.material_id,
+            Price.supplier_id == subquery.c.supplier_id
+        )
+    ).delete(synchronize_session='fetch')
 
     return jsonify({'message': 'Suppliers created/updated successfully'}), 200
 

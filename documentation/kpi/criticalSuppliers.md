@@ -21,51 +21,43 @@ Show critical Suppliers, meaning Suppliers that have an index that is in a criti
 **Content example**:
 
 ```json
-{
-  "reliability": [
+[
     {
-      "availability": false,
-      "country": "China",
-      "email": null,
-      "id": 11,
-      "lat": 35.195581226251,
-      "long": 118.265431433867,
-      "name": "AME energy Co.,Limited",
-      "reliability": -0.1,
-      "risk_index": 0.76722545748501,
-      "sustainability_index": 0.899024302173073
+      "reliability": false,
+      "risk": true,
+      "supplier": {
+        "availability": false,
+        "country": "China",
+        "email": null,
+        "external_id": "S9112",
+        "id": 11,
+        "lat": 35.195581226251,
+        "long": 118.265431433867,
+        "name": "AME energy Co.,Limited",
+        "reliability": 0.8,
+        "risk_index": 0.672097,
+        "sustainability_index": 0.2
+      },
+      "sustainability": true
     },
-    ...
-  ],
-  "risk": [
     {
-      "availability": true,
-      "country": "Germany",
-      "email": null,
-      "id": 17,
-      "lat": 52.9063952752977,
-      "long": 9.66385927388883,
-      "name": "DDP Specialty Products GmbH & Co. KG",
-      "reliability": null,
-      "risk_index": 0.700980868468645,
-      "sustainability_index": 0.525231594912317
+      "reliability": false,
+      "risk": true,
+      "supplier": {
+        "availability": true,
+        "country": "United States of America",
+        "email": null,
+        "external_id": "S2941",
+        "id": 15,
+        "lat": 35.4187588130353,
+        "long": -80.6599928802627,
+        "name": "Celgrad",
+        "reliability": null,
+        "risk_index": 0.66705,
+        "sustainability_index": 0.56
+      },
+      "sustainability": false
     },
-    ...
-  ],
-  "sustainability": [
-    {
-      "availability": true,
-      "country": "France",
-      "email": "nourashraf225@gmail.com",
-      "id": 12,
-      "lat": 47.1985431981444,
-      "long": -1.58932183135905,
-      "name": "Armor Battery Films",
-      "reliability": -0.3,
-      "risk_index": 0.251099950171836,
-      "sustainability_index": 0.22483555123122
-    },
-    ...
-  ]
-}
+  ...
+]
 ```
