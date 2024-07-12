@@ -6,8 +6,8 @@
     }
   ],
   "functions": {
-    "app.py": {
-      "runtime": "@vercel/python",
+    "api/app.py": {
+      "runtime": "vercel-python@0.5.0",
       "maxDuration": 30
     }
   }
