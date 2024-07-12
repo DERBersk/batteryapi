@@ -69,6 +69,7 @@ def get_project(project_id):
                                 .filter(ProductsPerProject.project_id==project_id)\
                                 .filter(Product.id==ProductsPerProject.product_id)\
                                 .add_columns(Product.id,Product.description,Product.specification,ProductsPerProject.amount,Product.external_id)\
+                                .order_by(Product.id.asc())\
                                 .all()
         print(products)
         products_list = []

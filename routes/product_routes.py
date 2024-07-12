@@ -53,6 +53,7 @@ def get_product(product_id):
                                   .filter(MaterialsPerProduct.product_id==product_id)\
                                   .filter(Material.id==MaterialsPerProduct.material_id)\
                                   .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerProduct.amount,Material.unit,Material.external_id)\
+                                  .order_by(Material.id.asc())\
                                   .all()
         external_production = ExternalProductionData.query.join(Product)\
                                                         .join(Week)\

@@ -95,6 +95,7 @@ def get_supplier(supplier_id):
                                   .filter(MaterialsPerSupplier.supplier_id==supplier_id)\
                                   .filter(Material.id==MaterialsPerSupplier.material_id)\
                                   .add_columns(Material.id,Material.name,Material.safety_stock,Material.lot_size,Material.stock_level,MaterialsPerSupplier.lead_time, Material.unit, Material.external_id,MaterialsPerSupplier.co2_emissions,MaterialsPerSupplier.distance)\
+                                  .order_by(Material.id.asc())\
                                   .all()
         materials_list = []
         for material in materials:
@@ -122,7 +123,7 @@ def get_supplier(supplier_id):
                 }
             )
             
-        orders = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == supplier_id).all()
+        orders = Order.query.filter(Order.delivery_date.is_(None)).filter(Order.supplier_id == supplier_id).order_by(Order.id).all()
         order_list = []
         for order in orders:
             

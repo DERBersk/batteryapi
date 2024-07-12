@@ -21,12 +21,10 @@ class Project(db.Model):
         start_week = Week.query.filter(Week.id == self.start_week).first()
         end_week = Week.query.filter(Week.id == self.end_week).first()
         check_year, check_week = datetime.datetime.now().isocalendar()[:2]
-        if check_year < start_week.year or (check_year == start_week.year and check_week < start_week.week):
-            return True
-        elif check_year > end_week.year or (check_year == end_week.year and check_week > end_week.week):
-            return False
-        else:
-            return True
+        return (check_year < start_week.year or 
+                (check_year == start_week.year and check_week <= start_week.week)) and \
+            (check_year < end_week.year or 
+                (check_year == end_week.year and check_week <= end_week.week))
         
     def check_project_week_past_year(self):
         start_week = Week.query.filter(Week.id == self.start_week).first()
