@@ -79,14 +79,13 @@ def OptimalOrderCalculation():
     rec_order_dict = {}
 
     today = date.today()
-    
+        
     for material in materials:
         material_id = material.id
         unit = material.unit.name if material.unit else None
         name = material.name
         strategy = material.strategy.value if material.strategy else options.strategy.value
         supplier = None
-        
         if strategy == "Sustainability":
             valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.sustainability_index is not None]
             if valid_suppliers:
@@ -146,6 +145,9 @@ def OptimalOrderCalculation():
             week_key = f"wk{week_number}_{year}"
 
             lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
+            
+            if lead_time_demand == 0:
+                continue
                         
             # Calculate total outstanding orders for the material within the lead time
             total_outstanding_orders = 0
@@ -154,7 +156,7 @@ def OptimalOrderCalculation():
                     if is_within_lead_time(order.planned_delivery_date, lead_time, week_start):
                         total_outstanding_orders += order.amount
             total_demand = lead_time_demand + material.safety_stock - total_outstanding_orders
-            
+                        
             if total_demand <= material.stock_level:
                 continue
             else:
@@ -176,15 +178,25 @@ def OptimalOrderCalculation():
                 if week_key not in rec_order_dict:
                     rec_order_dict[week_key] = []
                     
-                if is_new_material(rec_order_dict,material_id):
+                if is_new_material(rec_order_dict, material_id):
                     rec_order_dict[week_key].append(material_recommendation)
-        new_rec_order_list = []
-        for week_key in rec_order_dict:
-            wk = week_dict.get(week_key)
-            new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week_key]})
-        
-        sorted_data = sorted(new_rec_order_list, key=lambda x: (x['year'], x['week']))
+    
+    # Always include the next 5 weeks, even if no orders are generated
+    new_rec_order_list = []
+    for week in range(5):
+        week_start = today + timedelta(weeks=week)
+        week_number = week_start.isocalendar()[1]
+        year = week_start.isocalendar()[0]
+        week_key = f"wk{week_number}_{year}"
+        if week_key in rec_order_dict:
+            new_rec_order_list.append({"week": week_number, "year": year, "data": rec_order_dict[week_key]})
+        else:
+            new_rec_order_list.append({"week": week_number, "year": year, "data": []})
+    
+    sorted_data = sorted(new_rec_order_list, key=lambda x: (x['year'], x['week']))
+    
     return sorted_data
+
 
 def OptimalOrderCalculationOneWeek():
     # Fetch all necessary data before the loop
@@ -285,7 +297,7 @@ def OptimalOrderCalculationOneWeek():
         week_key = f"wk{week_number}_{year}"
 
         lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
-                    
+        
         # Calculate total outstanding orders for the material within the lead time
         total_outstanding_orders = 0
         if material_id in outstanding_orders_dict:
@@ -297,6 +309,7 @@ def OptimalOrderCalculationOneWeek():
         if total_demand <= material.stock_level:
             continue
         else:
+            print(lead_time_demand)
             min_order = total_demand - material.stock_level
             material_recommendation = {
                 "material_id": material_id,
@@ -309,6 +322,7 @@ def OptimalOrderCalculationOneWeek():
                 "lead_time": lead_time,
                 "sustainability_index": sustainability_index,
                 "risk_index": risk_index,
+                "co2_emissions": co2_emissions,
                 "price": price,
             }
             if week_key not in rec_order_dict:
@@ -316,7 +330,10 @@ def OptimalOrderCalculationOneWeek():
                 
             if is_new_material(rec_order_dict,material_id):
                 rec_order_dict[week_key].append(material_recommendation)
-    return rec_order_dict[week_key]
+    if rec_order_dict == {}:
+        return []
+    else: 
+        return rec_order_dict[week_key]
     
 ###############################################################################################
 # Support Functions
