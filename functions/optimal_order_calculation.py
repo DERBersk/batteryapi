@@ -79,14 +79,13 @@ def OptimalOrderCalculation():
     rec_order_dict = {}
 
     today = date.today()
-    
+        
     for material in materials:
         material_id = material.id
         unit = material.unit.name if material.unit else None
         name = material.name
         strategy = material.strategy.value if material.strategy else options.strategy.value
         supplier = None
-        
         if strategy == "Sustainability":
             valid_suppliers = [s for s in suppliers if (s.id, material_id) in materials_per_supplier_dict and s.sustainability_index is not None]
             if valid_suppliers:
@@ -146,6 +145,9 @@ def OptimalOrderCalculation():
             week_key = f"wk{week_number}_{year}"
 
             lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
+            
+            if lead_time_demand == 0:
+                continue
                         
             # Calculate total outstanding orders for the material within the lead time
             total_outstanding_orders = 0
@@ -154,7 +156,7 @@ def OptimalOrderCalculation():
                     if is_within_lead_time(order.planned_delivery_date, lead_time, week_start):
                         total_outstanding_orders += order.amount
             total_demand = lead_time_demand + material.safety_stock - total_outstanding_orders
-            
+                        
             if total_demand <= material.stock_level:
                 continue
             else:
@@ -176,15 +178,25 @@ def OptimalOrderCalculation():
                 if week_key not in rec_order_dict:
                     rec_order_dict[week_key] = []
                     
-                if is_new_material(rec_order_dict,material_id):
+                if is_new_material(rec_order_dict, material_id):
                     rec_order_dict[week_key].append(material_recommendation)
-        new_rec_order_list = []
-        for week_key in rec_order_dict:
-            wk = week_dict.get(week_key)
-            new_rec_order_list.append({"week": wk.week, "year": wk.year, "data": rec_order_dict[week_key]})
-        
-        sorted_data = sorted(new_rec_order_list, key=lambda x: (x['year'], x['week']))
+    
+    # Always include the next 5 weeks, even if no orders are generated
+    new_rec_order_list = []
+    for week in range(5):
+        week_start = today + timedelta(weeks=week)
+        week_number = week_start.isocalendar()[1]
+        year = week_start.isocalendar()[0]
+        week_key = f"wk{week_number}_{year}"
+        if week_key in rec_order_dict:
+            new_rec_order_list.append({"week": week_number, "year": year, "data": rec_order_dict[week_key]})
+        else:
+            new_rec_order_list.append({"week": week_number, "year": year, "data": []})
+    
+    sorted_data = sorted(new_rec_order_list, key=lambda x: (x['year'], x['week']))
+    
     return sorted_data
+
 
 def OptimalOrderCalculationOneWeek():
     # Fetch all necessary data before the loop
@@ -285,7 +297,7 @@ def OptimalOrderCalculationOneWeek():
         week_key = f"wk{week_number}_{year}"
 
         lead_time_demand = get_lead_time_demand(filtered_weekly_material_demand, lead_time, week_start)
-                    
+        
         # Calculate total outstanding orders for the material within the lead time
         total_outstanding_orders = 0
         if material_id in outstanding_orders_dict:
@@ -297,6 +309,7 @@ def OptimalOrderCalculationOneWeek():
         if total_demand <= material.stock_level:
             continue
         else:
+            print(lead_time_demand)
             min_order = total_demand - material.stock_level
             material_recommendation = {
                 "material_id": material_id,
@@ -309,6 +322,7 @@ def OptimalOrderCalculationOneWeek():
                 "lead_time": lead_time,
                 "sustainability_index": sustainability_index,
                 "risk_index": risk_index,
+                "co2_emissions": co2_emissions,
                 "price": price,
             }
             if week_key not in rec_order_dict:
@@ -316,7 +330,10 @@ def OptimalOrderCalculationOneWeek():
                 
             if is_new_material(rec_order_dict,material_id):
                 rec_order_dict[week_key].append(material_recommendation)
-    return rec_order_dict[week_key]
+    if rec_order_dict == {}:
+        return []
+    else: 
+        return rec_order_dict[week_key]
     
 ###############################################################################################
 # Support Functions
@@ -393,16 +410,29 @@ def save_weekly_material_demand(material_demand_dict):
     from extensions import db
     # Clear existing data (optional)
     db.session.query(WeeklyMaterialDemand).delete()
-
+    
+    # Fetch all needed week IDs in one query
+    weeks_to_query = {(year, week) for _, year, week in material_demand_dict.keys()}
+    week_dict = {
+        (wk.year, wk.week): wk.id
+        for wk in Week.query.filter(
+            db.or_(
+                db.and_(Week.year == year, Week.week == week)
+                for year, week in weeks_to_query
+            )
+        ).all()
+    }
+    
     # Add new data
     for (material_id, year, week), amount in material_demand_dict.items():
-        wk = Week.query.filter(Week.year == year).filter(Week.week == week).first()
-        weekly_demand = WeeklyMaterialDemand(
-            material_id=material_id,
-            week_id=wk.id,
-            amount=amount
-        )
-        db.session.add(weekly_demand)
+        week_id = week_dict.get((year, week))
+        if week_id is not None:
+            weekly_demand = WeeklyMaterialDemand(
+                material_id=material_id,
+                week_id=week_id,
+                amount=amount
+            )
+            db.session.add(weekly_demand)
     
     db.session.commit()
 
@@ -458,7 +488,7 @@ def MaterialDemand5Weeks():
     
     # Calculate weekly total Material demand (Demand and Composition fit)
     material_demand_dict = calculate_material_demand(weekly_total,materials_per_products)
-    
+        
     result = aggregate_demand(material_demand_dict,False)
     
     return result
@@ -485,20 +515,21 @@ def get_next_weeks(year, week, num_weeks=5):
     current_date = datetime.strptime(f'{year}-W{week-1}-1', "%Y-W%U-%w")
     next_weeks = []
     for _ in range(num_weeks):
-        current_date += timedelta(weeks=1)
         next_weeks.append((current_date.isocalendar()[0], current_date.isocalendar()[1]))
+        current_date += timedelta(weeks=1)
     return next_weeks
 
 def aggregate_demand(data,product=False):
     demand_aggregate = defaultdict(float)
 
     # Fetch material and product details from the database
-    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level, 'unit': material.unit.name if material.unit else ""} for material in Material.query.all()}
-    products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.all()}
+    materials = {material.id: {'name': material.name, 'stock_level': material.stock_level, 'unit': material.unit.name if material.unit else ""} for material in Material.query.order_by(Material.id.asc()).all()}
+    products = {product.id: {'description': product.description, 'specification': product.specification} for product in Product.query.order_by(Product.id.asc()).all()}
       
     
     for (id, year, week), demand in data.items():
-        next_weeks = get_next_weeks(year, week, num_weeks=5)
+        check_year, check_week = datetime.now().isocalendar()[:2]
+        next_weeks = get_next_weeks(check_year, check_week, num_weeks=5)
         for next_year, next_week in next_weeks:
             if (id, next_year, next_week) in data:
                 demand_aggregate[id] += data[(id, next_year, next_week)]
@@ -511,7 +542,7 @@ def aggregate_demand(data,product=False):
                 "demand_sum": round(demand_sum,2),
                 "description": products[id]['description'] if id in products else None,
                 "specification": products[id]['specification'] if id in products else None,
-                "percentage_of_total_output": round(demand_sum / total_demand_sum * 100) if total_demand_sum > 0 else 0
+                "percentage_of_total_output": round(demand_sum / total_demand_sum * 100,2) if total_demand_sum > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
@@ -522,7 +553,7 @@ def aggregate_demand(data,product=False):
                 "demand_sum": round(demand_sum,2),
                 "unit": materials[id]['unit'],
                 "material_name": materials[id]['name'] if id in materials else None,
-                "percentage_of_current_stock": round(demand_sum / materials[id]['stock_level'] * 100) if id in materials and materials[id]['stock_level'] > 0 else 0
+                "percentage_of_current_stock": round(demand_sum / materials[id]['stock_level']* 100,2) if id in materials and materials[id]['stock_level'] > 0 else 0
             }
             for id, demand_sum in demand_aggregate.items()
         ]
