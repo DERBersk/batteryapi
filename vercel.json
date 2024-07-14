@@ -1,16 +1,18 @@
 {
-    "builds": [
-        {
-            "src": "api/app.py",
-            "use": "@vercel/python",
-            "config": {"maxDuration":30}
-        }
+    "version": 2,
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/app.py"
+      }
     ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "api/app.py"
-        }
-    ]
+    "functions": {
+      "app.py": {
+        "memory": 3009,
+        "maxDuration": 30
+      }
+    },
+    "cleanUrls": true,
+    "trailingSlash": false
   }
   
