@@ -5,11 +5,16 @@
         "source":"/(.*)",
         "destination":"api/app.py"
     }],
-
+    "builds": [
+        {
+        "src": "api/app.py",
+        "use": "@vercel/python"
+        }
+    ],
     "functions": {
         "api/**/*.py": {
             "maxDuration": 30
-      }
     }
-  }
+    }
+}
   
