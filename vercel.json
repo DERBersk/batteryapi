@@ -1,20 +1,16 @@
 {
-    "version": 2,
-    "buildCommand": "python api/app.py",
-    "rewrites":[{
-        "source":"/(.*)",
-        "destination":"api/app.py"
-    }],
     "builds": [
         {
-        "src": "api/app.py",
-        "use": "@vercel/python"
+            "src": "api/app.py",
+            "use": "@vercel/python",
+            "config": {"maxDuration":30}
         }
     ],
-    "functions": {
-        "api/**/*.py": {
-            "maxDuration": 30
-    }
-    }
-}
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "api/app.py"
+        }
+    ]
+  }
   
