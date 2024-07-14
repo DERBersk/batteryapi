@@ -10,3 +10,4 @@ pycountry
 xlrd
 pandas
 requests
+waitress

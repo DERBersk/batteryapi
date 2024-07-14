@@ -2,6 +2,23 @@
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
- 
+
+[packages]
+flask = "==2.2.1"
+flask-cors = "*"
+flask-sqlalchemy = "*"
+datetime = "*"
+faker = "*"
+werkzeug = "==2.2.1"
+psycopg2-binary = "*"
+apscheduler = "*"
+pycountry = "*"
+xlrd = "*"
+pandas = "*"
+requests = "*"
+waitress = "*"
+
+[dev-packages]
+
 [requires]
-python_version = "3.9"
+python_version = "3.12"

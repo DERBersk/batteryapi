@@ -1,15 +1,18 @@
 {
     "version": 2,
-    "buildCommand": "python api/app.py",
+    "buildCommand": "vercel build",
+    "devCommand": "python3 api/app.py",
     "rewrites":[{
         "source":"/(.*)",
         "destination":"api/app.py"
     }],
 
     "functions": {
-        "api/**/*.py": {
+        "api/app.py": {
             "maxDuration": 30
       }
     }
+    ,
+    "outputDirectory": "."
   }
   

@@ -1,3 +1,4 @@
+import os
 # import external sources
 from flask import Flask
 import json
@@ -45,4 +46,4 @@ with app.app_context():
     db.create_all()
 # app.run(debug=True, host='0.0.0.0')
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
