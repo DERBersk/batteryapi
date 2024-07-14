@@ -1,10 +1,9 @@
 {
     "version": 2,
-    "buildCommand": "python api/app.py",
     "rewrites": [
       {
         "source": "/(.*)",
-        "destination": "/api/app.py"
+        "destination": "/api/app"
       }
     ],
     "functions": {
@@ -15,5 +14,5 @@
     },
     "cleanUrls": true,
     "trailingSlash": false
-  }
+}
   
