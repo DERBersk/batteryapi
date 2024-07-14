@@ -6,7 +6,8 @@
       }
   ],
   "functions":{
-    "runtime": "@vercel/python",
-    "includeFiles":["app.py"]
+    "app.py":{
+        "runtime": "@vercel/python"
+    }
   }
 }
