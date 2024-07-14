@@ -1,8 +1,14 @@
 {
     "version": 2,
+    "buildCommand": "python api/app.py -m batteryapi",
+    "rewrites":[{
+        "source":"/(.*)",
+        "destination":"api/app.py"
+    }],
+
     "functions": {
-      "api/app.py": {
-        "maxDuration": 30
+        "api/**/*.py": {
+            "maxDuration": 30
       }
     }
   }
