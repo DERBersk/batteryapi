@@ -103,7 +103,7 @@ def get_project(project_id):
 ###################################################
 @project_bp.route('', methods=['POST'])
 def create_or_update_project():
-    from app import db
+    from api.app import db
     data = request.json
 
     if not isinstance(data, list):
@@ -165,7 +165,7 @@ def create_or_update_project():
 ###################################################
 @project_bp.route('/<int:project_id>', methods=['DELETE'])
 def delete_project(project_id):
-    from app import db
+    from api.app import db
     project = Project.query.get(project_id)
     if project:
         # Delete from the database
