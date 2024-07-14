@@ -3,9 +3,15 @@
       {
           "src": "app.py",
           "use": "@vercel/python",
-          "config": {"maxDuration":30}
+          "config": {        "runtime": "python3.8"
+        }
       }
   ],
+  "functions": {
+    "app.py": {
+      "maxDuration": 10
+    }
+  },
   "routes": [
       {
           "src": "/(.*)",
