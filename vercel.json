@@ -1,18 +1,15 @@
 {
-    "version": 2,
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/api/app"
-      }
-    ],
-    "functions": {
+  "version": 2,
+  "buildCommand": "python api/app.py",
+  "rewrites":[{
+      "source":"/(.*)",
+      "destination":"api/app.py"
+  }],
+
+  "functions": {
       "api/**/*.py": {
-        "memory": 1024,
-        "maxDuration": 30
-      }
-    },
-    "cleanUrls": true,
-    "trailingSlash": false
+          "maxDuration": 30
+    }
+  }
 }
-  
+
