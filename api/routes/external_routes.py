@@ -5,7 +5,7 @@ from flask import Blueprint, request,render_template,current_app,jsonify
 # import functions and data
 from functions.email import send_email
 from functions.token_manager import generate_token
-from functions.fetch_updates import update_or_create_orders
+from functions.fetch_updates import update_or_create_orders, update_or_create_materials
 from extensions import db
 # import models
 from models.supplier import Supplier
@@ -117,8 +117,15 @@ def update_data(token):
         return jsonify('Invalid link.'),400
     
 ###################################################
-# Route for Fetch and update of orders
+# Route for Fetch and update of orders from WMS
 ###################################################
 @external_bp.route('/orders/',methods=["POST"])
 def fetch_and_update_orders():
     return jsonify(update_or_create_orders())
+
+###################################################
+# Route for Fetch and update of materials from WMS
+###################################################
+@external_bp.route('/materials/',methods=["POST"])
+def fetch_and_update_materials():
+    return jsonify(update_or_create_materials())
