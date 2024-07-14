@@ -33,7 +33,7 @@ def get_material(material_id):
 @price_bp.route('/', methods=['POST'])
 def create_or_update_prices():
     data = request.json
-    from app import db
+    from api.app import db
     if not isinstance(data, list):
         return jsonify({'message': 'Invalid data format. Expected a list of prices.'}), 400
 
@@ -68,7 +68,7 @@ def create_or_update_prices():
 ###################################################
 @price_bp.route('/<int:price_id>', methods=['DELETE'])
 def delete_price(price_id):
-    from app import db
+    from api.app import db
     price = Price.query.get(price_id)
     if price:
         db.session.delete(price)

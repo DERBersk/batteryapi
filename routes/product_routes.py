@@ -106,7 +106,7 @@ def get_product(product_id):
 ###################################################
 @product_bp.route('', methods=['POST'])
 def create_or_update_products():
-    from app import db
+    from api.app import db
     data = request.json
 
     if not isinstance(data, list):
@@ -156,7 +156,7 @@ def create_or_update_products():
 ###################################################
 @product_bp.route('/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
-    from app import db
+    from api.app import db
     product = Product.query.get(product_id)
     if product:
         # Delete from the database
