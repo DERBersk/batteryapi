@@ -1,3 +1,4 @@
+import os
 # import external sources
 from flask import Flask
 import json
@@ -41,8 +42,11 @@ def create_app():
 app = create_app()
 db.init_app(app)
 # scheduler.add_job(func=Run, trigger='cron', hour=23, minute=0)
+@app.route('/')
+def hello():
+    return "Hello, World!"
 with app.app_context():
     db.create_all()
 # app.run(debug=True, host='0.0.0.0')
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))

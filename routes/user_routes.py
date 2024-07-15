@@ -30,7 +30,7 @@ def get_user(user_id):
 ###################################################
 @user_bp.route('/', methods=['POST'])
 def create_user():
-    from app import db
+    from api.app import db
     data = request.get_json()
 
     if 'id' in data:
@@ -59,7 +59,7 @@ def create_user():
 ###################################################
 @user_bp.route('/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    from app import db
+    from api.app import db
     user = User.query.get(user_id)
     if user:
         # Delete from the database
