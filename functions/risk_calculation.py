@@ -94,3 +94,32 @@ def update_supplier_risk_indices():
     db.session.commit()
     
     return [supplier.serialize() for supplier in suppliers]
+
+def update_supplier_risk_indices_one_supplier(supplier_id):
+    # Fetch options (assuming only one set of options is used)
+    options = Options.query.first()
+
+    # Fetch suppliers
+    supplier = Supplier.query.filter(Supplier.id == supplier_id).first()
+
+    # Fetch country risk data
+    country_risk_data = CountryRisk()
+    country_risk_dict = {item['description']: item['index'] for item in country_risk_data}
+
+    if supplier.country in country_risk_dict:
+        country_risk_index = country_risk_dict[supplier.country]
+    else:
+        country_risk_index = 0  # Default to 0 if country risk is not found
+        
+    if not supplier.reliability:
+        supplier.risk_index = country_risk_index
+    else:
+        # Calculate risk_index using weights from options and supplier's reliability
+        risk_index = (options.risk_index_weight_country_risk * country_risk_index) + \
+                    (options.risk_index_weight_reliability * (1-supplier.reliability))
+    
+        # Update the supplier's risk_index
+        supplier.risk_index = risk_index
+
+    # Commit the changes to the database
+    db.session.commit()

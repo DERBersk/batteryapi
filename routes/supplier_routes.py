@@ -3,8 +3,12 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from sqlalchemy import case, func, and_
 import requests
+import json
 # import functions and data
 from extensions import db
+from functions.reliability_calculation import ReliabilityCalculationOneSupplier
+from functions.risk_calculation import update_supplier_risk_indices_one_supplier
+from functions.sustainability_calculations import calculate_sustainability_index
 # import models
 from models.supplier import Supplier
 from models.material import Material
@@ -182,6 +186,9 @@ def create_or_update_suppliers():
             supplier = Supplier(**{k: v for k, v in supplier_data.items() if k != 'materials'})
 
         db.session.add(supplier)
+        
+        if supplier.external_id != None:
+            update_or_create_orders(supplier.external_id)
 
         # Extract materials data
         materials_data = supplier_data.get('materials', [])
@@ -234,6 +241,10 @@ def create_or_update_suppliers():
                 distance=distance
             )
             db.session.add(materials_per_supplier)
+            
+        ReliabilityCalculationOneSupplier(supplier.id)
+        calculate_sustainability_index()
+        update_supplier_risk_indices_one_supplier(supplier.id)
 
     db.session.commit()
     
@@ -253,6 +264,62 @@ def create_or_update_suppliers():
 
     return jsonify({'message': 'Suppliers created/updated successfully'}), 200
 
+def fetch_api_data_orders(supplier_id):
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    url = config["WMS_ORDERS"]+f"/{supplier_id}"
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    return response.json()
+
+def update_or_create_orders(supplier_id):
+    api_data = fetch_api_data_orders(supplier_id)
+    
+    # Fetch all necessary data in a single query and store them in dictionaries
+    existing_materials = {material.external_id: material for material in Material.query.all()}
+    existing_suppliers = {supplier.external_id: supplier for supplier in Supplier.query.all()}
+    existing_orders = {order.external_id: order for order in Order.query.all()}
+    
+    for item in api_data:
+        # Check if the material exists in the existing materials dictionary
+        material = existing_materials.get(item['material_id'])
+        if not material:
+            print(f"Material with external_id {item['material_id']} not found.")
+            continue
+        
+        # Check if the supplier exists in the existing suppliers dictionary
+        supplier = existing_suppliers.get(item['supplier_id'])
+        if not supplier:
+            print(f"Supplier with external_id {item['supplier_id']} not found.")
+            continue
+        
+        # Check if the order exists in the existing orders dictionary
+        order = existing_orders.get(item['id'])
+        
+        planned_delivery_date = datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+        delivery_date = datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z') if item['delivery_date'] else None
+
+        if order:
+            # Update the existing order
+            order.material_id = material.id
+            order.supplier_id = supplier.id
+            order.amount = item['amount']
+            order.planned_delivery_date = planned_delivery_date
+            order.delivery_date = delivery_date
+        else:
+            # Create a new order
+            new_order = Order(
+                external_id=item['id'],
+                material_id=material.id,
+                supplier_id=supplier.id,
+                amount=item['amount'],
+                planned_delivery_date=planned_delivery_date,
+                delivery_date=delivery_date
+            )
+            db.session.add(new_order)
+    
+    # Commit the changes to the database
+    db.session.commit()
 
 ###################################################
 # Delete a single supplier
