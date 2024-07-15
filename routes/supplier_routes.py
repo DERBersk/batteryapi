@@ -166,7 +166,7 @@ def get_supplier(supplier_id):
 ###################################################
 @supplier_bp.route('', methods=['POST'])
 def create_or_update_suppliers():
-    from app import db
+    from api.app import db
     data = request.json
 
     if not isinstance(data, list):
@@ -326,7 +326,7 @@ def update_or_create_orders(supplier_id):
 ###################################################
 @supplier_bp.route('/<int:supplier_id>', methods=['DELETE'])
 def delete_supplier(supplier_id):
-    from app import db
+    from api.app import db
     supplier = Supplier.query.get(supplier_id)
     if supplier:
         # Delete from the database

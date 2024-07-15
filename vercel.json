@@ -1,15 +1,19 @@
 {
-  "version": 2,
-  "buildCommand": "python api/app.py",
-  "rewrites":[{
-      "source":"/(.*)",
-      "destination":"api/app.py"
-  }],
-
-  "functions": {
-      "api/**/*.py": {
-          "maxDuration": 30
+    "version": 2,
+    "functions":{
+        "api/app.py":{
+            "maxDuration":60
+        }
+    },
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "api/app.py"
+      }
+    ],
+    "env": {
+      "FLASK_ENV": "production",
+      "SECRET_KEY": "your-production-secret-key"
     }
   }
-}
-
+  

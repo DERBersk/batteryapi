@@ -32,7 +32,7 @@ def get_material(material_id):
 ###################################################
 @material_bp.route('', methods=['POST'])
 def create_or_update_materials():
-    from app import db
+    from api.app import db
     data = request.json
 
     if not isinstance(data, list):
@@ -62,7 +62,7 @@ def create_or_update_materials():
 ###################################################
 @material_bp.route('/<int:material_id>', methods=['DELETE'])
 def delete_material(material_id):
-    from app import db
+    from api.app import db
     material = Material.query.get(material_id)
     if material:
         # Delete from the database
