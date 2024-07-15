@@ -21,28 +21,31 @@ def fetch_api_data_materials():
 def update_or_create_materials():
     api_data = fetch_api_data_materials()
     
+    # Fetch all materials and create a dictionary with external_id as the key
+    existing_materials = {material.external_id: material for material in Material.query.all()}
+    
     for item in api_data:
-        # Find the material by external_id
-        material = Material.query.filter(Material.external_id==item['id']).first()
+        # Define a dictionary to map the database fields to the API data
+        material_data = {
+            'name': item['description'],
+            'lot_size': item['lot_size'],
+            'safety_stock': item['safety_stock'],
+            'stock_level': item['stock_level'],
+            'unit': item['unit'] if item['unit'] else UnitEnum.Pcs  # Assuming UnitEnum has a default unit
+        }
+        
+        # Check if the material exists in the existing materials dictionary
+        material = existing_materials.get(item['id'])
         
         if material:
             # Update the existing material
-            material.name = item['description']
-            material.lot_size = item['lot_size']
-            material.safety_stock = item['safety_stock']
-            material.stock_level = item['stock_level']
-            material.unit = item['unit'] if item['unit'] else UnitEnum.Pcs  # Assuming UnitEnum has a default unit
+            for key, value in material_data.items():
+                setattr(material, key, value)
         else:
             # Create a new material
-            new_material = Material(
-                name=item['description'],
-                external_id=item['id'],
-                lot_size=item['lot_size'],
-                safety_stock=item['safety_stock'],
-                stock_level=item['stock_level'],
-                unit=item['unit'] if item['unit'] else UnitEnum.Pcs,  # Assuming UnitEnum has a default unit
-                strategy=StrategyEnum.NONE  # Assuming StrategyEnum.NONE is the default
-            )
+            material_data['external_id'] = item['id']
+            material_data['strategy'] = StrategyEnum.NONE  # Assuming StrategyEnum.NONE is the default
+            new_material = Material(**material_data)
             db.session.add(new_material)
     
     # Commit the changes to the database
@@ -58,43 +61,46 @@ def fetch_api_data_orders():
 def update_or_create_orders():
     api_data = fetch_api_data_orders()
     
+    # Fetch all necessary data in a single query and store them in dictionaries
+    existing_materials = {material.external_id: material for material in Material.query.all()}
+    existing_suppliers = {supplier.external_id: supplier for supplier in Supplier.query.all()}
+    existing_orders = {order.external_id: order for order in Order.query.all()}
+    
     for item in api_data:
-        # Find the material by external_id
-        material = Material.query.filter(Material.external_id==item['material_id']).first()
+        # Check if the material exists in the existing materials dictionary
+        material = existing_materials.get(item['material_id'])
         if not material:
             print(f"Material with external_id {item['material_id']} not found.")
             continue
         
-        # Find the supplier by external_id
-        supplier = Supplier.query.filter(Supplier.external_id==item['supplier_id']).first()
+        # Check if the supplier exists in the existing suppliers dictionary
+        supplier = existing_suppliers.get(item['supplier_id'])
         if not supplier:
             print(f"Supplier with external_id {item['supplier_id']} not found.")
             continue
-
-        # Find the order by external_id
-        order = Order.query.filter(Order.external_id==item['id']).first()
         
+        # Check if the order exists in the existing orders dictionary
+        order = existing_orders.get(item['id'])
+        
+        planned_delivery_date = datetime.datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+        delivery_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z') if item['delivery_date'] else None
+
         if order:
             # Update the existing order
             order.material_id = material.id
             order.supplier_id = supplier.id
             order.amount = item['amount']
-            order.planned_delivery_date = datetime.datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
-            if item['delivery_date']:
-                order.delivery_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
+            order.planned_delivery_date = planned_delivery_date
+            order.delivery_date = delivery_date
         else:
-            if item['delivery_date']:
-                d_date = datetime.datetime.strptime(item['delivery_date'], '%a, %d %b %Y %H:%M:%S %Z')
-            else:
-                d_date = None
             # Create a new order
             new_order = Order(
                 external_id=item['id'],
                 material_id=material.id,
                 supplier_id=supplier.id,
                 amount=item['amount'],
-                planned_delivery_date=datetime.datetime.strptime(item['planned_delivery_date'], '%a, %d %b %Y %H:%M:%S %Z'),
-                delivery_date=d_date
+                planned_delivery_date=planned_delivery_date,
+                delivery_date=delivery_date
             )
             db.session.add(new_order)
     

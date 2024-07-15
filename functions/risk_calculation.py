@@ -15,7 +15,7 @@ def CountryRisk():
     cols = [col for col in df.columns if col.startswith("GPRC_")]
 
     # Load country codes from countryCode.json
-    json_file_name = "lib/json/countryCode.json"
+    json_file_name = "api/lib/json/countryCode.json"
     with open(json_file_name, 'r') as f:
         country_codes = json.load(f)
 
@@ -27,7 +27,7 @@ def CountryRisk():
     max_value = max([tail[col].item() for col in cols if not pd.isnull(tail[col].item())])
 
     # Prepare to read 2024.csv for second set of indices
-    second_indices_file = "lib/csv/2024.csv"
+    second_indices_file = "api/lib/csv/2024.csv"
     second_df = pd.read_csv(second_indices_file, sep=';', decimal=',')
 
     # Merge df and second_df on country codes
@@ -85,7 +85,7 @@ def update_supplier_risk_indices():
 
         # Calculate risk_index using weights from options and supplier's reliability
         risk_index = (options.risk_index_weight_country_risk * country_risk_index) + \
-                     (options.risk_index_weight_reliability * supplier.reliability)
+                     (options.risk_index_weight_reliability * (1-supplier.reliability))
         
         # Update the supplier's risk_index
         supplier.risk_index = risk_index
