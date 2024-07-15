@@ -15,7 +15,7 @@ def CountryRisk():
     cols = [col for col in df.columns if col.startswith("GPRC_")]
 
     # Load country codes from countryCode.json
-    json_file_name = "api/lib/json/countryCode.json"
+    json_file_name = "/lib/json/countryCode.json"
     with open(json_file_name, 'r') as f:
         country_codes = json.load(f)
 
