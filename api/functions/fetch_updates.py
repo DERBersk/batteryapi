@@ -3,6 +3,7 @@ import requests
 import datetime
 from collections import defaultdict
 from sqlalchemy.exc import IntegrityError
+import json
 # import functions and data
 from extensions import db
 # import models
@@ -13,7 +14,9 @@ from models.external_production_data import ExternalProductionData
 from models.product import Product
 
 def fetch_api_data_materials():
-    url = "https://secondaryapi-wms.vercel.app/material/"
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    url = config["WMS_MATERIALS"]
     response = requests.get(url)
     response.raise_for_status()  # Raise an exception for HTTP errors
     return response.json()
@@ -53,7 +56,9 @@ def update_or_create_materials():
     
     
 def fetch_api_data_orders():
-    url = "https://secondaryapi-wms.vercel.app/order/"
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    url = config["WMS_ORDERS"]
     response = requests.get(url)
     response.raise_for_status()  # Raise an exception for HTTP errors
     return response.json()

@@ -4,5 +4,7 @@
     "EMAIL_HOST":"smtp.gmail.com",
     "EMAIL_PORT":587,
     "EMAIL_PASSWORD": "lgew wfui hwzk exgk",
-    "DATABASE":"postgresql://postgres.xheevcowfsiqoblrojtv:TGEBzsP7RGjpVM5E@aws-0-eu-west-2.pooler.supabase.com:5432/postgres"
+    "DATABASE":"postgresql://postgres.xheevcowfsiqoblrojtv:TGEBzsP7RGjpVM5E@aws-0-eu-west-2.pooler.supabase.com:5432/postgres",
+    "WMS_ORDERS": "https://secondaryapi-wms.vercel.app/order/",
+    "WMS_MATERIALS": "https://secondaryapi-wms.vercel.app/material/"
 }
