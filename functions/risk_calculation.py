@@ -27,7 +27,7 @@ def CountryRisk():
     max_value = max([tail[col].item() for col in cols if not pd.isnull(tail[col].item())])
 
     # Prepare to read 2024.csv for second set of indices
-    second_indices_file = "api/lib/csv/2024.csv"
+    second_indices_file = "lib/csv/2024.csv"
     second_df = pd.read_csv(second_indices_file, sep=';', decimal=',')
 
     # Merge df and second_df on country codes
