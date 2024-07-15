@@ -242,9 +242,9 @@ def create_or_update_suppliers():
             )
             db.session.add(materials_per_supplier)
             
-        ReliabilityCalculationOneSupplier(supplier.id)
-        #calculate_sustainability_index()
-        update_supplier_risk_indices_one_supplier(supplier.id)
+        # ReliabilityCalculationOneSupplier(supplier.id)
+        # calculate_sustainability_index()
+        # update_supplier_risk_indices_one_supplier(supplier.id)
 
     db.session.commit()
     
