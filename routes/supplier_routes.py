@@ -166,7 +166,7 @@ def get_supplier(supplier_id):
 ###################################################
 @supplier_bp.route('', methods=['POST'])
 def create_or_update_suppliers():
-    from api.app import db
+    from extensions import db
     data = request.json
 
     if not isinstance(data, list):
