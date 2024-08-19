@@ -29,7 +29,7 @@ The Battery API offers a range of endpoints to facilitate interactions with user
     * the Email information
     * the Company Name
     * the database (when developing, a path to a data.db file suffices)
-5. Run `python app.py` in the terminal (also possible in VSCode or other editors)
+5. Run `python api/app.py` in the terminal (also possible in VSCode or other editors)
 
 When completing the steps, the BatteryAPI is running. An other way to launch the application is to use Docker, which is described in the following.
 
@@ -55,6 +55,8 @@ Local development is the fastest way to implement new features and to test them.
 The code is currently structured the following way:
 
 ```
+├── api
+│   ├── app.py
 ├── documentation
 │   ├── ...
 ├── functions
@@ -67,10 +69,10 @@ The code is currently structured the following way:
 │   ├── ...
 ├── templates
 │   ├── ...
-├── extensions.py
-└── app.py
+└── extensions.py
 ```
 
+* `api/app.py` is the core of the project and activates all routes and initiates the database. This file is called when starting the application.
 * `documentation` encompasses all Markdown files regarding routing and a guide on how to add new fields.
 * `functions` includes all python files regarding more complex functions to be separated from the route files.
 * `lib` holds all files that are in the category of either data or images.
@@ -78,4 +80,3 @@ The code is currently structured the following way:
 * `routes` regards all defined routes. These do not have to be, but currently are all registered in the app.py file.
 * `templates` includes all html files used for supplier access.
 * `extensions.py` defines all Singleton objects, such as the database and the scheduler
-* `app.py` is the core of the project and activates all routes and initiates the database. This file is called when starting the application.
