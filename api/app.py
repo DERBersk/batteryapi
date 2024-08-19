@@ -1,10 +1,15 @@
+import sys
 import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # import external sources
 from flask import Flask
 import json
 from flask_cors import CORS
 # import functions and data
 from extensions import db, scheduler
+
 
 def create_app():
     app = Flask(__name__.split(".")[0])
