@@ -345,7 +345,7 @@ def get_products_without_material():
 
 def get_materials_per_supplier_without_price():
     # Subquery to find all material_id and supplier_id pairs where end_date is None
-    subquery = db.session.query(Price.material_id, Price.supplier_id).filter(Price.is_(None)).distinct()
+    subquery = db.session.query(Price.material_id, Price.supplier_id).filter(Price.end_date.is_(None)).distinct()
     
     # Main query to find all MaterialsPerSupplier records that do not match any pair in the subquery
     materials_per_supplier_without_price = db.session.query(
