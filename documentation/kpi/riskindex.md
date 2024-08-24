@@ -85,9 +85,7 @@ These are set by the user in the Settings Menu
 
 The risk index $R$ for each supplier is calculated using the following formula:
 
-$$
-R = (W_c*C)+(W_r*S)
-$$
+$R = (W_c*C)+(W_r*S)$
 
 where:
 
